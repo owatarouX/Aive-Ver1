@@ -23,6 +23,13 @@ enum eClick
 	eBomb		//2.”š’e
 };
 
+enum eStatus
+{
+	eIdle,
+	eWalking,
+	eAttack
+};
+
 //è— Œ•‚Ì—v‘f”
 constexpr int BULLET_MAX = 2;
 

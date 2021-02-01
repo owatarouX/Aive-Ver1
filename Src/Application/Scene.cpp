@@ -100,6 +100,7 @@ void Scene::Release()
 	m_shurikenTex.Release();
 	m_iconBombTex.Release();
 	m_stackBombTex.Release();
+	m_stackKeyTex.Release();
 
 	// エフェクト
 	m_pSlashTex.Release();
@@ -191,6 +192,7 @@ void Scene::Reset()
 	m_shurikenTex.Load("Texture/UI/Shuriken.png");
 	m_iconBombTex.Load("Texture/UI/Bomb.png");
 	m_stackBombTex.Load("Texture/UI/bomb_icon.png");
+	m_stackKeyTex.Load("Texture/UI/key.png");
 
 
 	// エフェクト
@@ -253,6 +255,7 @@ void Scene::Reset()
 	m_ui.SetIconShurikenTexture(&m_shurikenTex);
 	m_ui.SetIconBombTexture(&m_iconBombTex);
 	m_ui.SetStackBombTexture(&m_stackBombTex);
+	m_ui.SetStackKeyTexture(&m_stackKeyTex);
 	m_ui.SetOwner(this);
 
 	// エフェクト

@@ -24,6 +24,7 @@ public:
 	void SetIconShurikenTexture(KdTexture* apTexture);
 	void SetIconBombTexture(KdTexture* apTexture);
 	void SetStackBombTexture(KdTexture* apTexture);
+	void SetStackKeyTexture(KdTexture* apTexture);
 
 private:
 	KdTexture* m_pbackTexture;
@@ -40,16 +41,20 @@ private:
 	KdTexture* m_pIconBombTexture;
 
 	KdTexture* m_pStackBombTexture;
+	KdTexture* m_pStackKeyTexture;
 
 	Math::Matrix m_backmat;
 	Math::Matrix m_rframemat;
 	Math::Matrix m_lframemat;
 	Math::Matrix m_hpmat;
 	Math::Matrix m_hpbarmat;
-	Math::Matrix m_stackIconmat;
+	Math::Matrix m_stackbombIconmat;
+	Math::Matrix m_stackkeyIconmat;
+
 
 	int m_hp;//HP取得用
 	int m_bombstacks; //爆弾の所持数取得用
+	int m_keystacks;  //鍵の所持数取得用
 	//int m_weaponType; //プレイヤーの武器種取得用
 
 	Scene* m_pOwner;			//オーナー取得用

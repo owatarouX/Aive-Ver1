@@ -84,6 +84,7 @@ private:
 	KdTexture m_shurikenTex;
 	KdTexture m_iconBombTex;
 	KdTexture m_stackBombTex;
+	KdTexture m_stackKeyTex;
 
 
 	// エフェクト

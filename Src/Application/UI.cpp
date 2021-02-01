@@ -16,8 +16,9 @@ CUI::CUI()
 	, m_rframemat()
 	, m_lframemat()
 	, m_hpmat()
-	,m_stackIconmat()
+	,m_stackbombIconmat()
 	,m_bombstacks(0)
+	,m_keystacks(0)
 {
 }
 
@@ -37,6 +38,7 @@ void CUI::Updata()
 	int leftWeaponType = player->GetL();
 	m_hp = player->GetHp();
 	m_bombstacks = player->GetBombPossession();
+	m_keystacks = player->GetKeyPossession();
 
 	switch (rightWeaponType)
 	{
@@ -92,10 +94,18 @@ void CUI::Draw()
 	
 	for (int i = 0; i < m_bombstacks; i++)
 	{
-		SHADER.m_spriteShader.SetMatrix(m_stackIconmat);
+		SHADER.m_spriteShader.SetMatrix(m_stackbombIconmat);
 		Math::Rectangle scrRect = { 0,0,64,64 }; // テクスチャ座標
 		Math::Color color = { 1,1,1,1 }; // 色（RGBAの順番で　0.0～1.0）
 		SHADER.m_spriteShader.DrawTex(m_pStackBombTexture, 250-i*15, -255, 64, 64, &scrRect, &color, Math::Vector2(0.5f, 0.5f));
+	}
+
+	for (int i = 0; i < m_keystacks; i++)
+	{
+		SHADER.m_spriteShader.SetMatrix(m_stackkeyIconmat);
+		Math::Rectangle scrRect = { 0,0,32,32 }; // テクスチャ座標
+		Math::Color color = { 1,1,1,1 }; // 色（RGBAの順番で　0.0～1.0）
+		SHADER.m_spriteShader.DrawTex(m_pStackKeyTexture, 250 - i * 30, -310, 32, 32, &scrRect, &color, Math::Vector2(0.5f, 0.5f));
 	}
 
 	m_hpbarmat = DirectX::XMMatrixTranslation(-200, -250, 0);//ここは座標
@@ -179,4 +189,11 @@ void CUI::SetStackBombTexture(KdTexture* apTexture)
 	if (apTexture == nullptr)return;
 
 	m_pStackBombTexture = apTexture;
+}
+
+void CUI::SetStackKeyTexture(KdTexture* apTexture)
+{
+	if (apTexture == nullptr)return;
+
+	m_pStackKeyTexture = apTexture;
 }
