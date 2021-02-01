@@ -90,28 +90,10 @@ void CPlayer::Init()
 	//Œ®‰Šú‰»
 	m_KeyPossession = 0;
 
-	//ƒTƒEƒ“ƒh“Ç‚İ‚İ
-		//‡@—ÌˆæŠm•Û
-	katanase = std::make_shared<KdSoundEffect>();
-	//‡A‰¹“Ç‚İ‚İ
-	katanase->Load("Sound/Katana.WAV");
-	//‡BÀ‘Ì‰»
-	katanaseInst = katanase->CreateInstance(false);
-
-	//ƒTƒEƒ“ƒh“Ç‚İ‚İ
-		//‡@—ÌˆæŠm•Û
-	shurikense = std::make_shared<KdSoundEffect>();
-	//‡A‰¹“Ç‚İ‚İ
-	shurikense->Load("Sound/shuriken.WAV");
-	//‡BÀ‘Ì‰»
-	shurikenseInst = shurikense->CreateInstance(false);
-
-	//‡@—ÌˆæŠm•Û
-	hitse = std::make_shared<KdSoundEffect>();
-	//‡A‰¹“Ç‚İ‚İ
-	hitse->Load("Sound/hit.WAV");
-	//‡BÀ‘Ì‰»
-	hitseInst = hitse->CreateInstance(false);
+	//SE(ƒTƒEƒ“ƒh‚Ì“Ç‚İ‚İ‚ÆÀ‘Ì‰»)
+	katanaseInst = Sound_Loading(katanase, "Sound/katana.WAV");
+	shurikenseInst = Sound_Loading(shurikense, "Sound/shuriken.WAV");
+	hitseInst = Sound_Loading(hitse,"Sound/hit.WAV");
 
 }
 
@@ -1445,5 +1427,27 @@ void CPlayer::SetBomb()
 int CPlayer::Animation(int cnt, const int xtex)
 {
 	return cnt / m_aTimer * 116 + 38 + xtex;
+}
+
+//std::shared_ptr<KdSoundInstance> CPlayer::Sound_Loading(std::shared_ptr<KdSoundEffect> se, std::shared_ptr<KdSoundInstance> seInst, const std::string& seName)
+std::shared_ptr<KdSoundInstance> CPlayer::Sound_Loading(std::shared_ptr<KdSoundEffect> se, const std::string &seName)
+{
+	//‡@—ÌˆæŠm•Û
+	se = std::make_shared<KdSoundEffect>();
+	//‡A‰¹“Ç‚İ‚İ
+	se->Load(seName);
+	//‡BÀ‘Ì‰»
+	//seInst = se->CreateInstance(false);
+
+	//return seInst;
+
+	return se->CreateInstance(false);
+
+	//‡@—ÌˆæŠm•Û
+//	se = std::make_shared<KdSoundEffect>();
+	//‡A‰¹“Ç‚İ‚İ
+//	se->Load("Sound/hit.WAV");
+	//‡BÀ‘Ì‰»
+//	seInst = se->CreateInstance(false);
 }
 
