@@ -97,9 +97,12 @@ void Scene::Release()
 	m_lframeTex.Release();
 	m_HPTex.Release();
 	m_HPbarTex.Release();
+	m_HideTex.Release();
+	m_HidebarTex.Release();
 	m_katanaTex.Release();
 	m_shurikenTex.Release();
 	m_iconBombTex.Release();
+	m_iconMinoTex.Release();
 	m_stackBombTex.Release();
 	m_stackKeyTex.Release();
 
@@ -188,9 +191,12 @@ void Scene::Reset()
 	m_lframeTex.Load("Texture/UI/frameL.png");
 	m_HPTex.Load("Texture/UI/HP.png");
 	m_HPbarTex.Load("Texture/UI/HPbar.png");
+	m_HideTex.Load("Texture/UI/Hide.png");
+	m_HidebarTex.Load("Texture/UI/Hidebar.png");
 	m_katanaTex.Load("Texture/UI/Katana.png");
 	m_shurikenTex.Load("Texture/UI/Shuriken.png");
 	m_iconBombTex.Load("Texture/UI/Bomb.png");
+	m_iconMinoTex.Load("Texture/UI/Hidemino.png");
 	m_stackBombTex.Load("Texture/UI/bomb_icon.png");
 	m_stackKeyTex.Load("Texture/UI/key.png");
 
@@ -252,9 +258,12 @@ void Scene::Reset()
 	m_ui.SetlframeTexture(&m_lframeTex);
 	m_ui.SetHPTexture(&m_HPTex);
 	m_ui.SetHPBarTexture(&m_HPbarTex);
+	m_ui.SetHideTexture(&m_HideTex);
+	m_ui.SetHideBarTexture(&m_HidebarTex);
 	m_ui.SetIconKatanaTexture(&m_katanaTex);
 	m_ui.SetIconShurikenTexture(&m_shurikenTex);
 	m_ui.SetIconBombTexture(&m_iconBombTex);
+	m_ui.SetIconMinoTexture(&m_iconMinoTex);
 	m_ui.SetStackBombTexture(&m_stackBombTex);
 	m_ui.SetStackKeyTexture(&m_stackKeyTex);
 	m_ui.SetOwner(this);

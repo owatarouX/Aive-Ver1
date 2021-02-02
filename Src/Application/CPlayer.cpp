@@ -396,12 +396,14 @@ void CPlayer::KeyOperation()
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		Attack(m_bLClick, m_LClick);
+		m_bLClick = true;
 	}
 	else m_bLClick = false;
 	//‰EƒNƒŠƒbƒNUŒ‚
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 	{
 		Attack(m_bRClick, m_RClick);
+		m_bRClick = true;
 	}
 	else m_bRClick = false;
 
@@ -1400,7 +1402,6 @@ void CPlayer::Attack(bool flg, eClick click)
 		SetHidden();
 		break;
 	}
-	flg = true;
 }
 
 //UŒ‚Fè— Œ•
@@ -1408,6 +1409,8 @@ void CPlayer::SetShuriken()
 {
 	if (m_shurikenCnt < COOL_TIME::PLAYER_SHURIKEN) return;
 	
+	m_hiddenList.bSetHidden();	// UŒ‚‰B‚êg‰ğœ
+
 	for (int i = 0; i < BULLET_MAX; i++)
 	{
 		if (!m_bulletList[i].IsAlive())
@@ -1425,6 +1428,8 @@ void CPlayer::SetSword()
 {
 	if (m_slashCnt < COOL_TIME::PLAYER_SLASH) return;	// aŒ‚ƒJƒEƒ“ƒg§ŒÀ
 	
+	m_hiddenList.bSetHidden();	// UŒ‚‰B‚êg‰ğœ
+
 	CMap* map = m_pOwner->GetMap();
 	Math::Vector2 ScrollPos = map->GetscrollPos();
 
@@ -1441,6 +1446,8 @@ void CPlayer::SetSword()
 void CPlayer::SetBomb()
 {
 	if (m_BombPossession <= 0) return;
+
+	m_hiddenList.bSetHidden();	// UŒ‚‰B‚êg‰ğœ
 
 	if (!m_bombList.IsAlive())
 	{

@@ -47,6 +47,7 @@ void CArcher::Update()
 	if (m_hp <= 0)
 	{
 		m_bAlive = false;
+		m_shotCnt = 0;
 		return;
 	}
 
