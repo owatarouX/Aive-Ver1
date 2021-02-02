@@ -150,12 +150,14 @@ void CPlayer::ReInit(int mapData)
 }
 
 //更新
-void CPlayer::Updata()
+void CPlayer::Updata(POINT aMousePos)
 {
 	//生存時のみ処理
 	if (!m_bAlive) return;
 	CMap* map = m_pOwner->GetMap();		//マップクラス取得
 	Math::Vector2 ScrollPos = map->GetscrollPos();		//スクロール量取得
+	
+	m_ClickPoint = aMousePos;	// マウス座標取得
 
 	// プレイヤー更新
 	UpDatePlayer(ScrollPos);
@@ -414,12 +416,14 @@ void CPlayer::KeyOperation()
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		Attack(m_bLClick, m_LClick);
+		m_bLClick = true;
 	}
 	else m_bLClick = false;
 	//右クリック攻撃
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 	{
 		Attack(m_bRClick, m_RClick);
+		m_bRClick = true;
 	}
 	else m_bRClick = false;
 
@@ -1418,7 +1422,6 @@ void CPlayer::Attack(bool flg, eClick click)
 		SetHidden();
 		break;
 	}
-	flg = true;
 }
 
 //攻撃：手裏剣
@@ -1426,16 +1429,23 @@ void CPlayer::SetShuriken()
 {
 	if (m_shurikenCnt < COOL_TIME::PLAYER_SHURIKEN) return;
 	
+	m_hiddenList.bSetHidden();	// 攻撃時隠れ身解除
+	CMap* map = m_pOwner->GetMap();		//マップクラス取得
+	Math::Vector2 ScrollPos = map->GetscrollPos();		//スクロール量取得
+	// 弾発射
 	for (int i = 0; i < BULLET_MAX; i++)
 	{
 		if (!m_bulletList[i].IsAlive())
 		{
-			m_bulletList[i].Shot(m_pos , m_direction);
+			// 発射角度を求める
+			float deg = Utility::GetAngleDeg(m_pos, { (float)m_ClickPoint.x, (float)m_ClickPoint.y });
+			// 発射
+			m_bulletList[i].Shot(m_pos, deg);
 			m_shurikenCnt = 0;
+			shurikenseInst->Play();
 			break;
 		}
 	}
-	shurikenseInst->Play();
 }
 
 //攻撃：刀
@@ -1446,13 +1456,18 @@ void CPlayer::SetSword()
 	CMap* map = m_pOwner->GetMap();
 	Math::Vector2 ScrollPos = map->GetscrollPos();
 
+	m_hiddenList.bSetHidden();	// 攻撃時隠れ身解除
+	
+	// 斬撃発動
 	if (!m_swordList.bGetSlash())
 	{
-		m_swordList.Slash(m_pos - ScrollPos, m_direction);
+		// 発射角度を求める
+		float deg = Utility::GetAngleDeg(m_pos, { (float)m_ClickPoint.x, (float)m_ClickPoint.y });
+		// 斬撃発生
+		m_swordList.Slash(m_pos, deg);
 		m_slashCnt = 0;
-		
+		katanaseInst->Play();
 	}
-	katanaseInst->Play();
 }
 
 //攻撃：爆弾
@@ -1460,6 +1475,9 @@ void CPlayer::SetBomb()
 {
 	if (m_BombPossession <= 0) return;
 
+	m_hiddenList.bSetHidden();	// 攻撃時隠れ身解除
+
+	// 爆弾発動
 	if (!m_bombList.IsAlive())
 	{
 		m_bombList.InstBomb(m_pos);

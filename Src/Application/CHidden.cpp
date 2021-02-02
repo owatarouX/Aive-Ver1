@@ -51,4 +51,5 @@ void CHidden::Hidden()
 {
 	// ƒtƒ‰ƒOó‘ÔØ‚è‘Ö‚¦
 	if(!m_bHidden) m_bHidden = true;
+	else m_bHidden = false;
 }
