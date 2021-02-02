@@ -5,15 +5,16 @@
 //コンストラクタ
 CPlayer::CPlayer()
 	:m_pTexture(nullptr)
-	,m_pos(0.0f,0.0f)
-	,m_moveVal(0.0f,0.0f)
-	,m_mat()
-	,m_transMat()
-	,m_scaleMat()
-	,m_size(1.0f,1.0f)
-	,m_bAlive(true)
-	,m_hp(HP::PLAYER)
-	,m_hpCount()
+	, m_pos(0.0f, 0.0f)
+	, m_moveVal(0.0f, 0.0f)
+	, m_mat()
+	, m_transMat()
+	, m_scaleMat()
+	, m_size(1.0f, 1.0f)
+	, m_bAlive(true)
+	, m_hp(HP::PLAYER)
+	, m_bHeal(false)
+	, m_hpCount()
 	, m_alpha(1.0f)
 	, m_HitFlg(false)
 	, m_slashCnt(COOL_TIME::PLAYER_SLASH)
@@ -26,6 +27,7 @@ CPlayer::CPlayer()
 	, m_aflame(5)
 	, m_BombPossession(0)
 	, m_KeyPossession(0)
+	, m_bMinoPossession(false)
 {
 }
 
@@ -86,6 +88,10 @@ void CPlayer::Init()
 	//爆弾の初期化
 	m_bombList.Init();
 	m_BombPossession = 0;
+
+	//隠れ身初期化
+	m_hiddenList.Init();
+	m_bMinoPossession = false;
 
 	//鍵初期化
 	m_KeyPossession = 0;
@@ -148,152 +154,11 @@ void CPlayer::Updata()
 {
 	//生存時のみ処理
 	if (!m_bAlive) return;
-	//マップクラス取得
-	CMap* map = m_pOwner->GetMap();
-	//スクロール量取得
-	Math::Vector2 ScrollPos = map->GetscrollPos();
+	CMap* map = m_pOwner->GetMap();		//マップクラス取得
+	Math::Vector2 ScrollPos = map->GetscrollPos();		//スクロール量取得
 
-	m_moveVal = { 0,0 };
-
-	/* キー入力 */
-
-	//移動
-	if (GetAsyncKeyState('W') & 0x8000)
-	{
-		m_moveVal.y += SPEED::PLAYER;
-		m_direction = Up;
-	}
-	if (GetAsyncKeyState('S') & 0x8000)
-	{
-		m_moveVal.y -= SPEED::PLAYER;
-		m_direction = Down;
-	}
-	if (GetAsyncKeyState('A') & 0x8000)
-	{
-		m_moveVal.x -= SPEED::PLAYER;
-		m_direction = Left;
-	}
-	if (GetAsyncKeyState('D') & 0x8000)
-	{
-		m_moveVal.x += SPEED::PLAYER;
-		m_direction = Right;
-	}
-
-	//サイズ変更(画像反転用)
-	switch (m_direction) {
-	case 2:
-		m_size = { -1.0f, 1.0f };
-		break;
-	case 3:
-		m_size = { 1.0f, 1.0f };
-		break;
-	}
-
-	//左クリック攻撃
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-	{
-		if (!m_bLClick)
-		{
-			switch (m_LClick)
-			{
-			case eSword:	//刀
-				SetSword();
-				break;
-			case eShuriken:	//手裏剣
-				SetShuriken();
-				break;
-			case eBomb:		//爆弾
-				SetBomb();
-				break;
-			}
-			m_bLClick = true;
-		}
-	}
-	else m_bLClick = false;
-
-	//右クリック攻撃
-	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
-	{
-		if (!m_bRClick)
-		{
-			switch (m_RClick)
-			{
-			case eSword:
-				SetSword();
-				break;
-			case eShuriken:
-				SetShuriken();
-				break;
-			case eBomb:
-				SetBomb();
-				break;
-			}
-			m_bRClick = true;
-		}
-	}
-	else m_bRClick = false;
-
-
-	//武器変更
-	//左クリック武器
-	if (GetAsyncKeyState('Q') & 0x8000)
-	{
-		if (!m_bLChange)
-		{
-			m_LClick = ChangeItem(m_LClick);
-			if(m_LClick==m_RClick)m_LClick = ChangeItem(m_LClick);
-			m_bLChange = true;
-		}
-	}
-	else m_bLChange = false;
-
-	//右クリック武器
-	if (GetAsyncKeyState('E') & 0x8000)
-	{
-		if (!m_bRChange)
-		{
-			m_RClick = ChangeItem(m_RClick);
-			if (m_RClick == m_LClick)m_RClick = ChangeItem(m_RClick);
-			m_bRChange = true;
-		}
-	}
-	else m_bRChange = false;
-
-	m_slashCnt++;
-	m_shurikenCnt++;
-
-	/* 当たり判定 */
-	//マップ
-	HitCheckMap();
-
-	//敵
-	HitCheckEnemy();
-	
-	//爆弾
-	HitCheckBomb();
-
-	//アイテム
-	HitCheckItem();
-
-	//爆弾個数制限
-	if (m_BombPossession > BOMB_MAX) m_BombPossession = BOMB_MAX;
-
-	//無敵時間
-	InviTime();
-
-	//HP0でフラグ下げ
-	if (m_hp <= 0) m_bAlive = !m_bAlive;
-	//HP上限を設ける
-	if (m_hp >= HP::PLAYER)m_hp = HP::PLAYER;
-	
-	//座標確定
-	m_pos.x += m_moveVal.x;
-	m_pos.y += m_moveVal.y;
-	
-	//行列作成
-	m_transMat = DirectX::XMMatrixTranslation(m_pos.x - ScrollPos.x, m_pos.y - ScrollPos.y, 0.0f);
-	m_scaleMat = DirectX::XMMatrixScaling(m_size.x, m_size.y, 0.0f);
-	m_mat = m_scaleMat * m_transMat;
+	// プレイヤー更新
+	UpDatePlayer(ScrollPos);
 	
 	//弾の更新
 	for (int i = 0; i < BULLET_MAX; i++)
@@ -310,11 +175,68 @@ void CPlayer::Updata()
 	m_bombList.SetScrollPos(ScrollPos);
 	m_bombList.Updata();
 
+	//隠れ身の更新
+	m_hiddenList.Updata();
+}
+
+// プレイヤー更新処理
+void CPlayer::UpDatePlayer(Math::Vector2 ScrollPos)
+{
+	// キー操作一覧
+	KeyOperation();
+
+	//サイズ変更(画像反転用)
+	switch (m_direction) {
+	case 2:
+		m_size = { -1.0f, 1.0f };
+		break;
+	case 3:
+		m_size = { 1.0f, 1.0f };
+		break;
+	}
+
+	//クールタイム増加
+	// 斬撃カウント
+	m_slashCnt++;
+	if (m_slashCnt >= COOL_TIME::PLAYER_SLASH)m_slashCnt = COOL_TIME::PLAYER_SLASH;
+	// 手裏剣カウント
+	m_shurikenCnt++;
+	if (m_shurikenCnt >= COOL_TIME::PLAYER_SHURIKEN)m_shurikenCnt = COOL_TIME::PLAYER_SHURIKEN;
+	
+	/* 当たり判定 */
+	//マップ
+	HitCheckMap();
+	//敵
+	HitCheckEnemy();
+	//爆弾
+	HitCheckBomb();
+	//アイテム
+	HitCheckItem();
+	
+	//無敵時間
+	InviTime();
+
+	//HP0でフラグ下げ
+	if (m_hp <= 0) m_bAlive = !m_bAlive;
+	//HP上限を設ける
+	if (m_hp >= HP::PLAYER)m_hp = HP::PLAYER;
+
 	//アニメーション
 	const int CNT_MAX = m_aTimer * m_aflame;
 	if (m_aCnt >= CNT_MAX + m_aTimer - 1)
 		m_aCnt = 0;
 	m_aCnt++;
+
+	//座標確定
+	m_pos.x += m_moveVal.x;
+	m_pos.y += m_moveVal.y;
+
+	m_moveVal = { 0,0 };
+	
+	//行列作成
+	m_transMat = DirectX::XMMatrixTranslation(m_pos.x - ScrollPos.x, m_pos.y - ScrollPos.y, 0.0f);
+	m_scaleMat = DirectX::XMMatrixScaling(m_size.x, m_size.y, 0.0f);
+	m_mat = m_scaleMat * m_transMat;
 }
 
 //描画
@@ -340,12 +262,6 @@ void CPlayer::Draw()
 	Math::Color color = { 1,1,1, m_alpha }; // 色（RGBAの順番で　0.0～1.0）
 	SHADER.m_spriteShader.DrawTex(m_pTexture, 0, 0, 160, 64, &scrRect, &color, Math::Vector2(0.5f, 0.5f));
 
-}
-
-//フラグ状態取得
-const bool CPlayer::IsAlive()
-{
-	return m_bAlive;
 }
 
 //テクスチャ設定:自機
@@ -468,6 +384,70 @@ const int CPlayer::GetL()
 	return a;
 }
 
+// キー操作一覧
+void CPlayer::KeyOperation()
+{
+	/* 移動 */
+	if (GetAsyncKeyState('W') & 0x8000)
+	{
+		m_moveVal.y += SPEED::PLAYER;
+		m_direction = Up;
+	}
+	if (GetAsyncKeyState('S') & 0x8000)
+	{
+		m_moveVal.y -= SPEED::PLAYER;
+		m_direction = Down;
+	}
+	if (GetAsyncKeyState('A') & 0x8000)
+	{
+		m_moveVal.x -= SPEED::PLAYER;
+		m_direction = Left;
+	}
+	if (GetAsyncKeyState('D') & 0x8000)
+	{
+		m_moveVal.x += SPEED::PLAYER;
+		m_direction = Right;
+	}
+
+	/* 攻撃 */
+	//左クリック攻撃
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	{
+		Attack(m_bLClick, m_LClick);
+	}
+	else m_bLClick = false;
+	//右クリック攻撃
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+	{
+		Attack(m_bRClick, m_RClick);
+	}
+	else m_bRClick = false;
+
+	/* 武器チェンジ */
+	//左クリック武器
+	if (GetAsyncKeyState('Q') & 0x8000)
+	{
+		if (!m_bLChange)
+		{
+			m_LClick = ChangeItem(m_LClick);
+			if (m_LClick == m_RClick)m_LClick = ChangeItem(m_LClick);
+			m_bLChange = true;
+		}
+	}
+	else m_bLChange = false;
+	//右クリック武器
+	if (GetAsyncKeyState('E') & 0x8000)
+	{
+		if (!m_bRChange)
+		{
+			m_RClick = ChangeItem(m_RClick);
+			if (m_RClick == m_LClick)m_RClick = ChangeItem(m_RClick);
+			m_bRChange = true;
+		}
+	}
+	else m_bRChange = false;
+}
+
 //マップとの当たり判定
 void CPlayer::HitCheckMap()
 {
@@ -492,17 +472,27 @@ void CPlayer::HitCheckMap()
 			const float MAP_RIGHT = chipX[h][w] + Infor::RADIUS_32;		//右辺
 			const float MAP_TOP = chipY[h][w] + Infor::RADIUS_32;		//上辺
 			const float MAP_BOTTOM = chipY[h][w] - Infor::RADIUS_32;	//下辺
+
 			if (chipData[h][w] >= 78 && chipData[h][w] <= 79)	//データ：ギミック
 			{
 				if (mapData == OneFloor)
+				{
+					if (!Utility::bHitCheck(m_pos, m_moveVal, { chipX[h][w],chipY[h][w] },
+						PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
+						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
+					{
+						if (enemy->bGetEvent())map->SetLock();	// カギ閉め
+						enemy->Event();		// イベント発生
+					}
+				}
+				else if (mapData == BossFloor)
 				{
 					// イベント発生処理
 					if (!Utility::bHitCheck(m_pos, m_moveVal, { chipX[h][w],chipY[h][w] },
 						PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 					{
-						if (enemy->bGetEvent())map->SetLock();
-						enemy->Event();
+						if (enemy->bGetEvent())map->SetLock();	// カギ閉め
 					}
 				}
 			}
@@ -532,13 +522,15 @@ void CPlayer::HitCheckMap()
 					break;
 				}
 			}
-			else if (chipData[h][w] >= 90)	//データ：扉
+			else if (chipData[h][w] >= 90)	//データ：回復ポイント
 			{
+				if (m_bHeal) return;
 				if (!Utility::bHitCheck(m_pos, m_moveVal, { chipX[h][w],chipY[h][w] },
 					PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 					Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 				{
 					SetHeal(HP::PLAYER);
+					m_bHeal = true;
 				}
 			}
 			else if (chipData[h][w] == 80)	//データ：ギミック
@@ -810,13 +802,14 @@ void CPlayer::HitCheckEnemy()
 		{
 			if (!samuraiList[e].bGetSlashHit())	// 多段ヒット防止フラグ
 			{
-				bool slash_hit = true;
-				slash_hit = Utility::bHitCheck(m_swordList.GetPos(), m_swordList.GetMove(), enePos,
-					SLASH_SIZE::LEFT,SLASH_SIZE::RIGHT,SLASH_SIZE::TOP,SLASH_SIZE::DOWN,
-					SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN);
+				// 敵と斬撃の距離
+				const float checkDist = Utility::GetDistance(enePos, m_swordList.GetPos());
 
-				//ヒット時
-				if (!slash_hit)
+				// ヒット判定の距離
+				const float hitDist = SLASH_SIZE::LEFT+SAMURAI_SIZE::LEFT;
+
+				// ヒット判定よりも距離が近いとき
+				if (checkDist <= hitDist)
 				{
 					samuraiList[e].SetDamage(POWER::PLAYER_SLASH);	//敵にダメージ
 					samuraiList[e].bSetSlashHit(true);	// 多段ヒット防止
@@ -950,16 +943,17 @@ void CPlayer::HitCheckEnemy()
 		{
 			if (!archerList[i].bGetSlashHit())	// 多段ヒット防止
 			{
-				bool slash_hit = true;
-				slash_hit = Utility::bHitCheck(m_swordList.GetPos(), m_swordList.GetMove(), enePos,
-					SLASH_SIZE::LEFT, SLASH_SIZE::RIGHT, SLASH_SIZE::TOP, SLASH_SIZE::DOWN,
-					ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN);
+				// 敵と斬撃の距離
+				const float checkDist = Utility::GetDistance(enePos, m_swordList.GetPos());
 
-				//ヒット時
-				if (!slash_hit)
+				// ヒット判定の距離
+				const float hitDist = SLASH_SIZE::LEFT + ARCHER_SIZE::LEFT;
+
+				// ヒット判定よりも距離が近いとき
+				if (checkDist <= hitDist)
 				{
-					archerList[i].SetDamage(POWER::PLAYER_SLASH);		//敵にダメージ
-					archerList[i].bSetSlashHit(true);
+					archerList[i].SetDamage(POWER::PLAYER_SLASH);	//敵にダメージ
+					archerList[i].bSetSlashHit(true);	// 多段ヒット防止
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
@@ -1106,16 +1100,17 @@ void CPlayer::HitCheckEnemy()
 		{
 			if (!giantList[i].bGetSlashHit())	// 多段ヒット防止
 			{
-				bool slash_hit = true;
-				slash_hit = Utility::bHitCheck(m_swordList.GetPos(), m_swordList.GetMove(), enePos,
-					SLASH_SIZE::LEFT, SLASH_SIZE::RIGHT, SLASH_SIZE::TOP, SLASH_SIZE::DOWN,
-					GIANT_SIZE::LEFT, GIANT_SIZE::RIGHT, GIANT_SIZE::TOP, GIANT_SIZE::DOWN);
+				// 敵と斬撃の距離
+				const float checkDist = Utility::GetDistance(enePos, m_swordList.GetPos());
 
-				//ヒット時
-				if (!slash_hit)
+				// ヒット判定の距離
+				const float hitDist = SLASH_SIZE::LEFT + GIANT_SIZE::LEFT;
+
+				// ヒット判定よりも距離が近いとき
+				if (checkDist <= hitDist)
 				{
-					giantList[i].SetDamage(POWER::PLAYER_SLASH);		//敵にダメージ
-					giantList[i].bSetSlashHit(true);
+					giantList[i].SetDamage(POWER::PLAYER_SLASH);	//敵にダメージ
+					giantList[i].bSetSlashHit(true);	// 多段ヒット防止
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
@@ -1142,7 +1137,7 @@ void CPlayer::HitCheckEnemy()
 				if (!blast_hit)
 				{
 					giantList[i].SetDamage(POWER::PLAYER_BLAST);	//敵にダメージ
-					giantList[i].bSetSlashHit(true);
+					giantList[i].bSetBlastHit(true);
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
@@ -1201,13 +1196,14 @@ void CPlayer::HitCheckEnemy()
 	{
 		if (!bossList->bGetSlashHit())	// 多段ヒット防止フラグ
 		{
-			bool slash_hit = true;
-			slash_hit = Utility::bHitCheck(m_swordList.GetPos(), m_swordList.GetMove(), bossList->GetPos(),
-				SLASH_SIZE::LEFT, SLASH_SIZE::RIGHT, SLASH_SIZE::TOP, SLASH_SIZE::DOWN,
-				BOSS_SIZE::LEFT, BOSS_SIZE::RIGHT, BOSS_SIZE::TOP, BOSS_SIZE::DOWN);
+			// 敵と斬撃の距離
+			const float checkDist = Utility::GetDistance(enePos, m_swordList.GetPos());
 
-			//ヒット時
-			if (!slash_hit)
+			// ヒット判定の距離
+			const float hitDist = SLASH_SIZE::LEFT + BOSS_SIZE::LEFT;
+
+			// ヒット判定よりも距離が近いとき
+			if (checkDist <= hitDist)
 			{
 				bossList->SetDamage(POWER::PLAYER_SLASH);	//敵にダメージ
 				bossList->bSetSlashHit(true);	// 多段ヒット防止
@@ -1271,7 +1267,7 @@ void CPlayer::HitCheckBomb()
 		//ヒット時
 		if (!blast_hit)
 		{
-			SetDamage(10);
+			SetDamage(POWER::PLAYER_BLAST);
 			m_HitFlg = true;
 		}
 	}
@@ -1292,13 +1288,11 @@ void CPlayer::HitCheckItem()
 		if (m_BombPossession >= BOMB_MAX) break;
 
 		if (!ItemBomb[i].GetAlive())continue;
-		bool bomb_hit = true;
-		bomb_hit = Utility::bHitCheck(m_pos, m_moveVal, ItemBomb[i].GetPos(),
-			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
-			56, 40, 24, 24);
-
+		
 		//ヒット時
-		if (!bomb_hit)
+		if (!Utility::bHitCheck(m_pos, m_moveVal, ItemBomb[i].GetPos(),
+			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
+			56, 40, 24, 24))
 		{
 			ItemBomb[i].bSetbombHit();	//拾った判定入手
 			ItemBomb[i].SetAlive();		//爆弾のフラグ下げ
@@ -1313,13 +1307,11 @@ void CPlayer::HitCheckItem()
 	for (int i = 0; i < KEY_SETMAX; i++)
 	{
 		if (!ItemKey[i].GetAlive()) continue;
-		bool key_hit = true;
-		key_hit = Utility::bHitCheck(m_pos, m_moveVal, ItemKey[i].GetPos(),
-			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
-			16,16,16,16);
 
 		//ヒット時
-		if (!key_hit)
+		if (!Utility::bHitCheck(m_pos, m_moveVal, ItemKey[i].GetPos(),
+			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
+			16, 16, 16, 16))
 		{
 			ItemKey[i].SetAlive();		//鍵のフラグ下げ
 			m_KeyPossession++;		//鍵入手
@@ -1334,18 +1326,29 @@ void CPlayer::HitCheckItem()
 	{
 		if (!ItemHealth[i].GetAlive())continue;
 		
-		bool health_hit = true;
-		health_hit = Utility::bHitCheck(m_pos, m_moveVal, ItemHealth[i].GetPos(),
-			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
-			16, 16, 16, 16);
 		//ヒット時
-		if (!health_hit)
+		if (!Utility::bHitCheck(m_pos, m_moveVal, ItemHealth[i].GetPos(),
+			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
+			16, 16, 16, 16))
 		{
 			ItemHealth[i].SetAlive();		// 回復のフラグ下げ
 			SetHeal(10);		// 回復
 		}
 	}
-
+	////////////////////////////////////////////////////////////////
+	//		アイテム：隠れ蓑								
+	////////////////////////////////////////////////////////////////
+	//隠れ蓑リスト取得
+	CItem_Mino* ItemMino = item->GetMinoItem();
+	if (!ItemMino->GetAlive())return;
+	//ヒット時
+	if (!Utility::bHitCheck(m_pos, m_moveVal, ItemMino->GetPos(),
+		PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
+		32,32,32,32))
+	{
+		ItemMino->SetAlive();	// フラグ下げ
+		m_bMinoPossession = true;		// 隠れ蓑入手
+	}
 }
 
 //無敵時間
@@ -1353,6 +1356,8 @@ void CPlayer::InviTime()
 {
 	if (m_HitFlg)	//プレイヤーが当たったら
 	{
+		m_hiddenList.bSetHidden();		// 隠れ身解除
+
 		const int CNT_MAX = 120;	//無敵時間
 		if (m_hpCount >= CNT_MAX)
 		{
@@ -1370,6 +1375,11 @@ void CPlayer::InviTime()
 			else m_alpha = 0.5;
 		}
 	}
+	else
+	{
+		m_hpCount = 0;
+		if (!m_hiddenList.bGetHidden()) m_alpha = 1.0f;
+	}
 }
 
 //武器切り替え関数
@@ -1382,21 +1392,40 @@ eClick CPlayer::ChangeItem(eClick click)
 	case eSword:
 		return eBomb;
 	case eBomb:
+		if (m_bMinoPossession) return eHidden;	// 隠れ蓑所持時使用可能
+		else return eShuriken;
+	case eHidden:
 		return eShuriken;
-	default:
-		break;
 	}
 }
 
+// 攻撃関数
+void CPlayer::Attack(bool flg, eClick click)
+{
+	if (flg) return;
+	switch (click)
+	{
+	case eSword:	//刀
+		SetSword();
+		break;
+	case eShuriken:	//手裏剣
+		SetShuriken();
+		break;
+	case eBomb:		//爆弾
+		SetBomb();
+		break;
+	case eHidden:	//隠れ身
+		SetHidden();
+		break;
+	}
+	flg = true;
+}
 
 //攻撃：手裏剣
 void CPlayer::SetShuriken()
 {
-	CMap* map = m_pOwner->GetMap();
-	Math::Vector2 ScrollPos = map->GetscrollPos();
-
-	if (m_shurikenCnt <= COOL_TIME::PLAYER_SHURIKEN) return;
-
+	if (m_shurikenCnt < COOL_TIME::PLAYER_SHURIKEN) return;
+	
 	for (int i = 0; i < BULLET_MAX; i++)
 	{
 		if (!m_bulletList[i].IsAlive())
@@ -1412,7 +1441,7 @@ void CPlayer::SetShuriken()
 //攻撃：刀
 void CPlayer::SetSword()
 {
-	if (m_slashCnt <= COOL_TIME::PLAYER_SLASH) return;	// 斬撃カウント制限
+	if (m_slashCnt < COOL_TIME::PLAYER_SLASH) return;	// 斬撃カウント制限
 	
 	CMap* map = m_pOwner->GetMap();
 	Math::Vector2 ScrollPos = map->GetscrollPos();
@@ -1431,9 +1460,6 @@ void CPlayer::SetBomb()
 {
 	if (m_BombPossession <= 0) return;
 
-	CMap* map = m_pOwner->GetMap();
-	Math::Vector2 ScrollPos = map->GetscrollPos();
-
 	if (!m_bombList.IsAlive())
 	{
 		m_bombList.InstBomb(m_pos);
@@ -1442,6 +1468,18 @@ void CPlayer::SetBomb()
 	}
 }
 
+//隠れ身
+void CPlayer::SetHidden()
+{
+	m_hiddenList.Hidden();	// 隠れ身
+	if (m_hiddenList.bGetHidden())
+	{
+		m_alpha = 0.2f;
+		m_HitFlg = false;
+	}
+}
+
+// アニメーション
 int CPlayer::Animation(int cnt, const int xtex)
 {
 	return cnt / m_aTimer * 116 + 38 + xtex;

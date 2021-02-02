@@ -69,16 +69,18 @@ void CGiant::Update(int mapData)
 	// プレイヤーとの角度を求める 
 	m_deg = Utility::GetAngleDeg(m_pos, m_playerPos);
 
+	// 一定の距離に近づいたら
+	if (m_dist < 400 ) m_VisibilityFlg = true;		// 視野フラグ上げ
+	// 一定の距離に離れたら
+	if (m_dist > 500)	m_VisibilityFlg = false;	// 視野フラグ下げ
+
+	// プレイヤーが隠れ蓑使用時、視野フラグ下げる
+	if (m_bHidden)m_VisibilityFlg = false;
+
 	// 視界内の時
 	if (m_VisibilityFlg) Attack();	//攻撃態勢
 	// 視野外
 	else Walk();	//散歩
-
-	// 一定の距離に近づいたら
-	if (m_dist < 400 /*&& m_dist > 80*/) m_VisibilityFlg = true;		// 視野フラグ上げ
-	
-	// 一定の距離に離れたら
-	if (m_dist > 500)	m_VisibilityFlg = false;	// 視野フラグ下げ
 
 	// 座標確定
 	m_pos.x += m_moveVal.x;
@@ -178,6 +180,12 @@ void CGiant::SetScrollPos(Math::Vector2 scrPos)
 void CGiant::SetPlayerPos(Math::Vector2 pos)
 {
 	m_playerPos = pos;
+}
+
+// 隠れ身状態取得
+void CGiant::bSetHidden(bool flg)
+{
+	m_bHidden = flg;
 }
 
 // 攻撃関数

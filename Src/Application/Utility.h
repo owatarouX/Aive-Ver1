@@ -72,15 +72,15 @@ namespace SPEED
 namespace COOL_TIME
 {
 	// プレイヤー
-	const int PLAYER_SLASH = 50;
-	const int PLAYER_SHURIKEN = 20;
-	
+	const int PLAYER_SLASH = 50;		// 斬撃
+	const int PLAYER_SHURIKEN = 20;		// 手裏剣
+
 	// 侍
 	const int SAMURAI_SLASH = 120;
 	// 弓兵
 	const int ARCHER_ARROW = 80;
 	// 大男
-	const int GIANT_ATK = rand()%10+80;
+	const int GIANT_ATK = 80;
 	// ボス
 	const int BOSS_SLASH = 80;
 	const int BOSS_ARROW = 120;

@@ -65,11 +65,13 @@ void CArcher::Update()
 	if (m_dist > 500)
 		m_VisibilityFlg = false;	// 視野フラグ下げ
 
+	// プレイヤーが隠れ蓑使用時、視野フラグ下げる
+	if (m_bHidden)m_VisibilityFlg = false;
+
 	if (m_VisibilityFlg)
 	{
-
 		// プレイヤーが近づいて来た時
-		if (m_dist < 200/* && m_dist > 300*/)
+		if (m_dist < 200)
 		{
 			// プレイヤーから逃げる
 			float spd = SPEED::ARCHER;
@@ -187,5 +189,10 @@ void CArcher::SetScrollPos(Math::Vector2 scrPos)
 void CArcher::SetPlayerPos(Math::Vector2 pos)
 {
 	m_playerPos = pos;
+}
+
+void CArcher::bSetHidden(bool flg)
+{
+	m_bHidden = flg;
 }
 

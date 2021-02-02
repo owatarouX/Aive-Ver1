@@ -33,7 +33,7 @@ void CEnemySword::Init()
 }
 
 //更新処理
-void CEnemySword::Updata(Math::Vector2 playerPos)
+void CEnemySword::Updata()
 {
 	if (!m_bSlash)return;	// フラグがたっていなければreturn
 

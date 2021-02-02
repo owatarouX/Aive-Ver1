@@ -19,7 +19,6 @@ void CEnemy::Init()
 {
 	CMap* pMap = m_pOwner->GetMap();
 	int mapData = pMap->GetMapData();	//マップデータ取得
-	int b = 0;
 	// 初期化：侍
 	for (int i = 0; i < SAMURAI_MAX; i++)
 	{
@@ -54,27 +53,28 @@ void CEnemy::Update()
 {
 	CPlayer* pPlayer = m_pOwner->GetPlayer();		// プレイヤークラスの取得
 	Math::Vector2 playerPos = pPlayer->GetPos();	// プレイヤー座標取得
+	bool bHidden = pPlayer->bGetHidden();			// 隠れ身状態取得
 
 	CMap* pMap = m_pOwner->GetMap();
 	Math::Vector2 scrPos = pMap->GetscrollPos();	//スクロール量取得
 
 	// 更新：侍
-	Update_Samurai(playerPos,scrPos);
+	Update_Samurai(playerPos,scrPos, bHidden);
 	
 	// 更新：弓兵
-	Update_Archer(playerPos, scrPos);
+	Update_Archer(playerPos, scrPos, bHidden);
 
 	// 更新：大男
-	Update_Giant(playerPos, scrPos);
+	Update_Giant(playerPos, scrPos, bHidden);
 
 	// 更新：ボス
-	Update_Boss(playerPos, scrPos);
+	Update_Boss(playerPos, scrPos, bHidden);
 
 	// 更新：矢
 	Update_Arrow(scrPos);
 
 	// 敵の斬撃処理
-	Update_Sword(playerPos, scrPos);
+	Update_Sword(scrPos);
 
 	// マップとの当たり判定
 	HitCheckMap();
@@ -94,14 +94,17 @@ void CEnemy::Update()
 }
 
 // 更新：侍
-void CEnemy::Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos)
+void CEnemy::Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
+	CPlayer* pPlayer = m_pOwner->GetPlayer();		// プレイヤークラスの取得
+
 	CItem* item = m_pOwner->GetItem();
 
 	for (int i = 0; i < SAMURAI_MAX; i++)
 	{
 		m_samuraiList[i].SetPlayerPos(playerPos);
 		m_samuraiList[i].SetScrollPos(scrPos);
+		m_samuraiList[i].bSetHidden(hide);
 		m_samuraiList[i].Update();
 		
 		// 回復アイテムドロップ処理
@@ -110,8 +113,6 @@ void CEnemy::Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos)
 		// 斬撃攻撃処理
 		if (m_samuraiList[i].bGetSlash())
 		{
-			//MessageBox(NULL, L"HIT", L"hit", MB_OK);
-
 			// 敵斬撃クラスメモリ新規
 			CEnemySword* sword = new CEnemySword;
 
@@ -128,12 +129,15 @@ void CEnemy::Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos)
 }
 
 // 更新：弓兵
-void CEnemy::Update_Archer(Math::Vector2 playerPos, Math::Vector2 scrPos)
+void CEnemy::Update_Archer(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
+	CPlayer* pPlayer = m_pOwner->GetPlayer();		// プレイヤークラスの取得
+
 	for (int i = 0; i < ARCHER_MAX; i++)
 	{
 		m_archerList[i].SetPlayerPos(playerPos);
 		m_archerList[i].SetScrollPos(scrPos);
+		m_archerList[i].bSetHidden(hide);
 		m_archerList[i].Update();
 
 		// 視野フラグtrue時＆発射カウント0以下の時
@@ -156,8 +160,10 @@ void CEnemy::Update_Archer(Math::Vector2 playerPos, Math::Vector2 scrPos)
 }
 
 // 更新：大男
-void CEnemy::Update_Giant(Math::Vector2 playerPos, Math::Vector2 scrPos)
+void CEnemy::Update_Giant(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
+	CPlayer* pPlayer = m_pOwner->GetPlayer();		// プレイヤークラスの取得
+
 	CMap* map = m_pOwner->GetMap();
 	int mapData = map->GetMapData();
 	CItem* item = m_pOwner->GetItem();
@@ -166,14 +172,16 @@ void CEnemy::Update_Giant(Math::Vector2 playerPos, Math::Vector2 scrPos)
 	{
 		m_giantList[i].SetScrollPos(scrPos);
 		m_giantList[i].SetPlayerPos(playerPos);
+		m_giantList[i].bSetHidden(hide);
 		m_giantList[i].Update(mapData);
+
 		// 鍵ドロップ処理
 		if (item->DropKey(m_giantList[i].bGetDrop(), m_giantList[i].GetPos())) m_giantList[i].bSetDrop();
 	}
 }
 
 // 更新：ボス
-void CEnemy::Update_Boss(Math::Vector2 playerPos, Math::Vector2 scrPos)
+void CEnemy::Update_Boss(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
 	m_bossList.SetScrollPos(scrPos);
 	m_bossList.SetPlayerPos(playerPos);
@@ -181,8 +189,6 @@ void CEnemy::Update_Boss(Math::Vector2 playerPos, Math::Vector2 scrPos)
 
 	if (m_bossList.GetSlash())	// 斬撃フラグがtrueになったとき
 	{
-		//MessageBox(NULL, L"HIT", L"hit", MB_OK);
-
 		// 敵斬撃クラスメモリ新規
 		CEnemySword* sword = new CEnemySword;
 
@@ -241,12 +247,12 @@ void CEnemy::Update_Arrow(Math::Vector2 scrPos)
 }
 
 // 更新：斬撃
-void CEnemy::Update_Sword(Math::Vector2 playerPos, Math::Vector2 scrPos)
+void CEnemy::Update_Sword(Math::Vector2 scrPos)
 {
 	for (int i = 0; i < m_enemySwordList.size(); i++)
 	{
 		m_enemySwordList[i]->SetScrollPos(scrPos);
-		m_enemySwordList[i]->Updata(playerPos);
+		m_enemySwordList[i]->Updata();
 	}
 
 	std::vector<CEnemySword*>::iterator it;
@@ -281,12 +287,6 @@ void CEnemy::Draw()
 		m_archerList[i].Draw();
 	}
 
-	// 描画：矢
-	for (int i = 0; i < m_arrowList.size(); i++)
-	{
-		m_arrowList[i]->Draw();
-	}
-
 	// 描画：大男
 	for (int i = 0; i < GIANT_MAX; i++)
 	{
@@ -295,6 +295,12 @@ void CEnemy::Draw()
 
 	// 描画：ボス
 	m_bossList.Draw();
+	
+	// 描画：矢
+	for (int i = 0; i < m_arrowList.size(); i++)
+	{
+		m_arrowList[i]->Draw();
+	}
 
 	// 描画：敵斬撃
 	for (int i = 0; i < m_enemySwordList.size(); i++)
@@ -558,7 +564,7 @@ void CEnemy::HitCheckPlayer()
 		if (m_enemySwordList[i]->GetSize() == SAMURAI_SLASH_SIZE)
 		{
 			// ヒット判定の距離
-			const float hitDist = 50;
+			const float hitDist = PLAYER_SIZE::LEFT+SLASH_SIZE::LEFT;
 
 			// ヒット判定よりも距離が近いとき
 			if (checkDist <= hitDist)
@@ -571,7 +577,7 @@ void CEnemy::HitCheckPlayer()
 		else if (m_enemySwordList[i]->GetSize() == BOSS_SLASH_SIZE)
 		{
 			// ヒット判定の距離
-			const float hitDist = 100;
+			const float hitDist = PLAYER_SIZE::LEFT+BOSS_SIZE::LEFT;
 
 			// ヒット判定よりも距離が近いとき
 			if (checkDist <= hitDist)
@@ -586,32 +592,32 @@ void CEnemy::HitCheckPlayer()
 	{
 		// ボス本体とのヒット関数　　　　　　　　
 		int playerhit = Utility::iHitCheck(playerPos, playerMove, m_bossList.GetPosX(), m_bossList.GetPosY(),
-			64, -48, 25, 48,
-			100, 50, 50, 50);
+			PLAYER_SIZE::LEFT,PLAYER_SIZE::RIGHT,PLAYER_SIZE::TOP,PLAYER_SIZE::DOWN,
+			BOSS_SIZE::LEFT,BOSS_SIZE::RIGHT,BOSS_SIZE::TOP,BOSS_SIZE::DOWN);
 		switch (playerhit)
 		{
 		case 1:	// ボスの上部に触れたら
 			player->SetPosY(m_bossList.GetPosY() + 160);	// ボスの上部に出現
 			player->SetMovevalY(0);					// 移動量を0に
-			player->SetDamage(POWER::BOSS_SLASH);	// プレイヤーのHP減少
+			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
 			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 			break;
 		case 2:	// ボスの下部に触れたら
 			player->SetPosY(m_bossList.GetPosY() - 150);	// ボスの上部に出現
 			player->SetMovevalY(0);					// 移動量を0に
-			player->SetDamage(POWER::BOSS_SLASH);	// プレイヤーのHP減少
+			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
 			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 			break;
 		case 3:	// ボスの左に触れたら
 			player->SetPosX(m_bossList.GetPosX() - 100);	// ボスの上部に出現
 			player->SetMovevalX(0);					// 移動量を0に
-			player->SetDamage(POWER::BOSS_SLASH);	// プレイヤーのHP減少
+			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
 			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 			break;
 		case 4:	// ボスの右に触れたら
 			player->SetPosX(m_bossList.GetPosX() + 180);	// ボスの上部に出現
 			player->SetMovevalX(0);					// 移動量を0に
-			player->SetDamage(POWER::BOSS_SLASH);	// プレイヤーのHP減少
+			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
 			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 			break;
 		default:

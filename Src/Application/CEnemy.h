@@ -12,7 +12,7 @@
 class Scene;
 
 //敵の要素数
-constexpr int SAMURAI_MAX = 13;
+constexpr int SAMURAI_MAX = 15;
 constexpr int ARCHER_MAX = 13;
 constexpr int GIANT_MAX = 5;
 
@@ -54,12 +54,12 @@ public:		// 外部からアクセス可
 
 private:	// 外部からアクセス不可
 
-	void Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos);
-	void Update_Archer(Math::Vector2 playerPos, Math::Vector2 scrPos);
-	void Update_Giant(Math::Vector2 playerPos, Math::Vector2 scrPos);
-	void Update_Boss(Math::Vector2 playerPos, Math::Vector2 scrPos);
+	void Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide);
+	void Update_Archer(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide);
+	void Update_Giant(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide);
+	void Update_Boss(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide);
 	void Update_Arrow(Math::Vector2 scrPos);
-	void Update_Sword(Math::Vector2 playerPos, Math::Vector2 scrPos);
+	void Update_Sword(Math::Vector2 scrPos);
 
 	void HitCheckPlayer();	// プレイヤーとの当たり判定
 	void HitCheckMap();		//マップとの当たり判定
