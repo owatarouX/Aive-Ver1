@@ -14,7 +14,7 @@ public:
 	const Math::Vector2 CSword::GetMove();		//移動量取得
 
 	//攻撃処理
-	void Slash(Math::Vector2 Pos, const int Direct);
+	void Slash(Math::Vector2 Pos, const float deg);
 	const bool bGetSlash();		//フラグ状態取得
 
 	void SetScrollPos(Math::Vector2 scrPos);	//スクロール量取得
@@ -27,11 +27,12 @@ private:
 	Math::Matrix	 m_mat;			//行列
 	Math::Matrix	 m_transMat;	//移動行列
 	Math::Matrix	 m_scaleMat;	//拡大行列
+	Math::Matrix	 m_rotMat;	//拡大行列
 	Math::Vector2	 m_size;		//拡大サイズ
 	bool			 m_bSlash;		//攻撃フラグ
 	int				 m_slashCnt;	//攻撃発動時間
 	int				 m_slashAnime;	//アニメーション
-	int				 m_direction;	//方向
+	float			 m_deg;			//角度
 	Math::Vector2	 m_scrollPos;	//スクロール量取得用
 
 };

@@ -11,13 +11,17 @@ CArcher::CArcher()
 	, m_scaleMat()
 	, m_bAlive(false)
 	, m_hp(HP::ARCHER)
-	, m_deg()
+	, m_dmg(0)
+	, m_deg(0)
+	, m_dist(0)
 	, m_VisibilityFlg(false)
+	, m_bSlashHit(false)
+	, m_bBlastHit(false)
+	, m_moveCnt(MOVE_CNT_MAX)
 	, m_shotFlg(false)
 	, m_shotCnt(0)
 {
 }
-
 CArcher::~CArcher()
 {
 }
@@ -29,7 +33,9 @@ void CArcher::Init()
 	m_moveVal = { 0,0 };
 	m_bAlive = false;
 	m_hp = HP::ARCHER;
+	m_dmg = 0;
 	m_VisibilityFlg = false;
+	m_moveCnt = MOVE_CNT_MAX;
 	m_shotFlg = false;
 	m_shotCnt = 0;
 }
@@ -47,49 +53,38 @@ void CArcher::Update()
 	if (m_hp <= 0)
 	{
 		m_bAlive = false;
+		m_shotCnt = 0;
 		return;
 	}
 
-	m_moveVal = { 0,0 };
 
 	// プレイヤーとの距離を求める
 	float m_dist = Utility::GetDistance(m_pos, m_playerPos);
 	// プレイヤーとの角度を求める 
 	m_deg = Utility::GetAngleDeg(m_pos, m_playerPos);
 
-
 	// 一定の距離に近づいたら
-	if (m_dist < 350)
-		m_VisibilityFlg = true;		// 視野フラグ上げ
+	if (m_dist < 350) m_VisibilityFlg = true;		// 視野フラグ上げ
 	// 一定距離離れたら
-	if (m_dist > 500)
-		m_VisibilityFlg = false;	// 視野フラグ下げ
+	if (m_dist > 450) m_VisibilityFlg = false;		// 視野フラグ下げ
 
 	// プレイヤーが隠れ蓑使用時、視野フラグ下げる
 	if (m_bHidden)m_VisibilityFlg = false;
 
 	if (m_VisibilityFlg)
 	{
+		Attack();
 		// プレイヤーが近づいて来た時
-		if (m_dist < 200)
+		if (m_dist < 300)
 		{
 			// プレイヤーから逃げる
 			float spd = SPEED::ARCHER;
 			m_moveVal.x = -(cos(DirectX::XMConvertToRadians(m_deg)) * spd);
 			m_moveVal.y = -(sin(DirectX::XMConvertToRadians(m_deg)) * spd);
 		}
+		else m_moveVal = { 0,0 };
 	}
-
-
-	// 発射された時
-	if (m_shotFlg)
-	{
-		m_shotCnt = 0;	// カウントリセット
-		m_shotFlg = false;			// 発射フラグ下げ
-	}
-	// 発射カウント
-	if (m_shotCnt <= COOL_TIME::ARCHER_ARROW) m_shotCnt++;
-
+	else Walk();
 
 	// 座標確定
 	m_pos += m_moveVal;
@@ -194,5 +189,50 @@ void CArcher::SetPlayerPos(Math::Vector2 pos)
 void CArcher::bSetHidden(bool flg)
 {
 	m_bHidden = flg;
+}
+
+// 攻撃関数
+void CArcher::Attack()
+{
+	// 発射された時
+	if (m_shotFlg)
+	{
+		m_shotCnt = 0;	// カウントリセット
+		m_shotFlg = false;			// 発射フラグ下げ
+	}
+	// 発射カウント
+	if (m_shotCnt <= COOL_TIME::ARCHER_ARROW) m_shotCnt++;
+}
+
+// 見回り
+void CArcher::Walk()
+{
+	if (m_moveCnt >= MOVE_CNT_MAX)
+	{
+		float moveX = (rand() % 2 - 1);
+		float moveY = (rand() % 2 - 1);
+
+		// ランダム移動量セット
+		switch (int r = rand() % 16)
+		{
+		case 1:
+			m_moveVal = { moveX, moveY };
+			break;
+		case 2:
+			m_moveVal = { -moveX, -moveY };
+			break;
+		case 3:
+			m_moveVal = { -moveX, moveY };
+			break;
+		case 4:
+			m_moveVal = { moveX, -moveY };
+			break;
+		default:
+			m_moveVal = { 0, 0 };
+			break;
+		}
+		m_moveCnt = 0;
+	}
+	m_moveCnt++;
 }
 

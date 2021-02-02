@@ -5,10 +5,10 @@ CBullet::CBullet()
 	:m_pTexture(nullptr)
 	, m_pos(0.0f, 0.0f)
 	, m_moveVal(0.0f, 0.0f)
-	, m_moveRad(0.0f)
 	, m_mat()
 	, m_bAlive(false)
 	, m_radius(8.0f)
+	, m_deg(0)
 {
 }
 
@@ -18,10 +18,10 @@ CBullet::~CBullet()
 
 void CBullet::Init()
 {
-	m_moveVal.x = 15.0f;
-	m_moveVal.y = 15.0f;
-
+	m_pos = { 0,0 };
+	m_moveVal = { 0,0 };
 	m_bAlive = false;
+	m_deg = 0;
 	m_scrollPos = { 0,0 };
 }
 
@@ -29,27 +29,12 @@ void CBullet::Updata()
 {
 	if (!m_bAlive) return;
 
-	//指定角度に移動
-	switch (m_moveRad) {
-	case 0:
-		m_pos.y += m_moveVal.y;
-		break;
-	case 1:
-		m_pos.y -= m_moveVal.y;
-		break;
-	case 2:
-		m_pos.x -= m_moveVal.x;
-		break;
-	case 3:
-		m_pos.x += m_moveVal.x;
-		break;
-	}
-	
+
+	// 座標確定
+	m_pos += m_moveVal;
 
 	//移動行列
 	m_mat = DirectX::XMMatrixTranslation(m_pos.x-m_scrollPos.x, m_pos.y - m_scrollPos.y, 0.0f);
-
-
 }
 
 //描画
@@ -83,7 +68,7 @@ void CBullet::SetAlive(const float bAlive)
 }
 
 //発射処理
-void CBullet::Shot(const Math::Vector2 aShotPos, const int aShotDirection)
+void CBullet::Shot(const Math::Vector2 aShotPos, float deg)
 {
 	//生存フラグON
 	m_bAlive = true;
@@ -92,7 +77,10 @@ void CBullet::Shot(const Math::Vector2 aShotPos, const int aShotDirection)
 	m_pos = aShotPos;
 
 	//発射角度
-	m_moveRad = aShotDirection;
+	m_deg = deg;
+
+	m_moveVal.x = cos(DirectX::XMConvertToRadians(m_deg)) * SPEED::PLAYER_SHURIKEN;
+	m_moveVal.y = sin(DirectX::XMConvertToRadians(m_deg)) * SPEED::PLAYER_SHURIKEN;
 }
 
 const Math::Vector2 CBullet::GetPos()

@@ -42,7 +42,7 @@ public:
 	//プレイヤー
 	void Init();
 	void ReInit(int mapData);
-	void Updata();
+	void Updata(POINT aMousePos);
 	void UpDatePlayer(Math::Vector2 ScrollPos);
 	void Draw();
 
@@ -130,6 +130,7 @@ private:		//外部からアクセス不可
 	void SetHidden();		//隠れ身 
 
 	Scene*			 m_pOwner;			//オーナー取得用
+	POINT			 m_ClickPoint;
 	CBullet m_bulletList[BULLET_MAX];	//手裏剣クラス取得
 	CSword  m_swordList;				//斬撃クラス取得
 	CBomb  m_bombList;					//爆弾クラス取得

@@ -47,16 +47,22 @@ private:
 	int				m_hp;		// 体力量
 	int				m_dmg;		// 体力減少量
 	float			m_deg;		// 角度
+	float			m_dist;		// 距離
 	bool			m_VisibilityFlg;	// 視野フラグ
+	bool			m_bSlashHit;		// 斬撃ヒットフラグ
+	bool			m_bBlastHit;		// 爆風ヒットフラグ
+	
+	int				m_moveCnt;			// ランダム行動カウント
+	const int		MOVE_CNT_MAX = 40;	// ランダム行動時間
 	bool			m_shotFlg;	// 発射フラグ
 	int				m_shotCnt;	// 発射カウント
 
-	bool			m_bSlashHit;		// 斬撃ヒットフラグ
-	bool			m_bBlastHit;		// 爆風ヒットフラグ
 
 	Math::Vector2	 m_scrollPos;	//スクロール量取得用
 	Math::Vector2	 m_playerPos;	//プレイヤーの座標取得用
 	bool			 m_bHidden;		//隠れ身フラグ取得用
 
+	void Attack();		// 攻撃関数
+	void Walk();		// 見回り関数
 };
 
