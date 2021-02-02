@@ -18,6 +18,7 @@ CUI::CUI()
 	, m_lframemat()
 	, m_hpmat()
 	,m_stackbombIconmat()
+	,m_stackkeyIconmat()
 {
 }
 
@@ -117,26 +118,45 @@ void CUI::Draw()
 	{
 		if (rightweapontype == eHidden)
 		{
-			m_hidebarmat = DirectX::XMMatrixTranslation(-200, -250, 0);//ここは座標
-			SHADER.m_spriteShader.SetMatrix(m_hidebarmat);
-			SHADER.m_spriteShader.DrawTex(m_pHidebarTexture, Math::Rectangle(0, 0, 110, 28), 1.0f);
+			if (!(m_hidecount == 0))
+			{
+				SHADER.m_spriteShader.SetMatrix(m_hidebarmat);
+				Math::Rectangle barscrRect = { 0,0,110,28 }; // テクスチャ座標
+				Math::Color barcolor = { 1,1,1,1 }; // 色（RGBAの順番で　0.0～1.0）
+				SHADER.m_spriteShader.DrawTex(m_pHidebarTexture, 100, -290, 78, 20, &barscrRect, &barcolor, Math::Vector2(0.5f, 0.5f));
 
-			m_hidemat = DirectX::XMMatrixTranslation(-200 - ((100 - m_hidecount) / 2), -250, 0);//ここは座標
-			SHADER.m_spriteShader.SetMatrix(m_hidemat);
-			SHADER.m_spriteShader.DrawTex(m_pHideTexture, Math::Rectangle(0, 0, m_hp, 18), 1.0f);
+				SHADER.m_spriteShader.SetMatrix(m_hidemat);
+				Math::Rectangle scrRect = { 0,0,18,18 }; // テクスチャ座標
+				if (m_hidecount <= 200)
+					hidebarcolor = { 0,1,0,1 }; // 色（RGBAの順番で　0.0～1.0）
+				if (m_hidecount >= 180)
+					hidebarcolor = { 1,1,0,1 }; // 色（RGBAの順番で　0.0～1.0）
+				if (m_hidecount >= 230)
+					hidebarcolor = { 1,0,0,1 }; // 色（RGBAの順番で　0.0～1.0）
+				float hideMax = 300;
+				SHADER.m_spriteShader.DrawTex(m_pHideTexture, 100 - ((70 * ((hideMax - (hideMax - m_hidecount)) / hideMax)) / 2), -290, 70 - (70 * ((hideMax - (hideMax - m_hidecount)) / hideMax)), 12, &scrRect, &hidebarcolor, Math::Vector2(0.5f, 0.5f));//300は隠れ蓑のチャージMAX時
+			}
 		}
-		if (leftweapontype = eHidden)
+		if (leftweapontype == eHidden)
 		{
-			SHADER.m_spriteShader.SetMatrix(m_hidebarmat);
-			Math::Rectangle barscrRect = { 0,0,110,28 }; // テクスチャ座標
-			Math::Color barcolor = { 1,1,1,1 }; // 色（RGBAの順番で　0.0～1.0）
-			SHADER.m_spriteShader.DrawTex(m_pHidebarTexture, -40, -290, 78, 20, &barscrRect, &barcolor, Math::Vector2(0.5f, 0.5f));
+			if (!(m_hidecount==0))
+			{
+				SHADER.m_spriteShader.SetMatrix(m_hidebarmat);
+				Math::Rectangle barscrRect = { 0,0,110,28 }; // テクスチャ座標
+				Math::Color barcolor = { 1,1,1,1 }; // 色（RGBAの順番で　0.0～1.0）
+				SHADER.m_spriteShader.DrawTex(m_pHidebarTexture, -40, -290, 78, 20, &barscrRect, &barcolor, Math::Vector2(0.5f, 0.5f));
 
-			SHADER.m_spriteShader.SetMatrix(m_hidemat);
-			Math::Rectangle scrRect = { 0,0,18,18 }; // テクスチャ座標
-			Math::Color color = { 0,1,0,1 }; // 色（RGBAの順番で　0.0～1.0）
-			float hideMax = 300;
-			SHADER.m_spriteShader.DrawTex(m_pHideTexture, -40-((70 * ((hideMax-(hideMax - m_hidecount)) / hideMax))/2), -290, 70-(70*((hideMax-(hideMax-m_hidecount))/hideMax)), 12, &scrRect, &color, Math::Vector2(0.5f, 0.5f));//300は隠れ蓑のチャージMAX時
+				SHADER.m_spriteShader.SetMatrix(m_hidemat);
+				Math::Rectangle scrRect = { 0,0,18,18 }; // テクスチャ座標
+				if (m_hidecount <= 200)
+					hidebarcolor = { 0,1,0,1 }; // 色（RGBAの順番で　0.0～1.0）
+				if (m_hidecount >= 180)
+					hidebarcolor = { 1,1,0,1 }; // 色（RGBAの順番で　0.0～1.0）
+				if (m_hidecount >= 230)
+					hidebarcolor = { 1,0,0,1 }; // 色（RGBAの順番で　0.0～1.0）
+				float hideMax = 300;
+				SHADER.m_spriteShader.DrawTex(m_pHideTexture, -40 - ((70 * ((hideMax - (hideMax - m_hidecount)) / hideMax)) / 2), -290, 70 - (70 * ((hideMax - (hideMax - m_hidecount)) / hideMax)), 12, &scrRect, &hidebarcolor, Math::Vector2(0.5f, 0.5f));//300は隠れ蓑のチャージMAX時
+			}
 		}
 	}
 

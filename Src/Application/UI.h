@@ -59,6 +59,7 @@ private:
 	Math::Matrix m_stackbombIconmat;
 	Math::Matrix m_stackkeyIconmat;
 
+	Math::Color hidebarcolor;
 
 	int m_hp;//HPæ“¾—p
 	int rightweapontype; //‰Eè•Šíæ“¾—p
