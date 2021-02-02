@@ -25,6 +25,13 @@ enum eClick
 	eHidden		//3.隠れ身	
 };
 
+enum eStatus
+{
+	eIdle,
+	eWalking,
+	eAttack
+};
+
 //手裏剣の要素数
 constexpr int BULLET_MAX = 2;
 
@@ -147,4 +154,5 @@ private:		//外部からアクセス不可
 	std::shared_ptr<KdSoundInstance> hitseInst;
 
 	int Animation(int cnt, const int xtex);
+	std::shared_ptr<KdSoundInstance> Sound_Loading(std::shared_ptr<KdSoundEffect> se, const std::string &seName);
 };

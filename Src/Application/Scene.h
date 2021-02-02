@@ -81,10 +81,14 @@ private:
 	KdTexture m_lframeTex;
 	KdTexture m_HPTex;
 	KdTexture m_HPbarTex;
+	KdTexture m_HideTex;
+	KdTexture m_HidebarTex;
 	KdTexture m_katanaTex;
 	KdTexture m_shurikenTex;
 	KdTexture m_iconBombTex;
+	KdTexture m_iconMinoTex;
 	KdTexture m_stackBombTex;
+	KdTexture m_stackKeyTex;
 
 
 	// エフェクト
