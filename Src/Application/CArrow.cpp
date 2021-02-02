@@ -76,8 +76,6 @@ void CArrow::Draw()
 {
 	if (!m_bAlive) return;
 
-	/*SHADER.m_spriteShader.SetMatrix(m_mat);
-	SHADER.m_spriteShader.DrawTex(m_pTexture, Math::Rectangle(32*m_direct, 0, 32, 32), 1.0f);*/
 	SHADER.m_spriteShader.SetMatrix(m_mat);
 	SHADER.m_spriteShader.DrawTex(m_pTexture, Math::Rectangle(32, 0, 32, 32), 1.0f);
 }

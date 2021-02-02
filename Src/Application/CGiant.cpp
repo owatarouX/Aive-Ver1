@@ -74,8 +74,8 @@ void CGiant::Update(int mapData)
 	// 一定の距離に離れたら
 	if (m_dist > 500)	m_VisibilityFlg = false;	// 視野フラグ下げ
 
-	// プレイヤーが隠れ蓑使用時、視野フラグ下げる
-	if (m_bHidden)m_VisibilityFlg = false;
+	// プレイヤーが隠れ蓑使用時
+	if (m_bHidden) m_VisibilityFlg = false;	// 視野フラグ下げる
 
 	// 視界内の時
 	if (m_VisibilityFlg) Attack();	//攻撃態勢

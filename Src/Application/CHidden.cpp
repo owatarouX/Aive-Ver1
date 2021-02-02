@@ -1,4 +1,4 @@
-#include"CHidden.h"
+ï»¿#include"CHidden.h"
 #include"Utility.h"
 
 CHidden::CHidden()
@@ -11,20 +11,20 @@ CHidden::~CHidden()
 {
 }
 
-// ‰Šú‰»
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void CHidden::Init()
 {
 	m_bHidden = false;
 	m_hiddenCnt = 0;
 }
 
-// XV
+// ï¿½Xï¿½V
 void CHidden::Updata()
 {
 	if (m_bHidden)
 	{
 		m_hiddenCnt++;
-		// g—pŠúŒÀ
+		// ï¿½gï¿½pï¿½ï¿½ï¿½ï¿½
 		if (m_hiddenCnt > HIDDEN_CNT_MAX)
 		{
 			m_bHidden = false;
@@ -40,16 +40,16 @@ void CHidden::Updata()
 	}
 }
 
-// ƒtƒ‰ƒOó‘Ô•ÏX
+// ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½Ô•ÏX
 void CHidden::bSetHidden()
 {
 	m_bHidden = false;
 }
 
-// ‰B‚êg”­“®
+// ï¿½Bï¿½ï¿½gï¿½ï¿½ï¿½ï¿½
 void CHidden::Hidden()
 {
-	// ƒtƒ‰ƒOó‘ÔØ‚è‘Ö‚¦
-	if (!m_bHidden) m_bHidden = true;
+	// ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ÔØ‚ï¿½Ö‚ï¿½
+	if(!m_bHidden) m_bHidden = true;
 	else m_bHidden = false;
 }

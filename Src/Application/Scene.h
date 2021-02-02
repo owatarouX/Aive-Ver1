@@ -110,7 +110,7 @@ private:
 	eSceneType sceneType;	//0:タイトル　1:ゲーム本編
 
 	//マウス構造体
-	t_Mouse mouse;
+	t_Mouse m_mouse;
 
 	//キー制御
 	int keyFlg;		//0:押してない1:押している
@@ -189,7 +189,7 @@ public:
 	void ResultDraw();
 
 	//マウス座標取得
-	void GetMousePos();
+	void GetMousePos(Math::Vector2 scrPos);
 
 private:
 	DirectX::SpriteBatch* spriteBatch;

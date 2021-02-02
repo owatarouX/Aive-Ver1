@@ -307,7 +307,7 @@ void Scene::Reset()
 //タイトル:更新
 void Scene::TitleUpdate()
 {
-	GetMousePos();
+	GetMousePos(m_map.GetscrollPos());
 
 	////////////////////////////////////////////////////////////
 	//	タイトルからゲーム本編								///
@@ -321,9 +321,9 @@ void Scene::TitleUpdate()
 	gameStartFlg = false;
 
 	//強調枠内の判定
-	if (mouse.cur.x > Left && mouse.cur.x < Right)
+	if (m_mouse.cur.x > Left && m_mouse.cur.x < Right)
 	{
-		if (mouse.cur.y > Bottom && mouse.cur.y < Top)
+		if (m_mouse.cur.y > Bottom && m_mouse.cur.y < Top)
 		{
 			gameStartFlg = true;	//枠を表示
 
@@ -351,9 +351,9 @@ void Scene::TitleUpdate()
 	ExplanationStartFlg = false;
 
 	//強調枠内の判定
-	if (mouse.cur.x > exLeft && mouse.cur.x < exRight)
+	if (m_mouse.cur.x > exLeft && m_mouse.cur.x < exRight)
 	{
-		if (mouse.cur.y > exBottom && mouse.cur.y < exTop)
+		if (m_mouse.cur.y > exBottom && m_mouse.cur.y < exTop)
 		{
 			ExplanationStartFlg = true;	//強調枠表示
 
@@ -398,7 +398,7 @@ void Scene::TitleDraw()
 //ゲーム:更新
 void Scene::GameUpdate()
 {
-	//GetMousePos();
+	GetMousePos(m_map.GetscrollPos());
 
 	//マップ切り替え時の処理
 	if (m_map.GetMapSwitchFlg())
@@ -454,7 +454,7 @@ void Scene::GameUpdate()
 	m_map.Update();
 
 	//プレイヤー
-	m_player.Updata();
+	m_player.Updata(m_mouse.cur);
 
 	//敵
 	m_enemy.Update();
@@ -538,7 +538,7 @@ void Scene::GameDraw()
 //説明:更新
 void Scene::ExplanationUpdate()
 {
-	GetMousePos();
+	GetMousePos(m_map.GetscrollPos());
 
 	////////////////////////////////////////////////////////
 	//	説明からタイトル								///
@@ -552,9 +552,9 @@ void Scene::ExplanationUpdate()
 	TitleStartFlg = false;
 
 	//強調枠内の判定
-	if (mouse.cur.x > eLeft && mouse.cur.x < eRight)
+	if (m_mouse.cur.x > eLeft && m_mouse.cur.x < eRight)
 	{
-		if (mouse.cur.y > eBottom && mouse.cur.y < eTop)
+		if (m_mouse.cur.y > eBottom && m_mouse.cur.y < eTop)
 		{
 			TitleStartFlg = true;	//強調枠表示
 
@@ -606,14 +606,13 @@ void Scene::ResultDraw()
 	SHADER.m_spriteShader.DrawTex(&resultTex, Math::Rectangle(0, 0, 1280, 720), 1.0f);
 }
 
-
 //マウス座標取得関数
-void Scene::GetMousePos()
+void Scene::GetMousePos(Math::Vector2 scrPos)
 {
-	GetCursorPos(&mouse.cur);
-	ScreenToClient(APP.m_window.GetWndHandle(), &mouse.cur);
+	GetCursorPos(&m_mouse.cur);
+	ScreenToClient(APP.m_window.GetWndHandle(), &m_mouse.cur);
 
-	mouse.cur.x -= Screen::HalfWidth;
-	mouse.cur.y -= Screen::HalfHeight;
-	mouse.cur.y *= -1;
+	m_mouse.cur.x -= Screen::HalfWidth - scrPos.x;
+	m_mouse.cur.y -= Screen::HalfHeight + scrPos.y;
+	m_mouse.cur.y *= -1;
 }

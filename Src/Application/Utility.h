@@ -23,7 +23,7 @@ namespace Infor
 namespace HP
 {
 	const int PLAYER = 100;		// プレイヤー
-	const int SAMURAI = 10;		// 侍
+	const int SAMURAI = 15;		// 侍
 	const int ARCHER = 9;		// 弓兵
 	const int GIANT = 30;		// 大男
 	const int BOSS = 150;		// ボス
@@ -35,7 +35,7 @@ namespace POWER
 	// プレイヤー
 	const int PLAYER_SHURIKEN = 2;	// 手裏剣
 	const int PLAYER_SLASH = 9;		// 斬撃
-	const int PLAYER_BLAST = 10;	// 爆風
+	const int PLAYER_BLAST = 15;	// 爆風
 
 	// 敵
 	const int ENEMY_PHYSICAL = 5;
@@ -54,6 +54,7 @@ namespace SPEED
 {
 	// プレイヤー
 	const int PLAYER = 5;
+	const int PLAYER_SHURIKEN = 12;
 
 	// 侍
 	const int SAMURAI = 1.8;
@@ -64,7 +65,7 @@ namespace SPEED
 	// 大男
 	const int GIANT_NORMAL = 1.1;
 	const int GIANT_RUSH = 6;
-	// ボス
+	// ボスww
 	const int BOSS = 1.8;
 }
 
@@ -76,7 +77,7 @@ namespace COOL_TIME
 	const int PLAYER_SHURIKEN = 20;		// 手裏剣
 
 	// 侍
-	const int SAMURAI_SLASH = 120;
+	const int SAMURAI_SLASH = 40;
 	// 弓兵
 	const int ARCHER_ARROW = 80;
 	// 大男

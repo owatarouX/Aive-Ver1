@@ -1,8 +1,8 @@
-#include "CPlayer.h"
+ï»¿#include "CPlayer.h"
 #include "Scene.h"
 #include"Utility.h"
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 CPlayer::CPlayer()
 	:m_pTexture(nullptr)
 	, m_pos(0.0f, 0.0f)
@@ -35,95 +35,95 @@ CPlayer::~CPlayer()
 {
 }
 
-//‰Šú‰»
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void CPlayer::Init()
 {
-	//À•W
-	//m_pos = { -250.0f,-1080.0f };	// ‰ŠúÀ•W
-	m_pos = { 900.0f,200.0f };	// ‹ß“¹
+	//ï¿½ï¿½ï¿½W
+	//m_pos = { -250.0f,-1080.0f };	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½W
+	m_pos = { 900.0f,200.0f };	// ï¿½ß“ï¿½
 	//m_pos = { 1600,-1800 };
 	//m_pos = { 700, -1600 };
 
-	//ˆÚ“®—Ê
+	//ï¿½Ú“ï¿½ï¿½ï¿½
 	m_moveVal.x = 0.0f;
 	m_moveVal.y = 0.0f;
 	
-	//¶‘¶ƒtƒ‰ƒO
+	//ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O
 	m_bAlive = true;
 	
-	//‘Ì—Í
+	//ï¿½Ì—ï¿½
 	m_hp = HP::PLAYER;
 	m_hpCount = 0;
 
-	//“§–¾“x
+	//ï¿½ï¿½ï¿½ï¿½ï¿½x
 	m_alpha = 1.0f;
 
-	//“G‚Æ“–‚½‚Á‚½‚©”»’è
+	//ï¿½Gï¿½Æ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	m_HitFlg = false;
 
-	//‰Šú•ûŒü
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	m_direction = Down;
 
-	//‰Šú‘•”õ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	m_LClick = eShuriken;
 	m_RClick = eSword;
 
-	//¶‰EƒNƒŠƒbƒNƒtƒ‰ƒO
+	//ï¿½ï¿½ï¿½Eï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½tï¿½ï¿½ï¿½O
 	m_bRClick = false;
 	m_bLClick = false;
 
-	//•Šíƒ`ƒFƒ“ƒWƒtƒ‰ƒO
+	//ï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½ï¿½ï¿½Wï¿½tï¿½ï¿½ï¿½O
 	m_bLChange = false;
 	m_bRChange = false;
 
-	//’e‚Ì‰Šú‰»
+	//ï¿½eï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
 	for (int i = 0; i < BULLET_MAX; i++)
 	{
 		m_bulletList[i].Init();
 	}
 
-	//“‰Šú‰»
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	m_swordList.Init();
 
-	//”š’e‚Ì‰Šú‰»
+	//ï¿½ï¿½ï¿½eï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½
 	m_bombList.Init();
 	m_BombPossession = 0;
 
-	//‰B‚êg‰Šú‰»
+	//ï¿½Bï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	m_hiddenList.Init();
 	m_bMinoPossession = false;
 
-	//Œ®‰Šú‰»
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	m_KeyPossession = 0;
 
-	//SE(ƒTƒEƒ“ƒh‚Ì“Ç‚İ‚İ‚ÆÀ‘Ì‰»)
+	//SE(ï¿½Tï¿½Eï¿½ï¿½ï¿½hï¿½Ì“Ç‚İï¿½ï¿½İ‚Æï¿½ï¿½Ì‰ï¿½)
 	katanaseInst = Sound_Loading(katanase, "Sound/katana.WAV");
 	shurikenseInst = Sound_Loading(shurikense, "Sound/shuriken.WAV");
 	hitseInst = Sound_Loading(hitse,"Sound/hit.WAV");
 
 }
 
-// Ä‰Šú‰»
+// ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½
 void CPlayer::ReInit(int mapData)
 {
 	switch (mapData)
 	{
-		//ˆêŠK‘w
+		//ï¿½ï¿½Kï¿½w
 	case OneFloor:
 		m_pos = { 1600,-1800 };
 		m_KeyPossession = 0;
 		break;
-		//“ñŠK‘w
+		//ï¿½ï¿½Kï¿½w
 	case TwoFloor:
 		m_pos = { -460,-2000 };
 		m_KeyPossession = 0;
 		break;
-		//OŠK‘w
+		//ï¿½Oï¿½Kï¿½w
 	case ThreeFloor:
 		m_pos = { -460,100 };
 		m_KeyPossession = 0;
 		break;
-		//ƒ{ƒX
+		//ï¿½{ï¿½X
 	case BossFloor:
 		m_pos = { 624,-1340 };
 		m_KeyPossession = 0;
@@ -131,43 +131,45 @@ void CPlayer::ReInit(int mapData)
 	}
 }
 
-//XV
-void CPlayer::Updata()
+//ï¿½Xï¿½V
+void CPlayer::Updata(POINT aMousePos)
 {
-	//¶‘¶‚Ì‚İˆ—
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚İï¿½ï¿½ï¿½
 	if (!m_bAlive) return;
-	CMap* map = m_pOwner->GetMap();		//ƒ}ƒbƒvƒNƒ‰ƒXæ“¾
-	Math::Vector2 ScrollPos = map->GetscrollPos();		//ƒXƒNƒ[ƒ‹—Êæ“¾
+	CMap* map = m_pOwner->GetMap();		//ï¿½}ï¿½bï¿½vï¿½Nï¿½ï¿½ï¿½Xï¿½æ“¾
+	Math::Vector2 ScrollPos = map->GetscrollPos();		//ï¿½Xï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Êæ“¾
+	
+	m_ClickPoint = aMousePos;	// ï¿½}ï¿½Eï¿½Xï¿½ï¿½ï¿½Wï¿½æ“¾
 
-	// ƒvƒŒƒCƒ„[XV
+	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Xï¿½V
 	UpDatePlayer(ScrollPos);
 	
-	//’e‚ÌXV
+	//ï¿½eï¿½ÌXï¿½V
 	for (int i = 0; i < BULLET_MAX; i++)
 	{
 		m_bulletList[i].SetScrollPos(ScrollPos);
 		m_bulletList[i].Updata();
 	}
 
-	//“UŒ‚XV
+	//ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½Xï¿½V
 	m_swordList.SetScrollPos(ScrollPos);
 	m_swordList.Updata(m_pos);
 
-	//”š’e‚ÌXV
+	//ï¿½ï¿½ï¿½eï¿½ÌXï¿½V
 	m_bombList.SetScrollPos(ScrollPos);
 	m_bombList.Updata();
 
-	//‰B‚êg‚ÌXV
+	//ï¿½Bï¿½ï¿½gï¿½ÌXï¿½V
 	m_hiddenList.Updata();
 }
 
-// ƒvƒŒƒCƒ„[XVˆ—
+// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½
 void CPlayer::UpDatePlayer(Math::Vector2 ScrollPos)
 {
-	// ƒL[‘€ìˆê——
+	// ï¿½Lï¿½[ï¿½ï¿½ï¿½ï¿½ê——
 	KeyOperation();
 
-	//ƒTƒCƒY•ÏX(‰æ‘œ”½“]—p)
+	//ï¿½Tï¿½Cï¿½Yï¿½ÏX(ï¿½æ‘œï¿½ï¿½ï¿½]ï¿½p)
 	switch (m_direction) {
 	case 2:
 		m_size = { -1.0f, 1.0f };
@@ -177,86 +179,86 @@ void CPlayer::UpDatePlayer(Math::Vector2 ScrollPos)
 		break;
 	}
 
-	//ƒN[ƒ‹ƒ^ƒCƒ€‘‰Á
-	// aŒ‚ƒJƒEƒ“ƒg
+	//ï¿½Nï¿½[ï¿½ï¿½ï¿½^ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// ï¿½aï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½g
 	m_slashCnt++;
 	if (m_slashCnt >= COOL_TIME::PLAYER_SLASH)m_slashCnt = COOL_TIME::PLAYER_SLASH;
-	// è— Œ•ƒJƒEƒ“ƒg
+	// ï¿½è— ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½g
 	m_shurikenCnt++;
 	if (m_shurikenCnt >= COOL_TIME::PLAYER_SHURIKEN)m_shurikenCnt = COOL_TIME::PLAYER_SHURIKEN;
 	
-	/* “–‚½‚è”»’è */
-	//ƒ}ƒbƒv
+	/* ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ */
+	//ï¿½}ï¿½bï¿½v
 	HitCheckMap();
-	//“G
+	//ï¿½G
 	HitCheckEnemy();
-	//”š’e
+	//ï¿½ï¿½ï¿½e
 	HitCheckBomb();
-	//ƒAƒCƒeƒ€
+	//ï¿½Aï¿½Cï¿½eï¿½ï¿½
 	HitCheckItem();
 	
-	//–³“GŠÔ
+	//ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½ï¿½
 	InviTime();
 
-	//HP0‚Åƒtƒ‰ƒO‰º‚°
+	//HP0ï¿½Åƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 	if (m_hp <= 0) m_bAlive = !m_bAlive;
-	//HPãŒÀ‚ğİ‚¯‚é
+	//HPï¿½ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½ï¿½
 	if (m_hp >= HP::PLAYER)m_hp = HP::PLAYER;
 
-	//ƒAƒjƒ[ƒVƒ‡ƒ“
+	//ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½
 	const int CNT_MAX = m_aTimer * m_aflame;
 	if (m_aCnt >= CNT_MAX + m_aTimer - 1)
 		m_aCnt = 0;
 	m_aCnt++;
 
-	//À•WŠm’è
+	//ï¿½ï¿½ï¿½Wï¿½mï¿½ï¿½
 	m_pos.x += m_moveVal.x;
 	m_pos.y += m_moveVal.y;
 
 	m_moveVal = { 0,0 };
 	
-	//s—ñì¬
+	//ï¿½sï¿½ï¿½ì¬
 	m_transMat = DirectX::XMMatrixTranslation(m_pos.x - ScrollPos.x, m_pos.y - ScrollPos.y, 0.0f);
 	m_scaleMat = DirectX::XMMatrixScaling(m_size.x, m_size.y, 0.0f);
 	m_mat = m_scaleMat * m_transMat;
 }
 
-//•`‰æ
+//ï¿½`ï¿½ï¿½
 void CPlayer::Draw()
 {
 	if (!m_bAlive) return;
 
-	//’e‚Ì•`‰æ
+	//ï¿½eï¿½Ì•`ï¿½ï¿½
 	for (int i = 0; i < BULLET_MAX; i++)
 	{
 		m_bulletList[i].Draw();
 	}
 
-	//aŒ‚‚Ì•`‰æ
+	//ï¿½aï¿½ï¿½ï¿½Ì•`ï¿½ï¿½
 	m_swordList.Draw();
 
-	//”š’e‚Ì•`‰æ
+	//ï¿½ï¿½ï¿½eï¿½Ì•`ï¿½ï¿½
 	m_bombList.Draw();
 
-	//ƒvƒŒƒCƒ„[•`‰æ
+	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½
 	SHADER.m_spriteShader.SetMatrix(m_mat);
-	Math::Rectangle scrRect = { -20,Animation(m_aCnt,348),160,64 }; // ƒeƒNƒXƒ`ƒƒÀ•W
-	Math::Color color = { 1,1,1, m_alpha }; // FiRGBA‚Ì‡”Ô‚Å@0.0`1.0j
+	Math::Rectangle scrRect = { -20,Animation(m_aCnt,348),160,64 }; // ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½W
+	Math::Color color = { 1,1,1, m_alpha }; // ï¿½Fï¿½iRGBAï¿½Ìï¿½ï¿½Ô‚Å@0.0ï¿½`1.0ï¿½j
 	SHADER.m_spriteShader.DrawTex(m_pTexture, 0, 0, 160, 64, &scrRect, &color, Math::Vector2(0.5f, 0.5f));
 
 }
 
-//ƒeƒNƒXƒ`ƒƒİ’è:©‹@
+//ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½:ï¿½ï¿½ï¿½@
 void CPlayer::SetTexture(KdTexture* apTexture)
 {
-	//ƒ|ƒCƒ“ƒ^‚ÌƒAƒhƒŒƒX‚ª³í‰»‚µ‚ç‚×‚é (null‚È‚çƒZƒbƒg‚µ‚È‚¢)
+	//ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½ÌƒAï¿½hï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½í‰»ï¿½ï¿½ï¿½ï¿½×‚ï¿½ (nullï¿½È‚ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½È‚ï¿½)
 	if (apTexture == nullptr)return;
 
 	m_pTexture = apTexture;
 
 }
 
-//ƒeƒNƒXƒ`ƒƒİ’è:è— Œ•
+//ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½:ï¿½è— ï¿½ï¿½
 void CPlayer::SetBulletTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr)return;
@@ -267,7 +269,7 @@ void CPlayer::SetBulletTexture(KdTexture* apTexture)
 	}
 }
 
-//ƒeƒNƒXƒ`ƒƒİ’è:aŒ‚
+//ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½:ï¿½aï¿½ï¿½
 void CPlayer::SetSlashTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr)return;
@@ -275,7 +277,7 @@ void CPlayer::SetSlashTexture(KdTexture* apTexture)
 	m_swordList.SetTexture(apTexture);
 }
 
-//ƒeƒNƒXƒ`ƒƒİ’è:”š’e
+//ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½:ï¿½ï¿½ï¿½e
 void CPlayer::SetBombTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr)return;
@@ -283,7 +285,7 @@ void CPlayer::SetBombTexture(KdTexture* apTexture)
 	m_bombList.SetTexture(apTexture);
 }
 
-//ƒeƒNƒXƒ`ƒƒİ’èF”š”­
+//ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½Fï¿½ï¿½ï¿½ï¿½
 void CPlayer::SetBlastTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr)return;
@@ -291,7 +293,7 @@ void CPlayer::SetBlastTexture(KdTexture* apTexture)
 	m_bombList.SetBlastTexture(apTexture);
 }
 
-//ƒI[ƒi[İ’è
+//ï¿½Iï¿½[ï¿½iï¿½[ï¿½İ’ï¿½
 void CPlayer::SetOwner(Scene* apOwner)
 {
 	if (apOwner == nullptr) return;
@@ -299,15 +301,15 @@ void CPlayer::SetOwner(Scene* apOwner)
 	m_pOwner = apOwner;
 }
 
-// ‘Ì—ÍŒ¸­
+// ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 void CPlayer::SetDamage(int dmg)
 {
-	// ‘Ì—ÍŒ¸­
+	// ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 	m_hp -= dmg;
-	//ƒqƒbƒg‰¹”­¶
+	//ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	hitseInst->Play();
 	
-	// ƒqƒbƒgƒGƒtƒFƒNƒg”­¶
+	// ï¿½qï¿½bï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 	CEffect* effect = m_pOwner->GetEffect();
 	CDamage* dmgList = effect->GetDmgList();
 
@@ -319,7 +321,7 @@ void CPlayer::SetDamage(int dmg)
 	}
 }
 
-// ‘Ì—Í‰ñ•œ
+// ï¿½Ì—Í‰ï¿½
 void CPlayer::SetHeal(int heal)
 {
 	m_hp += heal;
@@ -327,28 +329,28 @@ void CPlayer::SetHeal(int heal)
 	effect->PlayerHealEffect();
 }
 
-// ƒqƒbƒgƒtƒ‰ƒOƒZƒbƒg
+// ï¿½qï¿½bï¿½gï¿½tï¿½ï¿½ï¿½Oï¿½Zï¿½bï¿½g
 void CPlayer::SetHitFlg()
 {
 	m_HitFlg = true;
 }
 
-// À•WƒZƒbƒgX(Œ»İÀ•W‚É‘«‚µZ)
+// ï¿½ï¿½ï¿½Wï¿½Zï¿½bï¿½gX(ï¿½ï¿½ï¿½İï¿½ï¿½Wï¿½É‘ï¿½ï¿½ï¿½ï¿½Z)
 void CPlayer::SetPosX(float x)
 {
 	m_pos.x = x;
 }
-// À•WƒZƒbƒgY(Œ»İÀ•W‚É‘«‚µZ)
+// ï¿½ï¿½ï¿½Wï¿½Zï¿½bï¿½gY(ï¿½ï¿½ï¿½İï¿½ï¿½Wï¿½É‘ï¿½ï¿½ï¿½ï¿½Z)
 void CPlayer::SetPosY(float y)
 {
 	m_pos.y = y;
 }
-// ˆÚ“®—ÊƒZƒbƒgX(ˆÚ“®—Ê‚ğ“ü—Í)
+// ï¿½Ú“ï¿½ï¿½ÊƒZï¿½bï¿½gX(ï¿½Ú“ï¿½ï¿½Ê‚ï¿½ï¿½ï¿½ï¿½)
 void CPlayer::SetMovevalX(float movex)
 {
 	m_moveVal.x = movex;
 }
-// ˆÚ“®—ÊƒZƒbƒgY(ˆÚ“®—Ê‚ğ“ü—Í)
+// ï¿½Ú“ï¿½ï¿½ÊƒZï¿½bï¿½gY(ï¿½Ú“ï¿½ï¿½Ê‚ï¿½ï¿½ï¿½ï¿½)
 void CPlayer::SetMovevalY(float movey)
 {
 	m_moveVal.y = movey;
@@ -366,10 +368,10 @@ const int CPlayer::GetL()
 	return a;
 }
 
-// ƒL[‘€ìˆê——
+// ï¿½Lï¿½[ï¿½ï¿½ï¿½ï¿½ê——
 void CPlayer::KeyOperation()
 {
-	/* ˆÚ“® */
+	/* ï¿½Ú“ï¿½ */
 	if (GetAsyncKeyState('W') & 0x8000)
 	{
 		m_moveVal.y += SPEED::PLAYER;
@@ -391,15 +393,15 @@ void CPlayer::KeyOperation()
 		m_direction = Right;
 	}
 
-	/* UŒ‚ */
-	//¶ƒNƒŠƒbƒNUŒ‚
+	/* ï¿½Uï¿½ï¿½ */
+	//ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½Uï¿½ï¿½
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		Attack(m_bLClick, m_LClick);
 		m_bLClick = true;
 	}
 	else m_bLClick = false;
-	//‰EƒNƒŠƒbƒNUŒ‚
+	//ï¿½Eï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½Uï¿½ï¿½
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 	{
 		Attack(m_bRClick, m_RClick);
@@ -407,8 +409,8 @@ void CPlayer::KeyOperation()
 	}
 	else m_bRClick = false;
 
-	/* •Šíƒ`ƒFƒ“ƒW */
-	//¶ƒNƒŠƒbƒN•Ší
+	/* ï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½ï¿½ï¿½W */
+	//ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½
 	if (GetAsyncKeyState('Q') & 0x8000)
 	{
 		if (!m_bLChange)
@@ -419,7 +421,7 @@ void CPlayer::KeyOperation()
 		}
 	}
 	else m_bLChange = false;
-	//‰EƒNƒŠƒbƒN•Ší
+	//ï¿½Eï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½
 	if (GetAsyncKeyState('E') & 0x8000)
 	{
 		if (!m_bRChange)
@@ -432,7 +434,7 @@ void CPlayer::KeyOperation()
 	else m_bRChange = false;
 }
 
-//ƒ}ƒbƒv‚Æ‚Ì“–‚½‚è”»’è
+//ï¿½}ï¿½bï¿½vï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
 void CPlayer::HitCheckMap()
 {
 	CEnemy* enemy = m_pOwner->GetEnemy();
@@ -443,21 +445,21 @@ void CPlayer::HitCheckMap()
 	float(*chipX)[MAP_CHIP_W] = map->GetPosX();
 	float(*chipY)[MAP_CHIP_W] = map->GetPosY();
 	int(*chipData)[MAP_CHIP_W] = map->GetChipData();
-	int mapData = map->GetMapData();	//ƒ}ƒbƒvƒf[ƒ^æ“¾
+	int mapData = map->GetMapData();	//ï¿½}ï¿½bï¿½vï¿½fï¿½[ï¿½^ï¿½æ“¾
 
-	//ƒ}ƒbƒvƒf[ƒ^‚ğg‚Á‚Ä
+	//ï¿½}ï¿½bï¿½vï¿½fï¿½[ï¿½^ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½
 	int hit = 0;
 	for (int h = 0; h < MAP_CHIP_H; h++)
 	{
 		for (int w = 0; w < MAP_CHIP_W; w++)
 		{
-			//ƒ}ƒbƒv‚ÌŒ»İÀ•W‚Ìl•Ó
-			const float MAP_LEFT = chipX[h][w] - Infor::RADIUS_32;		//¶•Ó
-			const float MAP_RIGHT = chipX[h][w] + Infor::RADIUS_32;		//‰E•Ó
-			const float MAP_TOP = chipY[h][w] + Infor::RADIUS_32;		//ã•Ó
-			const float MAP_BOTTOM = chipY[h][w] - Infor::RADIUS_32;	//‰º•Ó
+			//ï¿½}ï¿½bï¿½vï¿½ÌŒï¿½ï¿½İï¿½ï¿½Wï¿½Ìlï¿½ï¿½
+			const float MAP_LEFT = chipX[h][w] - Infor::RADIUS_32;		//ï¿½ï¿½ï¿½ï¿½
+			const float MAP_RIGHT = chipX[h][w] + Infor::RADIUS_32;		//ï¿½Eï¿½ï¿½
+			const float MAP_TOP = chipY[h][w] + Infor::RADIUS_32;		//ï¿½ï¿½ï¿½
+			const float MAP_BOTTOM = chipY[h][w] - Infor::RADIUS_32;	//ï¿½ï¿½ï¿½ï¿½
 
-			if (chipData[h][w] >= 78 && chipData[h][w] <= 79)	//ƒf[ƒ^FƒMƒ~ƒbƒN
+			if (chipData[h][w] >= 78 && chipData[h][w] <= 79)	//ï¿½fï¿½[ï¿½^ï¿½Fï¿½Mï¿½~ï¿½bï¿½N
 			{
 				if (mapData == OneFloor)
 				{
@@ -465,24 +467,24 @@ void CPlayer::HitCheckMap()
 						PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 					{
-						if (enemy->bGetEvent())map->SetLock();	// ƒJƒM•Â‚ß
-						enemy->Event();		// ƒCƒxƒ“ƒg”­¶
+						if (enemy->bGetEvent())map->SetLock();	// ï¿½Jï¿½Mï¿½Â‚ï¿½
+						enemy->Event();		// ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½
 					}
 				}
 				else if (mapData == BossFloor)
 				{
-					// ƒCƒxƒ“ƒg”­¶ˆ—
+					// ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					if (!Utility::bHitCheck(m_pos, m_moveVal, { chipX[h][w],chipY[h][w] },
 						PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 					{
-						if (enemy->bGetEvent())map->SetLock();	// ƒJƒM•Â‚ß
+						if (enemy->bGetEvent())map->SetLock();	// ï¿½Jï¿½Mï¿½Â‚ï¿½
 					}
 				}
 			}
-			else if (chipData[h][w] >= 91)	//ƒf[ƒ^F”à
+			else if (chipData[h][w] >= 91)	//ï¿½fï¿½[ï¿½^ï¿½Fï¿½ï¿½
 			{
-				// ’Êí‚Ì•Ç”»’è
+				// ï¿½Êï¿½Ì•Ç”ï¿½ï¿½ï¿½
 				hit = Utility::iHitCheck(m_pos, m_moveVal, chipX[h][w], chipY[h][w],
 					PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 					Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32);
@@ -506,7 +508,7 @@ void CPlayer::HitCheckMap()
 					break;
 				}
 			}
-			else if (chipData[h][w] >= 90)	//ƒf[ƒ^F‰ñ•œƒ|ƒCƒ“ƒg
+			else if (chipData[h][w] >= 90)	//ï¿½fï¿½[ï¿½^ï¿½Fï¿½ñ•œƒ|ï¿½Cï¿½ï¿½ï¿½g
 			{
 				if (m_bHeal) return;
 				if (!Utility::bHitCheck(m_pos, m_moveVal, { chipX[h][w],chipY[h][w] },
@@ -517,9 +519,9 @@ void CPlayer::HitCheckMap()
 					m_bHeal = true;
 				}
 			}
-			else if (chipData[h][w] == 80)	//ƒf[ƒ^FƒMƒ~ƒbƒN
+			else if (chipData[h][w] == 80)	//ï¿½fï¿½[ï¿½^ï¿½Fï¿½Mï¿½~ï¿½bï¿½N
 			{
-				// –î‚Ì”­Ë
+				// ï¿½ï¿½Ì”ï¿½ï¿½ï¿½
 				if (!Utility::bHitCheck(m_pos, m_moveVal, { chipX[h][w],chipY[h][w] },
 					PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 					Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
@@ -529,11 +531,11 @@ void CPlayer::HitCheckMap()
 					enemy->shot({ chipX[y][x], chipY[y][x] }, m_pos);
 				}
 			}
-			else if (chipData[h][w] == 70)	//ƒf[ƒ^FŠÅ”Â•W€
+			else if (chipData[h][w] == 70)	//ï¿½fï¿½[ï¿½^ï¿½Fï¿½Å”Â•Wï¿½ï¿½
 			{
 				if (mapData != OutSide)continue;
 				CMessage* msgList = m_pOwner->GetMsg();
-				//ŠÅ”Â‘O”»’è
+				//ï¿½Å”Â‘Oï¿½ï¿½ï¿½ï¿½
 				if (!Utility::bHitCheck(m_pos, m_moveVal, { chipX[h][w],chipY[h][w] },
 					PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 					Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
@@ -543,27 +545,27 @@ void CPlayer::HitCheckMap()
 					else if (w == 8)msgNum = 1;
 					else if (w == 11)msgNum = 2;
 					
-					// ƒƒbƒZ[ƒW•\¦
+					// ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½\ï¿½ï¿½
 					msgList->SetMessage({ chipX[h][w],chipY[h][w] + 100 }, msgNum);
 					return;
 				}
 				else msgList->SetAlive();
 			}
-			else if (chipData[h][w] >= 60 && chipData[h][w] <= 69)	//ƒf[ƒ^Fƒ}ƒbƒvƒ`ƒFƒ“ƒW
+			else if (chipData[h][w] >= 60 && chipData[h][w] <= 69)	//ï¿½fï¿½[ï¿½^ï¿½Fï¿½}ï¿½bï¿½vï¿½`ï¿½Fï¿½ï¿½ï¿½W
 			{
 				if (!Utility::bHitCheck(m_pos, m_moveVal, { chipX[h][w],chipY[h][w] },
 					PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 					Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 				{
-					map->SetMapSwitchFlg(true);		//ƒ}ƒbƒvØ‚è‘Ö‚¦ƒtƒ‰ƒO
+					map->SetMapSwitchFlg(true);		//ï¿½}ï¿½bï¿½vï¿½Ø‚ï¿½Ö‚ï¿½ï¿½tï¿½ï¿½ï¿½O
 				}
 			}
-			else if (chipData[h][w] >= 49 && chipData[h][w] <= 59)	//ƒf[ƒ^F”à
+			else if (chipData[h][w] >= 49 && chipData[h][w] <= 59)	//ï¿½fï¿½[ï¿½^ï¿½Fï¿½ï¿½
 			{
 				////////////////////////////////////////////////////////////////
-				//		ƒvƒŒƒCƒ„[‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+				//		ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 				////////////////////////////////////////////////////////////////
-				// ’Êí‚Ì•Ç”»’è
+				// ï¿½Êï¿½Ì•Ç”ï¿½ï¿½ï¿½
 				hit = Utility::iHitCheck(m_pos, m_moveVal, chipX[h][w], chipY[h][w],
 					PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 					Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32);
@@ -587,28 +589,28 @@ void CPlayer::HitCheckMap()
 					break;
 				}
 
-				// Œ®•t‚«•Ç‚Æ‚Ì“–‚½‚è”»’è
+				// ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Ç‚Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
 				bool hit = Utility::bHitCheck(m_pos, m_moveVal, { chipX[h][w],chipY[h][w] },
 					PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 					Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32);
 
-				// Œ®‚ğ§ŒÀ”‚Á‚Ä‚éó‘Ô‚ÅG‚ê‚é‚Æ
+				// ï¿½ï¿½ï¿½ğ§Œï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ô‚ÅGï¿½ï¿½ï¿½ï¿½
 				if ((m_KeyPossession >= 2) && (!hit))
 				{
-					map->SetUnlock();	// Œ®ŠJ‚¯ˆ—
+					map->SetUnlock();	// ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					m_KeyPossession = 0;
 				}
 				////////////////////////////////////////////////////////////////
-				//		’e‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+				//		ï¿½eï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 				////////////////////////////////////////////////////////////////
 				for (int i = 0; i < BULLET_MAX; i++)
 				{
-					//ƒqƒbƒg
+					//ï¿½qï¿½bï¿½gï¿½ï¿½
 					if (!Utility::bHitCheck(m_bulletList[i].GetPos(), m_bulletList[i].GetMove(), { chipX[h][w],chipY[h][w] },
 						SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
 						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 					{
-						m_bulletList[i].SetAlive(false);	//’e‚Ìƒtƒ‰ƒO‰º‚°
+						m_bulletList[i].SetAlive(false);	//ï¿½eï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 					}
 				}
 			}
@@ -616,7 +618,7 @@ void CPlayer::HitCheckMap()
 			{
 				if (mapData != OneFloor)continue;
 				CMessage* msgList = m_pOwner->GetMsg();
-				//ŠÅ”Â‘O”»’è
+				//ï¿½Å”Â‘Oï¿½ï¿½ï¿½ï¿½
 				if (!Utility::bHitCheck(m_pos, m_moveVal, { chipX[h][w],chipY[h][w] },
 					PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 					Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
@@ -624,20 +626,20 @@ void CPlayer::HitCheckMap()
 					int msgNum = 0;
 					if (w == 23)msgNum = 3;
 
-					// ƒƒbƒZ[ƒW•\¦
+					// ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½\ï¿½ï¿½
 					msgList->SetMessage({ chipX[h][w],chipY[h][w] + 100 }, msgNum);
 					return;
 				}
 				else msgList->SetAlive();
 			}
-			else if (chipData[h][w] >= 10)	//ƒf[ƒ^F°
+			else if (chipData[h][w] >= 10)	//ï¿½fï¿½[ï¿½^ï¿½Fï¿½ï¿½
 			{
 				continue;
 			}
-			else	//ƒf[ƒ^F•Ç
+			else	//ï¿½fï¿½[ï¿½^ï¿½Fï¿½ï¿½
 			{
 				////////////////////////////////////////////////////////////////
-				//		ƒvƒŒƒCƒ„[‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+				//		ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 				////////////////////////////////////////////////////////////////
 				hit = Utility::iHitCheck(m_pos, m_moveVal, chipX[h][w], chipY[h][w],
 					PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
@@ -662,17 +664,17 @@ void CPlayer::HitCheckMap()
 					break;
 				}
 				////////////////////////////////////////////////////////////////
-				//		’e‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+				//		ï¿½eï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 				////////////////////////////////////////////////////////////////
 				for (int i = 0; i < BULLET_MAX; i++)
 				{
 					bool hit = Utility::bHitCheck(m_bulletList[i].GetPos(), m_bulletList[i].GetMove(), { chipX[h][w],chipY[h][w] },
 						SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
 						Infor::RADIUS_32,Infor::RADIUS_32,Infor::RADIUS_32,Infor::RADIUS_32);
-					//ƒqƒbƒg
+					//ï¿½qï¿½bï¿½gï¿½ï¿½
 					if (!hit)
 					{
-						m_bulletList[i].SetAlive(false);	//’e‚Ìƒtƒ‰ƒO‰º‚°
+						m_bulletList[i].SetAlive(false);	//ï¿½eï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 					}
 				}
 			}
@@ -680,51 +682,51 @@ void CPlayer::HitCheckMap()
 	}
 }
 
-//“G‚Æ‚Ì“–‚½‚è”»’è
+//ï¿½Gï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
 void CPlayer::HitCheckEnemy()
 {
-	CEnemy* enemy = m_pOwner->GetEnemy();	// “GƒNƒ‰ƒXæ“¾
+	CEnemy* enemy = m_pOwner->GetEnemy();	// ï¿½Gï¿½Nï¿½ï¿½ï¿½Xï¿½æ“¾
 	CEffect* effect = m_pOwner->GetEffect();
 	CDamage* dmgList = effect->GetDmgList();
 
-	const float EffectSize = 1.6;	// ƒqƒbƒgƒGƒtƒFƒNƒgƒTƒCƒY
+	const float EffectSize = 1.6;	// ï¿½qï¿½bï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Tï¿½Cï¿½Y
 
 	////////////////////////////////////////////////////////////////
-	//		˜‚Æ‚Ì“–‚½‚è”»’è								
+	//		ï¿½ï¿½ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½								
 	////////////////////////////////////////////////////////////////
-	CSamurai* samuraiList = enemy->GetSamuraiList();	//“GƒNƒ‰ƒXF˜ƒŠƒXƒgæ“¾
+	CSamurai* samuraiList = enemy->GetSamuraiList();	//ï¿½Gï¿½Nï¿½ï¿½ï¿½Xï¿½Fï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½gï¿½æ“¾
 	for (int e = 0; e < SAMURAI_MAX; e++)
 	{
-		Math::Vector2 enePos = samuraiList[e].GetPos();		//“G‚ÌÀ•Wæ“¾
-		Math::Vector2 eneMove = samuraiList[e].GetMove();		//“G‚ÌˆÚ“®—Êæ“¾
+		Math::Vector2 enePos = samuraiList[e].GetPos();		//ï¿½Gï¿½Ìï¿½ï¿½Wï¿½æ“¾
+		Math::Vector2 eneMove = samuraiList[e].GetMove();		//ï¿½Gï¿½ÌˆÚ“ï¿½ï¿½Êæ“¾
 
-		//¶‚«‚Ä‚é“G‚Ì‚İ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½Gï¿½Ì‚ï¿½
 		if (!samuraiList[e].IsAlive()) continue;
 
 		////////////////////////////////////////////////////////////////
-		//		ƒvƒŒƒCƒ„[‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
-		if (!m_HitFlg)	//–³“Gó‘Ô‚Å‚È‚¢‚Æ‚«
+		if (!m_HitFlg)	//ï¿½ï¿½ï¿½Gï¿½ï¿½Ô‚Å‚È‚ï¿½ï¿½Æ‚ï¿½
 		{
 			int player_hit = Utility::iHitCheck(m_pos, m_moveVal, enePos.x, enePos.y,
 				PLAYER_SIZE::LEFT,PLAYER_SIZE::RIGHT,PLAYER_SIZE::TOP,PLAYER_SIZE::DOWN,
 				SAMURAI_SIZE::LEFT,SAMURAI_SIZE::RIGHT,SAMURAI_SIZE::TOP,SAMURAI_SIZE::DOWN);
 
-			//“G‚ÌŒ»İÀ•W‚Ìl•Ó
-			const float ENEMY_LEFT = enePos.x - Infor::RADIUS_32;	//¶•Ó
-			const float ENEMY_RIGHT = enePos.x + Infor::RADIUS_32;	//‰E•Ó
-			const float ENEMY_TOP = enePos.y + Infor::RADIUS_32;		//ã•Ó
-			const float ENEMY_BOTTOM = enePos.y - Infor::RADIUS_32;	//‰º•Ó
+			//ï¿½Gï¿½ÌŒï¿½ï¿½İï¿½ï¿½Wï¿½Ìlï¿½ï¿½
+			const float ENEMY_LEFT = enePos.x - Infor::RADIUS_32;	//ï¿½ï¿½ï¿½ï¿½
+			const float ENEMY_RIGHT = enePos.x + Infor::RADIUS_32;	//ï¿½Eï¿½ï¿½
+			const float ENEMY_TOP = enePos.y + Infor::RADIUS_32;		//ï¿½ï¿½ï¿½
+			const float ENEMY_BOTTOM = enePos.y - Infor::RADIUS_32;	//ï¿½ï¿½ï¿½ï¿½
 
-			//“–‚½‚è”»’è•ªŠòˆ—
-			//1:ã	2:‰º 3:¶ 4:‰E
+			//ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½è•ªï¿½òˆ—ï¿½
+			//1:ï¿½ï¿½	2:ï¿½ï¿½ 3:ï¿½ï¿½ 4:ï¿½E
 			int dmg = 5;
 			switch (player_hit)
 			{
 			case 1:
 				m_pos.y = ENEMY_TOP + Infor::RADIUS_32;
 				m_moveVal.y = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);			//‘Ì—ÍŒ¸­
+				SetDamage(POWER::ENEMY_PHYSICAL);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 				m_HitFlg = true;
 				
 				break;
@@ -751,11 +753,11 @@ void CPlayer::HitCheckEnemy()
 			}
 		}
 		////////////////////////////////////////////////////////////////
-		//		’e‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½eï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
 		for (int i = 0; i < BULLET_MAX; i++)
 		{
-			//¶‚«‚Ä‚é’e‚Ì‚İ
+			//ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½eï¿½Ì‚ï¿½
 			if (m_bulletList[i].IsAlive())
 			{
 				bool bullet_hit = true;
@@ -763,15 +765,15 @@ void CPlayer::HitCheckEnemy()
 					SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
 					SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN);
 
-				//ƒqƒbƒg
+				//ï¿½qï¿½bï¿½gï¿½ï¿½
 				if (!bullet_hit)
 				{
-					samuraiList[e].SetDamage(POWER::PLAYER_SHURIKEN);			//“G‚Éƒ_ƒ[ƒW
-					m_bulletList[i].SetAlive(false);	//’e‚Ìƒtƒ‰ƒO‰º‚°
+					samuraiList[e].SetDamage(POWER::PLAYER_SHURIKEN);			//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
+					m_bulletList[i].SetAlive(false);	//ï¿½eï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
-						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 						break;
 					}
 					break;
@@ -779,28 +781,28 @@ void CPlayer::HitCheckEnemy()
 			}
 		}
 		////////////////////////////////////////////////////////////////
-		//		aŒ‚‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½aï¿½ï¿½ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
-		//aŒ‚‚ğo‚µ‚Ä‚¢‚éŠÔ
+		//ï¿½aï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½
 		if (m_swordList.bGetSlash())
 		{
-			if (!samuraiList[e].bGetSlashHit())	// ‘½’iƒqƒbƒg–h~ƒtƒ‰ƒO
+			if (!samuraiList[e].bGetSlashHit())	// ï¿½ï¿½ï¿½iï¿½qï¿½bï¿½gï¿½hï¿½~ï¿½tï¿½ï¿½ï¿½O
 			{
-				// “G‚ÆaŒ‚‚Ì‹——£
+				// ï¿½Gï¿½Æaï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 				const float checkDist = Utility::GetDistance(enePos, m_swordList.GetPos());
 
-				// ƒqƒbƒg”»’è‚Ì‹——£
+				// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 				const float hitDist = SLASH_SIZE::LEFT+SAMURAI_SIZE::LEFT;
 
-				// ƒqƒbƒg”»’è‚æ‚è‚à‹——£‚ª‹ß‚¢‚Æ‚«
+				// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½Æ‚ï¿½
 				if (checkDist <= hitDist)
 				{
-					samuraiList[e].SetDamage(POWER::PLAYER_SLASH);	//“G‚Éƒ_ƒ[ƒW
-					samuraiList[e].bSetSlashHit(true);	// ‘½’iƒqƒbƒg–h~
+					samuraiList[e].SetDamage(POWER::PLAYER_SLASH);	//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
+					samuraiList[e].bSetSlashHit(true);	// ï¿½ï¿½ï¿½iï¿½qï¿½bï¿½gï¿½hï¿½~
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
-						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 						break;
 					}
 				}
@@ -808,9 +810,9 @@ void CPlayer::HitCheckEnemy()
 		}
 		else samuraiList[e].bSetSlashHit(false);
 		////////////////////////////////////////////////////////////////
-		//		”š”­‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
-		//”š”­‚µ‚Ä‚¢‚é
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é
 		if (m_bombList.GetBlastAlive())
 		{
 			if (!samuraiList[e].bGetBlastHit())
@@ -819,15 +821,15 @@ void CPlayer::HitCheckEnemy()
 				blast_hit = Utility::bHitCheck(m_bombList.GetBlastPos(), { 0,0 }, enePos,
 					BLAST_SIZE::LEFT, BLAST_SIZE::RIGHT, BLAST_SIZE::TOP, BLAST_SIZE::DOWN,
 					SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN);
-				//ƒqƒbƒg
+				//ï¿½qï¿½bï¿½gï¿½ï¿½
 				if (!blast_hit)
 				{
-					samuraiList[e].SetDamage(POWER::PLAYER_BLAST);			//“G‚Éƒ_ƒ[ƒW
+					samuraiList[e].SetDamage(POWER::PLAYER_BLAST);			//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
 					samuraiList[e].bSetBlastHit(true);
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
-						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 						break;
 					}
 				}
@@ -836,67 +838,67 @@ void CPlayer::HitCheckEnemy()
 		else samuraiList[e].bSetBlastHit(false);
 	}
 	////////////////////////////////////////////////////////////////
-	//		‹|•º‚Æ‚Ì“–‚½‚è”»’è								
+	//		ï¿½|ï¿½ï¿½ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½								
 	////////////////////////////////////////////////////////////////
-	CArcher* archerList = enemy->GetArcherList();	//“GƒNƒ‰ƒXF‹|•ºƒŠƒXƒgæ“¾
+	CArcher* archerList = enemy->GetArcherList();	//ï¿½Gï¿½Nï¿½ï¿½ï¿½Xï¿½Fï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½gï¿½æ“¾
 	for (int i = 0; i < ARCHER_MAX; i++)
 	{
-		Math::Vector2 enePos = archerList[i].GetPos();		//“G‚ÌÀ•Wæ“¾
-		Math::Vector2 eneMove = archerList[i].GetMove();	//“G‚ÌˆÚ“®—Êæ“¾
+		Math::Vector2 enePos = archerList[i].GetPos();		//ï¿½Gï¿½Ìï¿½ï¿½Wï¿½æ“¾
+		Math::Vector2 eneMove = archerList[i].GetMove();	//ï¿½Gï¿½ÌˆÚ“ï¿½ï¿½Êæ“¾
 
-		//¶‚«‚Ä‚é“G‚Ì‚İ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½Gï¿½Ì‚ï¿½
 		if (!archerList[i].IsAlive()) continue;
 
 		////////////////////////////////////////////////////////////////
-		//		ƒvƒŒƒCƒ„[‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
-		if (!m_HitFlg)	//–³“Gó‘Ô‚Å‚È‚¢‚Æ‚«
+		if (!m_HitFlg)	//ï¿½ï¿½ï¿½Gï¿½ï¿½Ô‚Å‚È‚ï¿½ï¿½Æ‚ï¿½
 		{
 			int player_hit = Utility::iHitCheck(m_pos, m_moveVal, enePos.x, enePos.y,
 				PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 				ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN);
 
-			//“G‚ÌŒ»İÀ•W‚Ìl•Ó
-			const float ENEMY_LEFT = enePos.x - Infor::RADIUS_32;	//¶•Ó
-			const float ENEMY_RIGHT = enePos.x + Infor::RADIUS_32;	//‰E•Ó
-			const float ENEMY_TOP = enePos.y + Infor::RADIUS_32;		//ã•Ó
-			const float ENEMY_BOTTOM = enePos.y - Infor::RADIUS_32;	//‰º•Ó
+			//ï¿½Gï¿½ÌŒï¿½ï¿½İï¿½ï¿½Wï¿½Ìlï¿½ï¿½
+			const float ENEMY_LEFT = enePos.x - Infor::RADIUS_32;	//ï¿½ï¿½ï¿½ï¿½
+			const float ENEMY_RIGHT = enePos.x + Infor::RADIUS_32;	//ï¿½Eï¿½ï¿½
+			const float ENEMY_TOP = enePos.y + Infor::RADIUS_32;		//ï¿½ï¿½ï¿½
+			const float ENEMY_BOTTOM = enePos.y - Infor::RADIUS_32;	//ï¿½ï¿½ï¿½ï¿½
 
-			//“–‚½‚è”»’è•ªŠòˆ—
-			//1:ã	2:‰º 3:¶ 4:‰E
+			//ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½è•ªï¿½òˆ—ï¿½
+			//1:ï¿½ï¿½	2:ï¿½ï¿½ 3:ï¿½ï¿½ 4:ï¿½E
 			switch (player_hit)
 			{
 			case 1:
 				m_pos.y = ENEMY_TOP + Infor::RADIUS_32;
 				m_moveVal.y = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);			//‘Ì—ÍŒ¸­
+				SetDamage(POWER::ENEMY_PHYSICAL);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 				m_HitFlg = true;
 				break;
 			case 2:
 				m_pos.y = ENEMY_BOTTOM - Infor::RADIUS_32;
 				m_moveVal.y = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);			//‘Ì—ÍŒ¸­
+				SetDamage(POWER::ENEMY_PHYSICAL);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 				m_HitFlg = true; break;
 			case 3:
 				m_pos.x = ENEMY_LEFT - Infor::RADIUS_32;
 				m_moveVal.x = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);			//‘Ì—ÍŒ¸­
+				SetDamage(POWER::ENEMY_PHYSICAL);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 				m_HitFlg = true; break;
 			case 4:
 				m_pos.x = ENEMY_RIGHT + Infor::RADIUS_32;
 				m_moveVal.x = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);			//‘Ì—ÍŒ¸­
+				SetDamage(POWER::ENEMY_PHYSICAL);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 				m_HitFlg = true; break;
 			default:
 				break;
 			}
 		}
 		////////////////////////////////////////////////////////////////
-		//		’e‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½eï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
 		for (int b = 0; b < BULLET_MAX; b++)
 		{
-			//¶‚«‚Ä‚é’e‚Ì‚İ
+			//ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½eï¿½Ì‚ï¿½
 			if (m_bulletList[b].IsAlive())
 			{
 				bool bullet_hit = true;
@@ -904,15 +906,15 @@ void CPlayer::HitCheckEnemy()
 					SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
 					ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN);
 
-				//ƒqƒbƒg
+				//ï¿½qï¿½bï¿½gï¿½ï¿½
 				if (!bullet_hit)
 				{
-					archerList[i].SetDamage(POWER::PLAYER_SHURIKEN);	//“G‚Éƒ_ƒ[ƒW
-					m_bulletList[b].SetAlive(false);	//’e‚Ìƒtƒ‰ƒO‰º‚°
+					archerList[i].SetDamage(POWER::PLAYER_SHURIKEN);	//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
+					m_bulletList[b].SetAlive(false);	//ï¿½eï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
-						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 						break;
 					}
 					break;
@@ -920,28 +922,28 @@ void CPlayer::HitCheckEnemy()
 			}
 		}
 		////////////////////////////////////////////////////////////////
-		//		aŒ‚‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½aï¿½ï¿½ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
-		//aŒ‚‚ğo‚µ‚Ä‚¢‚éŠÔ
+		//ï¿½aï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½
 		if (m_swordList.bGetSlash())
 		{
-			if (!archerList[i].bGetSlashHit())	// ‘½’iƒqƒbƒg–h~
+			if (!archerList[i].bGetSlashHit())	// ï¿½ï¿½ï¿½iï¿½qï¿½bï¿½gï¿½hï¿½~
 			{
-				// “G‚ÆaŒ‚‚Ì‹——£
+				// ï¿½Gï¿½Æaï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 				const float checkDist = Utility::GetDistance(enePos, m_swordList.GetPos());
 
-				// ƒqƒbƒg”»’è‚Ì‹——£
+				// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 				const float hitDist = SLASH_SIZE::LEFT + ARCHER_SIZE::LEFT;
 
-				// ƒqƒbƒg”»’è‚æ‚è‚à‹——£‚ª‹ß‚¢‚Æ‚«
+				// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½Æ‚ï¿½
 				if (checkDist <= hitDist)
 				{
-					archerList[i].SetDamage(POWER::PLAYER_SLASH);	//“G‚Éƒ_ƒ[ƒW
-					archerList[i].bSetSlashHit(true);	// ‘½’iƒqƒbƒg–h~
+					archerList[i].SetDamage(POWER::PLAYER_SLASH);	//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
+					archerList[i].bSetSlashHit(true);	// ï¿½ï¿½ï¿½iï¿½qï¿½bï¿½gï¿½hï¿½~
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
-						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 						break;
 					}
 				}
@@ -949,9 +951,9 @@ void CPlayer::HitCheckEnemy()
 		}
 		else archerList[i].bSetSlashHit(false);
 		////////////////////////////////////////////////////////////////
-		//		”š”­‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
-		//”š”­‚µ‚Ä‚¢‚é
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é
 		if (m_bombList.GetBlastAlive())
 		{
 			if (!archerList[i].bGetBlastHit())
@@ -960,15 +962,15 @@ void CPlayer::HitCheckEnemy()
 				blast_hit = Utility::bHitCheck(m_bombList.GetBlastPos(), { 0,0 }, enePos,
 					BLAST_SIZE::LEFT, BLAST_SIZE::RIGHT, BLAST_SIZE::TOP, BLAST_SIZE::DOWN,
 					ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN);
-				//ƒqƒbƒg
+				//ï¿½qï¿½bï¿½gï¿½ï¿½
 				if (!blast_hit)
 				{
-					archerList[i].SetDamage(POWER::PLAYER_BLAST);	//“G‚Éƒ_ƒ[ƒW
+					archerList[i].SetDamage(POWER::PLAYER_BLAST);	//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
 					archerList[i].bSetSlashHit(true);
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
-						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 						break;
 					}
 				}
@@ -977,33 +979,33 @@ void CPlayer::HitCheckEnemy()
 		else archerList[i].bSetBlastHit(false);
 	}
 	////////////////////////////////////////////////////////////////
-	//		‘å’j‚Æ‚Ì“–‚½‚è”»’è								
+	//		ï¿½ï¿½jï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½								
 	////////////////////////////////////////////////////////////////
-	CGiant* giantList = enemy->GetGiantList();	//“GƒNƒ‰ƒXF‘å’jƒŠƒXƒgæ“¾
+	CGiant* giantList = enemy->GetGiantList();	//ï¿½Gï¿½Nï¿½ï¿½ï¿½Xï¿½Fï¿½ï¿½jï¿½ï¿½ï¿½Xï¿½gï¿½æ“¾
 	for (int i = 0; i < GIANT_MAX; i++)
 	{
-		Math::Vector2 enePos = giantList[i].GetPos();		//“G‚ÌÀ•Wæ“¾
-		Math::Vector2 eneMove = giantList[i].GetMove();		//“G‚ÌˆÚ“®—Êæ“¾
+		Math::Vector2 enePos = giantList[i].GetPos();		//ï¿½Gï¿½Ìï¿½ï¿½Wï¿½æ“¾
+		Math::Vector2 eneMove = giantList[i].GetMove();		//ï¿½Gï¿½ÌˆÚ“ï¿½ï¿½Êæ“¾
 
-		//¶‚«‚Ä‚é“G‚Ì‚İ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½Gï¿½Ì‚ï¿½
 		if (!giantList[i].IsAlive()) continue;
 
 		////////////////////////////////////////////////////////////////
-		//		ƒvƒŒƒCƒ„[‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
-		if (!m_HitFlg)	//–³“Gó‘Ô‚Å‚È‚¢‚Æ‚«
+		if (!m_HitFlg)	//ï¿½ï¿½ï¿½Gï¿½ï¿½Ô‚Å‚È‚ï¿½ï¿½Æ‚ï¿½
 		{
 			int player_hit = Utility::iHitCheck(m_pos, m_moveVal, enePos.x, enePos.y,
 				PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 				GIANT_SIZE::LEFT,GIANT_SIZE::RIGHT,GIANT_SIZE::TOP,GIANT_SIZE::DOWN);
 
-			//“G‚ÌŒ»İÀ•W‚Ìl•Ó
-			const float ENEMY_LEFT = enePos.x - Infor::RADIUS_32;	//¶•Ó
-			const float ENEMY_RIGHT = enePos.x + Infor::RADIUS_32;	//‰E•Ó
-			const float ENEMY_TOP = enePos.y + Infor::RADIUS_32;		//ã•Ó
-			const float ENEMY_BOTTOM = enePos.y - Infor::RADIUS_32;	//‰º•Ó
+			//ï¿½Gï¿½ÌŒï¿½ï¿½İï¿½ï¿½Wï¿½Ìlï¿½ï¿½
+			const float ENEMY_LEFT = enePos.x - Infor::RADIUS_32;	//ï¿½ï¿½ï¿½ï¿½
+			const float ENEMY_RIGHT = enePos.x + Infor::RADIUS_32;	//ï¿½Eï¿½ï¿½
+			const float ENEMY_TOP = enePos.y + Infor::RADIUS_32;		//ï¿½ï¿½ï¿½
+			const float ENEMY_BOTTOM = enePos.y - Infor::RADIUS_32;	//ï¿½ï¿½ï¿½ï¿½
 
-			// “Ëi“–‚½‚é‚Æ‘åƒ_ƒ[ƒW
+			// ï¿½Ëiï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‘ï¿½_ï¿½ï¿½ï¿½[ï¿½W
 			int dmg = 0;
 			float knockBack = 0;
 			if (giantList[i].bGetRush())
@@ -1017,32 +1019,32 @@ void CPlayer::HitCheckEnemy()
 				knockBack = 0;
 			}
 
-			//“–‚½‚è”»’è•ªŠòˆ—
-			//1:ã	2:‰º 3:¶ 4:‰E
+			//ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½è•ªï¿½òˆ—ï¿½
+			//1:ï¿½ï¿½	2:ï¿½ï¿½ 3:ï¿½ï¿½ 4:ï¿½E
 			switch (player_hit)
 			{
 			case 1:
 				m_pos.y = ENEMY_TOP + Infor::RADIUS_32;
 				m_moveVal.y = knockBack;
-				SetDamage(dmg);			//‘Ì—ÍŒ¸­
+				SetDamage(dmg);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 				m_HitFlg = true; 
 				break;
 			case 2:
 				m_pos.y = ENEMY_BOTTOM - Infor::RADIUS_32;
 				m_moveVal.y = -knockBack;
-				SetDamage(dmg);			//‘Ì—ÍŒ¸­
+				SetDamage(dmg);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 				m_HitFlg = true; 
 				break;
 			case 3:
 				m_pos.x = ENEMY_LEFT - Infor::RADIUS_32;
 				m_moveVal.x = -knockBack;
-				SetDamage(dmg);			//‘Ì—ÍŒ¸­
+				SetDamage(dmg);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 				m_HitFlg = true; 
 				break;
 			case 4:
 				m_pos.x = ENEMY_RIGHT + Infor::RADIUS_32;
 				m_moveVal.x = knockBack;
-				SetDamage(dmg);			//‘Ì—ÍŒ¸­
+				SetDamage(dmg);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 				m_HitFlg = true; 
 				break;
 			default:
@@ -1050,11 +1052,11 @@ void CPlayer::HitCheckEnemy()
 			}
 		}
 		////////////////////////////////////////////////////////////////
-		//		’e‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½eï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
 		for (int b = 0; b < BULLET_MAX; b++)
 		{
-			//¶‚«‚Ä‚é’e‚Ì‚İ
+			//ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½eï¿½Ì‚ï¿½
 			if (!m_bulletList[b].IsAlive()) continue;
 			
 			bool bullet_hit = true;
@@ -1062,43 +1064,43 @@ void CPlayer::HitCheckEnemy()
 				SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
 				GIANT_SIZE::LEFT, GIANT_SIZE::RIGHT, GIANT_SIZE::TOP, GIANT_SIZE::DOWN);
 
-			//ƒqƒbƒg
+			//ï¿½qï¿½bï¿½gï¿½ï¿½
 			if (!bullet_hit)
 			{
-				giantList[i].SetDamage(POWER::PLAYER_SHURIKEN);	//“G‚Éƒ_ƒ[ƒW
-				m_bulletList[b].SetAlive(false);	//’e‚Ìƒtƒ‰ƒO‰º‚°
+				giantList[i].SetDamage(POWER::PLAYER_SHURIKEN);	//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
+				m_bulletList[b].SetAlive(false);	//ï¿½eï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 				for (int i = 0; i < EFFECT_DMG_MAX; i++)
 				{
 					if (dmgList[i].GetbAlive())continue;
-					dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+					dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 					break;
 				}
 				break;
 			}
 		}
 		////////////////////////////////////////////////////////////////
-		//		aŒ‚‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½aï¿½ï¿½ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
-		//aŒ‚‚ğo‚µ‚Ä‚¢‚éŠÔ
+		//ï¿½aï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½
 		if (m_swordList.bGetSlash())
 		{
-			if (!giantList[i].bGetSlashHit())	// ‘½’iƒqƒbƒg–h~
+			if (!giantList[i].bGetSlashHit())	// ï¿½ï¿½ï¿½iï¿½qï¿½bï¿½gï¿½hï¿½~
 			{
-				// “G‚ÆaŒ‚‚Ì‹——£
+				// ï¿½Gï¿½Æaï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 				const float checkDist = Utility::GetDistance(enePos, m_swordList.GetPos());
 
-				// ƒqƒbƒg”»’è‚Ì‹——£
+				// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 				const float hitDist = SLASH_SIZE::LEFT + GIANT_SIZE::LEFT;
 
-				// ƒqƒbƒg”»’è‚æ‚è‚à‹——£‚ª‹ß‚¢‚Æ‚«
+				// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½Æ‚ï¿½
 				if (checkDist <= hitDist)
 				{
-					giantList[i].SetDamage(POWER::PLAYER_SLASH);	//“G‚Éƒ_ƒ[ƒW
-					giantList[i].bSetSlashHit(true);	// ‘½’iƒqƒbƒg–h~
+					giantList[i].SetDamage(POWER::PLAYER_SLASH);	//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
+					giantList[i].bSetSlashHit(true);	// ï¿½ï¿½ï¿½iï¿½qï¿½bï¿½gï¿½hï¿½~
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
-						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 						break;
 					}
 				}
@@ -1106,9 +1108,9 @@ void CPlayer::HitCheckEnemy()
 		}
 		else giantList[i].bSetSlashHit(false);
 		////////////////////////////////////////////////////////////////
-		//		”š”­‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+		//		ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 		////////////////////////////////////////////////////////////////
-		//”š”­‚µ‚Ä‚¢‚é
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é
 		if (m_bombList.GetBlastAlive())
 		{
 			if (!giantList[i].bGetBlastHit())
@@ -1117,15 +1119,15 @@ void CPlayer::HitCheckEnemy()
 				blast_hit = Utility::bHitCheck(m_bombList.GetBlastPos(), { 0,0 }, enePos,
 					BLAST_SIZE::LEFT, BLAST_SIZE::RIGHT, BLAST_SIZE::TOP, BLAST_SIZE::DOWN,
 					GIANT_SIZE::LEFT, GIANT_SIZE::RIGHT, GIANT_SIZE::TOP, GIANT_SIZE::DOWN);
-				//ƒqƒbƒg
+				//ï¿½qï¿½bï¿½gï¿½ï¿½
 				if (!blast_hit)
 				{
-					giantList[i].SetDamage(POWER::PLAYER_BLAST);	//“G‚Éƒ_ƒ[ƒW
+					giantList[i].SetDamage(POWER::PLAYER_BLAST);	//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
 					giantList[i].bSetBlastHit(true);
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
-						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+						dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 						break;
 					}
 				}
@@ -1136,21 +1138,21 @@ void CPlayer::HitCheckEnemy()
 
 
 	//------------------------------------------
-//======ƒ{ƒX‚Ì“–‚½‚è”»’è======
+//======ï¿½{ï¿½Xï¿½Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½======
 //===========)()(("&)'!)#)'%$)&!)(#!)(#
-//(ƒvƒŒƒCƒ„[‚Ö‚Ìƒ_ƒ[ƒW‚ÍenemyƒNƒ‰ƒX‚É“ü—Í‚³‚ê‚Ä‚¢‚é‚Ì‚ÅAƒ{ƒX‚ªó‚¯‚éƒ_ƒ[ƒW‚Ìˆ—‚Ì‚İ)
+//(ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ö‚Ìƒ_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½enemyï¿½Nï¿½ï¿½ï¿½Xï¿½É“ï¿½ï¿½Í‚ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ì‚ÅAï¿½{ï¿½Xï¿½ï¿½ï¿½ó‚¯‚ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Ìï¿½ï¿½ï¿½ï¿½Ì‚ï¿½)
 
 	CBoss* bossList = enemy->GetBossList();
-	Math::Vector2 enePos = bossList->GetPos();		//“G‚ÌÀ•Wæ“¾
-	Math::Vector2 eneMove = bossList->GetMove();		//“G‚ÌˆÚ“®—Êæ“¾
+	Math::Vector2 enePos = bossList->GetPos();		//ï¿½Gï¿½Ìï¿½ï¿½Wï¿½æ“¾
+	Math::Vector2 eneMove = bossList->GetMove();		//ï¿½Gï¿½ÌˆÚ“ï¿½ï¿½Êæ“¾
 
-	// ƒ{ƒX‚ª¶‚«‚Ä‚é‚Ì‚İ
+	// ï¿½{ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚éï¿½Ì‚ï¿½
 	if (!bossList->IsAlive()) return;
 
-	// ’e(è— Œ•)‚Ìƒqƒbƒgƒ`ƒFƒbƒN
+	// ï¿½e(ï¿½è— ï¿½ï¿½)ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N
 	for (int i = 0; i < BULLET_MAX; i++)
 	{
-		// ¶‚«‚Ä‚é’e‚Ì‚İ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½eï¿½Ì‚ï¿½
 		if (m_bulletList[i].IsAlive())
 		{
 			bool bullet_hit = true;
@@ -1158,15 +1160,15 @@ void CPlayer::HitCheckEnemy()
 				SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
 				BOSS_SIZE::LEFT,BOSS_SIZE::RIGHT,BOSS_SIZE::TOP,BOSS_SIZE::DOWN);
 
-			// ƒqƒbƒg
+			// ï¿½qï¿½bï¿½gï¿½ï¿½
 			if (!bullet_hit)
 			{
-				bossList->SetDamage(POWER::PLAYER_SHURIKEN);	//“G‚Éƒ_ƒ[ƒW
-				m_bulletList[i].SetAlive(false);	//’e‚Ìƒtƒ‰ƒO‰º‚°
+				bossList->SetDamage(POWER::PLAYER_SHURIKEN);	//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
+				m_bulletList[i].SetAlive(false);	//ï¿½eï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 				for (int i = 0; i < EFFECT_DMG_MAX; i++)
 				{
 					if (dmgList[i].GetbAlive())continue;
-					dmgList[i].EmitDmg(m_bulletList[i].GetPos(), eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+					dmgList[i].EmitDmg(m_bulletList[i].GetPos(), eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 					break;
 				}
 				break;
@@ -1174,27 +1176,27 @@ void CPlayer::HitCheckEnemy()
 		}
 	}
 
-	//======aŒ‚‚Ìƒqƒbƒgƒ`ƒFƒbƒN======
-	//aŒ‚‚ğo‚µ‚Ä‚¢‚éŠÔ
+	//======ï¿½aï¿½ï¿½ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N======
+	//ï¿½aï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½
 	if (m_swordList.bGetSlash())
 	{
-		if (!bossList->bGetSlashHit())	// ‘½’iƒqƒbƒg–h~ƒtƒ‰ƒO
+		if (!bossList->bGetSlashHit())	// ï¿½ï¿½ï¿½iï¿½qï¿½bï¿½gï¿½hï¿½~ï¿½tï¿½ï¿½ï¿½O
 		{
-			// “G‚ÆaŒ‚‚Ì‹——£
+			// ï¿½Gï¿½Æaï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 			const float checkDist = Utility::GetDistance(enePos, m_swordList.GetPos());
 
-			// ƒqƒbƒg”»’è‚Ì‹——£
+			// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 			const float hitDist = SLASH_SIZE::LEFT + BOSS_SIZE::LEFT;
 
-			// ƒqƒbƒg”»’è‚æ‚è‚à‹——£‚ª‹ß‚¢‚Æ‚«
+			// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½Æ‚ï¿½
 			if (checkDist <= hitDist)
 			{
-				bossList->SetDamage(POWER::PLAYER_SLASH);	//“G‚Éƒ_ƒ[ƒW
-				bossList->bSetSlashHit(true);	// ‘½’iƒqƒbƒg–h~
+				bossList->SetDamage(POWER::PLAYER_SLASH);	//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
+				bossList->bSetSlashHit(true);	// ï¿½ï¿½ï¿½iï¿½qï¿½bï¿½gï¿½hï¿½~
 				for (int i = 0; i < EFFECT_DMG_MAX; i++)
 				{
 					if (dmgList[i].GetbAlive())continue;
-					dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+					dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 					break;
 				}
 			}
@@ -1206,9 +1208,9 @@ void CPlayer::HitCheckEnemy()
 	}
 
 	////////////////////////////////////////////////////////////////
-	//		”š”­‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+	//		ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 	////////////////////////////////////////////////////////////////
-	//”š”­‚µ‚Ä‚¢‚é
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é
 	if (m_bombList.GetBlastAlive())
 	{
 		if (!bossList->bGetBlastHit())
@@ -1217,15 +1219,15 @@ void CPlayer::HitCheckEnemy()
 			blast_hit = Utility::bHitCheck(m_bombList.GetBlastPos(), { 0,0 }, bossList->GetPos(),
 				BLAST_SIZE::LEFT, BLAST_SIZE::RIGHT, BLAST_SIZE::TOP, BLAST_SIZE::DOWN,
 				BOSS_SIZE::LEFT, BOSS_SIZE::RIGHT, BOSS_SIZE::TOP, BOSS_SIZE::DOWN);
-			//ƒqƒbƒg
+			//ï¿½qï¿½bï¿½gï¿½ï¿½
 			if (!blast_hit)
 			{
-				bossList->SetDamage(POWER::PLAYER_BLAST);	//“G‚Éƒ_ƒ[ƒW
+				bossList->SetDamage(POWER::PLAYER_BLAST);	//ï¿½Gï¿½Éƒ_ï¿½ï¿½ï¿½[ï¿½W
 				bossList->bSetBlastHit(true);
 				for (int i = 0; i < EFFECT_DMG_MAX; i++)
 				{
 					if (dmgList[i].GetbAlive())continue;
-					dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ƒ_ƒ[ƒWƒGƒtƒFƒNƒg”­¶
+					dmgList[i].EmitDmg(enePos, eneMove, EffectSize);	// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
 					break;
 				}
 			}
@@ -1234,21 +1236,21 @@ void CPlayer::HitCheckEnemy()
 	else bossList->bSetBlastHit(false);
 }
 
-// ”š•—‚Æ‚Ì“–‚½‚è”»’è
+// ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
 void CPlayer::HitCheckBomb()
 {
 	if (m_HitFlg) return;
 
 	CEffect* effect = m_pOwner->GetEffect();
 	CDamage* dmgList = effect->GetDmgList();
-	//”š”­‚µ‚Ä‚¢‚é
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é
 	if (m_bombList.GetBlastAlive())
 	{
 		bool blast_hit = true;
 		blast_hit = Utility::bHitCheck(m_pos, m_moveVal, m_bombList.GetBlastPos(), 
 			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 			BLAST_SIZE::LEFT, BLAST_SIZE::RIGHT, BLAST_SIZE::TOP, BLAST_SIZE::DOWN);
-		//ƒqƒbƒg
+		//ï¿½qï¿½bï¿½gï¿½ï¿½
 		if (!blast_hit)
 		{
 			SetDamage(POWER::PLAYER_BLAST);
@@ -1257,92 +1259,92 @@ void CPlayer::HitCheckBomb()
 	}
 }
 
-//ƒAƒCƒeƒ€‚Æ‚Ì“–‚½‚è”»’è
+//ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
 void CPlayer::HitCheckItem()
 {
 	CItem* item = m_pOwner->GetItem();
 	
 	////////////////////////////////////////////////////////////////
-	//		ƒAƒCƒeƒ€F”š’e								
+	//		ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½Fï¿½ï¿½ï¿½e								
 	////////////////////////////////////////////////////////////////
-	CItem_Bomb* ItemBomb = item->GetBombItem();	//”š’eƒŠƒXƒgæ“¾
+	CItem_Bomb* ItemBomb = item->GetBombItem();	//ï¿½ï¿½ï¿½eï¿½ï¿½ï¿½Xï¿½gï¿½æ“¾
 	for (int i = 0; i < BOMB_SETMAX; i++)
 	{
-		// ”š’eŠ”Å‘å‚È‚ç“üè‚µ‚È‚¢
+		// ï¿½ï¿½ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‘ï¿½È‚ï¿½ï¿½ï¿½è‚µï¿½È‚ï¿½
 		if (m_BombPossession >= BOMB_MAX) break;
 
 		if (!ItemBomb[i].GetAlive())continue;
 		
-		//ƒqƒbƒg
+		//ï¿½qï¿½bï¿½gï¿½ï¿½
 		if (!Utility::bHitCheck(m_pos, m_moveVal, ItemBomb[i].GetPos(),
 			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 			56, 40, 24, 24))
 		{
-			ItemBomb[i].bSetbombHit();	//E‚Á‚½”»’è“üè
-			ItemBomb[i].SetAlive();		//”š’e‚Ìƒtƒ‰ƒO‰º‚°
-			m_BombPossession = BOMB_MAX;	//ƒAƒCƒeƒ€“üè
+			ItemBomb[i].bSetbombHit();	//ï¿½Eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			ItemBomb[i].SetAlive();		//ï¿½ï¿½ï¿½eï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
+			m_BombPossession = BOMB_MAX;	//ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		}
 	}
 	////////////////////////////////////////////////////////////////
-	//		ƒAƒCƒeƒ€FŒ®								
+	//		ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½Fï¿½ï¿½								
 	////////////////////////////////////////////////////////////////
-	//Œ®ƒŠƒXƒgæ“¾
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½gï¿½æ“¾
 	CItem_Key* ItemKey = item->GetKeyItem();
 	for (int i = 0; i < KEY_SETMAX; i++)
 	{
 		if (!ItemKey[i].GetAlive()) continue;
 
-		//ƒqƒbƒg
+		//ï¿½qï¿½bï¿½gï¿½ï¿½
 		if (!Utility::bHitCheck(m_pos, m_moveVal, ItemKey[i].GetPos(),
 			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 			16, 16, 16, 16))
 		{
-			ItemKey[i].SetAlive();		//Œ®‚Ìƒtƒ‰ƒO‰º‚°
-			m_KeyPossession++;		//Œ®“üè
+			ItemKey[i].SetAlive();		//ï¿½ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
+			m_KeyPossession++;		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		}
 	}
 	////////////////////////////////////////////////////////////////
-	//		ƒAƒCƒeƒ€F‰ñ•œ								
+	//		ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½Fï¿½ï¿½								
 	////////////////////////////////////////////////////////////////
-	//‰ñ•œƒŠƒXƒgæ“¾
+	//ï¿½ñ•œƒï¿½ï¿½Xï¿½gï¿½æ“¾
 	CItem_Health* ItemHealth = item->GetHealehItem();
 	for (int i = 0; i < HEALTH_SETMAX; i++)
 	{
 		if (!ItemHealth[i].GetAlive())continue;
 		
-		//ƒqƒbƒg
+		//ï¿½qï¿½bï¿½gï¿½ï¿½
 		if (!Utility::bHitCheck(m_pos, m_moveVal, ItemHealth[i].GetPos(),
 			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 			16, 16, 16, 16))
 		{
-			ItemHealth[i].SetAlive();		// ‰ñ•œ‚Ìƒtƒ‰ƒO‰º‚°
-			SetHeal(10);		// ‰ñ•œ
+			ItemHealth[i].SetAlive();		// ï¿½ñ•œ‚Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
+			SetHeal(10);		// ï¿½ï¿½
 		}
 	}
 	////////////////////////////////////////////////////////////////
-	//		ƒAƒCƒeƒ€F‰B‚ê–ª								
+	//		ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½Fï¿½Bï¿½ê–ª								
 	////////////////////////////////////////////////////////////////
-	//‰B‚ê–ªƒŠƒXƒgæ“¾
+	//ï¿½Bï¿½ê–ªï¿½ï¿½ï¿½Xï¿½gï¿½æ“¾
 	CItem_Mino* ItemMino = item->GetMinoItem();
 	if (!ItemMino->GetAlive())return;
-	//ƒqƒbƒg
+	//ï¿½qï¿½bï¿½gï¿½ï¿½
 	if (!Utility::bHitCheck(m_pos, m_moveVal, ItemMino->GetPos(),
 		PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 		32,32,32,32))
 	{
-		ItemMino->SetAlive();	// ƒtƒ‰ƒO‰º‚°
-		m_bMinoPossession = true;		// ‰B‚ê–ª“üè
+		ItemMino->SetAlive();	// ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
+		m_bMinoPossession = true;		// ï¿½Bï¿½ê–ªï¿½ï¿½ï¿½ï¿½
 	}
 }
 
-//–³“GŠÔ
+//ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½ï¿½
 void CPlayer::InviTime()
 {
-	if (m_HitFlg)	//ƒvƒŒƒCƒ„[‚ª“–‚½‚Á‚½‚ç
+	if (m_HitFlg)	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	{
-		m_hiddenList.bSetHidden();		// ‰B‚êg‰ğœ
+		m_hiddenList.bSetHidden();		// ï¿½Bï¿½ï¿½gï¿½ï¿½ï¿½
 
-		const int CNT_MAX = 120;	//–³“GŠÔ
+		const int CNT_MAX = 120;	//ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½ï¿½
 		if (m_hpCount >= CNT_MAX)
 		{
 			m_alpha = 1.0f;
@@ -1352,7 +1354,7 @@ void CPlayer::InviTime()
 		}
 		m_hpCount++;
 
-		//“_–Å
+		//ï¿½_ï¿½ï¿½
 		if (m_hpCount % 10 == 0)
 		{
 			if (m_alpha < 1)m_alpha = 1;
@@ -1366,7 +1368,7 @@ void CPlayer::InviTime()
 	}
 }
 
-//•ŠíØ‚è‘Ö‚¦ŠÖ”
+//ï¿½ï¿½ï¿½ï¿½Ø‚ï¿½Ö‚ï¿½ï¿½Öï¿½
 eClick CPlayer::ChangeItem(eClick click)
 {
 	switch (click)
@@ -1376,91 +1378,102 @@ eClick CPlayer::ChangeItem(eClick click)
 	case eSword:
 		return eBomb;
 	case eBomb:
-		if (m_bMinoPossession) return eHidden;	// ‰B‚ê–ªŠg—p‰Â”\
+		if (m_bMinoPossession) return eHidden;	// ï¿½Bï¿½ê–ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½pï¿½Â”\
 		else return eShuriken;
 	case eHidden:
 		return eShuriken;
 	}
 }
 
-// UŒ‚ŠÖ”
+// ï¿½Uï¿½ï¿½ï¿½Öï¿½
 void CPlayer::Attack(bool flg, eClick click)
 {
 	if (flg) return;
 	switch (click)
 	{
-	case eSword:	//“
+	case eSword:	//ï¿½ï¿½
 		SetSword();
 		break;
-	case eShuriken:	//è— Œ•
+	case eShuriken:	//ï¿½è— ï¿½ï¿½
 		SetShuriken();
 		break;
-	case eBomb:		//”š’e
+	case eBomb:		//ï¿½ï¿½ï¿½e
 		SetBomb();
 		break;
-	case eHidden:	//‰B‚êg
+	case eHidden:	//ï¿½Bï¿½ï¿½g
 		SetHidden();
 		break;
 	}
 }
 
-//UŒ‚Fè— Œ•
+//ï¿½Uï¿½ï¿½ï¿½Fï¿½è— ï¿½ï¿½
 void CPlayer::SetShuriken()
 {
 	if (m_shurikenCnt < COOL_TIME::PLAYER_SHURIKEN) return;
 	
-	m_hiddenList.bSetHidden();	// UŒ‚‰B‚êg‰ğœ
-
+	m_hiddenList.bSetHidden();	// æ”»æ’ƒæ™‚éš ã‚Œèº«è§£é™¤
+	CMap* map = m_pOwner->GetMap();		//ãƒãƒƒãƒ—ã‚¯ãƒ©ã‚¹å–å¾—
+	Math::Vector2 ScrollPos = map->GetscrollPos();		//ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«é‡å–å¾—
+	// å¼¾ç™ºå°„
 	for (int i = 0; i < BULLET_MAX; i++)
 	{
 		if (!m_bulletList[i].IsAlive())
 		{
-			m_bulletList[i].Shot(m_pos , m_direction);
+			// ï¿½ï¿½ï¿½ËŠpï¿½xï¿½ï¿½ï¿½ï¿½ß‚ï¿½
+			float deg = Utility::GetAngleDeg(m_pos, { (float)m_ClickPoint.x, (float)m_ClickPoint.y });
+			// ï¿½ï¿½ï¿½ï¿½
+			m_bulletList[i].Shot(m_pos, deg);
 			m_shurikenCnt = 0;
+			shurikenseInst->Play();
 			break;
 		}
 	}
-	shurikenseInst->Play();
 }
 
-//UŒ‚F“
+//ï¿½Uï¿½ï¿½ï¿½Fï¿½ï¿½
 void CPlayer::SetSword()
 {
-	if (m_slashCnt < COOL_TIME::PLAYER_SLASH) return;	// aŒ‚ƒJƒEƒ“ƒg§ŒÀ
+	if (m_slashCnt < COOL_TIME::PLAYER_SLASH) return;	// ï¿½aï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½
 	
-	m_hiddenList.bSetHidden();	// UŒ‚‰B‚êg‰ğœ
+	m_hiddenList.bSetHidden();	// ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½Bï¿½ï¿½gï¿½ï¿½ï¿½
 
 	CMap* map = m_pOwner->GetMap();
 	Math::Vector2 ScrollPos = map->GetscrollPos();
 
+	m_hiddenList.bSetHidden();	// ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½Bï¿½ï¿½gï¿½ï¿½ï¿½
+	
+	// ï¿½aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (!m_swordList.bGetSlash())
 	{
-		m_swordList.Slash(m_pos - ScrollPos, m_direction);
+		// ï¿½ï¿½ï¿½ËŠpï¿½xï¿½ï¿½ï¿½ï¿½ß‚ï¿½
+		float deg = Utility::GetAngleDeg(m_pos, { (float)m_ClickPoint.x, (float)m_ClickPoint.y });
+		// ï¿½aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		m_swordList.Slash(m_pos, deg);
 		m_slashCnt = 0;
-		
+		katanaseInst->Play();
 	}
-	katanaseInst->Play();
 }
 
-//UŒ‚F”š’e
+//ï¿½Uï¿½ï¿½ï¿½Fï¿½ï¿½ï¿½e
 void CPlayer::SetBomb()
 {
 	if (m_BombPossession <= 0) return;
 
-	m_hiddenList.bSetHidden();	// UŒ‚‰B‚êg‰ğœ
+	m_hiddenList.bSetHidden();	// æ”»æ’ƒæ™‚éš ã‚Œèº«è§£é™¤
 
+	// çˆ†å¼¾ç™ºå‹•
 	if (!m_bombList.IsAlive())
 	{
 		m_bombList.InstBomb(m_pos);
-		/* ƒAƒCƒeƒ€Á”ïˆ— */
+		/* ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ïˆï¿½ï¿½ */
 		m_BombPossession--;
 	}
 }
 
-//‰B‚êg
+//ï¿½Bï¿½ï¿½g
 void CPlayer::SetHidden()
 {
-	m_hiddenList.Hidden();	// ‰B‚êg
+	m_hiddenList.Hidden();	// ï¿½Bï¿½ï¿½g
 	if (m_hiddenList.bGetHidden())
 	{
 		m_alpha = 0.2f;
@@ -1468,7 +1481,7 @@ void CPlayer::SetHidden()
 	}
 }
 
-// ƒAƒjƒ[ƒVƒ‡ƒ“
+// ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½
 int CPlayer::Animation(int cnt, const int xtex)
 {
 	return cnt / m_aTimer * 116 + 38 + xtex;
@@ -1477,22 +1490,22 @@ int CPlayer::Animation(int cnt, const int xtex)
 //std::shared_ptr<KdSoundInstance> CPlayer::Sound_Loading(std::shared_ptr<KdSoundEffect> se, std::shared_ptr<KdSoundInstance> seInst, const std::string& seName)
 std::shared_ptr<KdSoundInstance> CPlayer::Sound_Loading(std::shared_ptr<KdSoundEffect> se, const std::string &seName)
 {
-	//‡@—ÌˆæŠm•Û
+	//ï¿½@ï¿½Ìˆï¿½mï¿½ï¿½
 	se = std::make_shared<KdSoundEffect>();
-	//‡A‰¹“Ç‚İ‚İ
+	//ï¿½Aï¿½ï¿½ï¿½Ç‚İï¿½ï¿½ï¿½
 	se->Load(seName);
-	//‡BÀ‘Ì‰»
+	//ï¿½Bï¿½ï¿½ï¿½Ì‰ï¿½
 	//seInst = se->CreateInstance(false);
 
 	//return seInst;
 
 	return se->CreateInstance(false);
 
-	//‡@—ÌˆæŠm•Û
+	//ï¿½@ï¿½Ìˆï¿½mï¿½ï¿½
 //	se = std::make_shared<KdSoundEffect>();
-	//‡A‰¹“Ç‚İ‚İ
+	//ï¿½Aï¿½ï¿½ï¿½Ç‚İï¿½ï¿½ï¿½
 //	se->Load("Sound/hit.WAV");
-	//‡BÀ‘Ì‰»
+	//ï¿½Bï¿½ï¿½ï¿½Ì‰ï¿½
 //	seInst = se->CreateInstance(false);
 }
 

@@ -217,8 +217,8 @@ void CSamurai::Attack()
 			bSetSlash(true);
 			m_atkCnt = 0;
 		}
+		m_atkCnt++;
 	}
-	m_atkCnt++;
 	if (m_atkCnt >= COOL_TIME::SAMURAI_SLASH)
 		m_atkCnt = COOL_TIME::SAMURAI_SLASH;	// ÉJÉEÉìÉgêßå¿
 }
