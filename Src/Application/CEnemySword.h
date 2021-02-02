@@ -7,7 +7,7 @@ public:
 	~CEnemySword();
 
 	void Init();
-	void Updata(Math::Vector2 playerPos);
+	void Updata();
 	void Draw();
 	void SetTexture(KdTexture* apTexture);
 	const Math::Vector2 CEnemySword::GetPos();		//À•Wæ“¾

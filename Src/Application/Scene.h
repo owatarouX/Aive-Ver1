@@ -73,6 +73,7 @@ private:
 	KdTexture m_ItemBombTex_f;
 	KdTexture m_ItemKeyTex;
 	KdTexture m_ItemHealthTex;
+	KdTexture m_ItemMinoTex;
 
 	//UI
 	KdTexture m_backTex;

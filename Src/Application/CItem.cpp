@@ -32,6 +32,10 @@ void CItem::Init()
 	{
 		m_healthList[i].Init();
 	}
+
+	// アイテム：隠れ蓑
+	m_minoList.Init();
+	SetMino();	// 隠れ蓑配置
 }
 
 //更新
@@ -50,20 +54,21 @@ void CItem::Update()
 		m_bombList[i].SetScrollPos(ScrollPos);		//スクロール量取得
 		m_bombList[i].Update();		//更新
 	}
-	
 	//鍵
 	for (int i = 0; i < KEY_SETMAX; i++)
 	{
 		m_keyList[i].SetScrollPos(ScrollPos);		//スクロール量取得
 		m_keyList[i].Update();		//更新
 	}
-
 	// 回復
 	for (int i = 0; i < HEALTH_SETMAX; i++)
 	{
 		m_healthList[i].SetScrollPos(ScrollPos);
 		m_healthList[i].Update();
 	}
+	// 隠れ蓑
+	m_minoList.SetScrollPos(ScrollPos);
+	m_minoList.Update();
 }
 
 //描画
@@ -74,18 +79,18 @@ void CItem::Draw()
 	{
 		m_bombList[i].Draw();
 	}
-
 	//鍵
 	for (int i = 0; i < KEY_SETMAX; i++)
 	{
 		m_keyList[i].Draw();
 	}
-
 	// 回復
 	for (int i = 0; i < HEALTH_SETMAX; i++)
 	{
 		m_healthList[i].Draw();
 	}
+	// 隠れ蓑
+	m_minoList.Draw();
 }
 
 //オーナー設定取得
@@ -151,6 +156,28 @@ void CItem::SetKey()
 	}
 }
 
+//隠れ蓑設置
+void CItem::SetMino()
+{
+	CMap* map = m_pOwner->GetMap();
+	int mapData = map->GetMapData();	//マップデータ取得
+
+	//データごとの配置設定
+	switch (mapData)
+	{
+		//一階層
+	case OneFloor:
+		m_minoList.SetMino({ 1400,-1600 });
+		break;
+		//二階層
+	case TwoFloor:
+		break;
+		//三階層
+	case ThreeFloor:
+		break;
+	}
+}
+
 //テクスチャ設定：爆弾true
 void CItem::SetTexBomb_t(KdTexture* apTexture)
 {
@@ -185,7 +212,7 @@ void CItem::SetTexKey(KdTexture* apTexture)
 }
 
 // テクスチャ設定：回復
-void CItem::SetHealthTex(KdTexture* apTexture)
+void CItem::SetTexHealth(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
 
@@ -193,6 +220,13 @@ void CItem::SetHealthTex(KdTexture* apTexture)
 	{
 		m_healthList[i].SetTexture(apTexture);
 	}
+}
+
+// テクスチャ設定：隠れ蓑
+void CItem::SetTexMino(KdTexture* apTexture)
+{
+	if (apTexture == nullptr)return;
+	m_minoList.SetTexture(apTexture);
 }
 
 // 回復ドロップ処理(true：ドロップ)

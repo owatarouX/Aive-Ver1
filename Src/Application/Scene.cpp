@@ -62,7 +62,7 @@ void Scene::Init()
 	bgm->Load("Sound/BGM.WAV");
 	bgmInst = bgm->CreateInstance(false);
 	bgmInst->SetVolume(0.3);
-	bgmInst->Play(true);
+	//bgmInst->Play(true);
 }
 
 void Scene::Release()
@@ -89,6 +89,7 @@ void Scene::Release()
 	m_ItemBombTex_f.Release();
 	m_ItemKeyTex.Release();
 	m_ItemHealthTex.Release();
+	m_ItemMinoTex.Release();
 
 	// UI
 	m_backTex.Release();
@@ -126,8 +127,7 @@ void Scene::ImGuiUpdate()
 	ImGui::SetNextWindowSize(ImVec2(200, 300), ImGuiSetCond_Once);
 
 	CBoss* BossList = m_enemy.GetBossList();
-	bool a = BossList->bGetBlastHit();
-	bool BossRushFlg = BossList->Getm_bRush();
+	bool a = m_player.bGetHidden();
 
 	// デバッグウィンドウ
 	if (ImGui::Begin("Debug Window"))
@@ -140,11 +140,10 @@ void Scene::ImGuiUpdate()
 		ImGui::Text("L_Click : %d", m_player.GetL());
 		ImGui::Text("Item_BombNum : %d", m_player.GetBombPossession());
 		ImGui::Text("Item_KeyNum : %d", m_player.GetKeyPossession());
-		ImGui::Text("msg : %f", m_message.GetPos().x);
-		ImGui::Text("msg : %f", m_message.GetPos().y);
 		ImGui::Text("BossHp : %d", BossList->GetHp());
+		ImGui::Text("Activate : %f", m_player.GetHideCnt());
 
-		//ImGui::Checkbox("flg", &a);
+		ImGui::Checkbox("HideFlg", &a);
 
 	}
 	ImGui::End();
@@ -177,10 +176,11 @@ void Scene::Reset()
 	m_mapTex.Load("Texture/Map/Map1.png");
 	
 	// アイテム
-	m_ItemBombTex_t.Load("Texture/Item/BombStorage_true.png");
-	m_ItemBombTex_f.Load("Texture/Item/BombStorage_false.png");
-	m_ItemKeyTex.Load("Texture/Item/Key.png");
-	m_ItemHealthTex.Load("Texture/Item/onigirio.png");
+	m_ItemBombTex_t.Load("Texture/Item/BombStorage_true.png");		// 爆弾_有
+	m_ItemBombTex_f.Load("Texture/Item/BombStorage_false.png");		// 爆弾_無
+	m_ItemKeyTex.Load("Texture/Item/Key.png");						// 鍵
+	m_ItemHealthTex.Load("Texture/Item/onigirio.png");				// 回復
+	m_ItemMinoTex.Load("Texture/Item/hidemino.png");					// 隠れ蓑
 
 	// UI
 	m_backTex.Load("Texture/UI/back.png");
@@ -240,7 +240,8 @@ void Scene::Reset()
 	m_item.SetTexBomb_t(&m_ItemBombTex_t);
 	m_item.SetTexBomb_f(&m_ItemBombTex_f);
 	m_item.SetTexKey(&m_ItemKeyTex);
-	m_item.SetHealthTex(&m_ItemHealthTex);
+	m_item.SetTexHealth(&m_ItemHealthTex);
+	m_item.SetTexMino(&m_ItemMinoTex);
 	m_item.SetOwner(this);
 	m_item.Init();
 

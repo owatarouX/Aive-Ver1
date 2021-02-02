@@ -33,6 +33,7 @@ public:
 
 	void SetScrollPos(Math::Vector2 scrPos);	//スクロール量取得
 	void SetPlayerPos(Math::Vector2 pos);		// プレイヤーの座標取得
+	void bSetHidden(bool flg);					// 隠れ身状態取得
 
 private:
 
@@ -55,6 +56,7 @@ private:
 
 	Math::Vector2	 m_scrollPos;	//スクロール量取得用
 	Math::Vector2	 m_playerPos;	//プレイヤーの座標取得用
+	bool			 m_bHidden;		//隠れ身フラグ取得用
 
 };
 

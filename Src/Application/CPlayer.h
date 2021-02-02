@@ -3,6 +3,7 @@
 #include"CBullet.h"
 #include"CSword.h"
 #include"CBomb.h"
+#include"CHidden.h"
 
 //クラスの前方宣言
 class Scene;
@@ -20,7 +21,8 @@ enum eClick
 {
 	eShuriken,	//0.手裏剣
 	eSword,		//1.刀
-	eBomb		//2.爆弾
+	eBomb,		//2.爆弾
+	eHidden		//3.隠れ身	
 };
 
 enum eStatus
@@ -48,8 +50,8 @@ public:
 	void Init();
 	void ReInit(int mapData);
 	void Updata();
+	void UpDatePlayer(Math::Vector2 ScrollPos);
 	void Draw();
-	const bool IsAlive();
 
 	//セッター
 	void SetTexture(KdTexture* apTexture);
@@ -67,12 +69,15 @@ public:
 	void SetMovevalY(float movey);	// 移動量セットY(移動量を入力)
 
 	//ゲッター
-	const Math::Vector2 GetPos() { return m_pos; }		//プレイヤー座標取得
-	const Math::Vector2 GetMove() { return m_moveVal; }		//プレイヤー移動量取得
-	const int GetHp() { return m_hp; }					//体力量取得
+	const bool IsAlive() { return m_bAlive; }
+	const Math::Vector2 GetPos() { return m_pos; }				//プレイヤー座標取得
+	const Math::Vector2 GetMove() { return m_moveVal; }			//プレイヤー移動量取得
+	const int GetHp() { return m_hp; }							//体力量取得
 	const int GetBombPossession() { return m_BombPossession; }	//爆弾所持数取得
 	const int GetKeyPossession() { return m_KeyPossession; }	//鍵所持数取得
-	const bool bGetHit() { return m_HitFlg; }	// 無敵状態取得
+	const bool bGetHit() { return m_HitFlg; }					// 無敵状態取得
+	const bool bGetHidden() { return m_hiddenList.bGetHidden(); }	// 隠れ身フラグ取得
+	const float GetHideCnt() { return m_hiddenList.GetHiddenCnt(); }
 
 	//キー内容取得
 	const int GetR();
@@ -94,12 +99,13 @@ private:		//外部からアクセス不可
 	
 	bool			 m_bAlive;		//生存フラグ
 	int				 m_hp;			//HP
+	bool			 m_bHeal;		//HP回復ポイントフラグ
 	int				 m_hpCount;		//無敵時間
 	float			 m_alpha;		//画像の透明度
 	bool			 m_HitFlg;		//当たり判定フラグ
-	float			 m_slashCnt;	//斬撃攻撃のクールタイムカウント
-	float			 m_shurikenCnt;	// 手裏剣クールタイムカウント
-	
+	float			 m_slashCnt;	//斬撃攻撃のクールタイム
+	float			 m_shurikenCnt;	//手裏剣クールタイム
+
 	bool			 m_bRClick;	//右クリックフラグ
 	bool			 m_bLClick;	//左クリックフラグ
 	bool			 m_bRChange;//右武器変更フラグ
@@ -111,6 +117,10 @@ private:		//外部からアクセス不可
 
 	int				 m_BombPossession;		//爆弾所持数
 	int				 m_KeyPossession;		//鍵所持数
+	bool			 m_bMinoPossession;		//隠れ蓑所持フラグ
+
+
+	void KeyOperation();	// キー操作一覧
 
 	/* 当たり判定 */
 	void HitCheckMap();			// マップ
@@ -120,15 +130,17 @@ private:		//外部からアクセス不可
 
 	void InviTime();			//無敵時間
 	eClick ChangeItem(eClick click);		//武器変更関数
+	void Attack(bool flg, eClick click);
 	void SetShuriken();		//手裏剣攻撃
 	void SetSword();		//刀攻撃
 	void SetBomb();			//爆弾攻撃
-
+	void SetHidden();		//隠れ身 
 
 	Scene*			 m_pOwner;			//オーナー取得用
 	CBullet m_bulletList[BULLET_MAX];	//手裏剣クラス取得
 	CSword  m_swordList;				//斬撃クラス取得
 	CBomb  m_bombList;					//爆弾クラス取得
+	CHidden m_hiddenList;				//隠れ身クラス取得
 
 	//音
 	std::shared_ptr<KdSoundEffect> katanase;

@@ -36,6 +36,7 @@ public:
 
 	void SetScrollPos(Math::Vector2 scrPos);	//スクロール量取得
 	void SetPlayerPos(Math::Vector2 pos);		// プレイヤーの座標取得
+	void bSetHidden(bool flg);					// 隠れ身状態取得
 
 private:
 	KdTexture* m_pTexture;		// 画像(テクスチャ)
@@ -61,10 +62,10 @@ private:
 	bool			m_bAtk;				// 攻撃フラグ
 	int				m_atkCnt;			// 攻撃カウント
 	int				m_atkRnd;			// ランダムで攻撃変更
-	
 
 	Math::Vector2	 m_scrollPos;	//スクロール量取得用
 	Math::Vector2	 m_playerPos;	//プレイヤーの座標取得用
+	bool			 m_bHidden;		//隠れ身フラグ取得用
 
 	void Attack();			// 攻撃関数
 	void Homing(float sp);	// 追跡(速度)

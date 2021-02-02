@@ -74,6 +74,9 @@ void CSamurai::Update()
 	// 一定の距離に離れたら
 	else if (m_dist > 400)	m_VisibilityFlg = false;	// 視野フラグ下げ
 	
+	// プレイヤーが隠れ蓑使用時、視野フラグ下げる
+	if (m_bHidden)m_VisibilityFlg = false;
+
 	// 視界内の時
 	if (m_VisibilityFlg)
 	{
@@ -195,6 +198,12 @@ void CSamurai::SetPlayerPos(Math::Vector2 pos)
 	m_playerPos = pos;
 }
 
+// プレイヤーの隠れ蓑使用フラグ取得
+void CSamurai::bSetHidden(bool flg)
+{
+	m_bHidden = flg;
+}
+
 // 攻撃関数
 void CSamurai::Attack()
 {
@@ -203,7 +212,6 @@ void CSamurai::Attack()
 	else
 	{
 		m_moveVal = { 0,0 };
-
 		if (m_atkCnt >= COOL_TIME::SAMURAI_SLASH)
 		{
 			bSetSlash(true);
