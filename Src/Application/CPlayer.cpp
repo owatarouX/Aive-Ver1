@@ -100,7 +100,7 @@ void CPlayer::Init()
 	katanaseInst = Sound_Loading(katanase, "Sound/katana.WAV");
 	shurikenseInst = Sound_Loading(shurikense, "Sound/shuriken.WAV");
 	hitseInst = Sound_Loading(hitse,"Sound/hit.WAV");
-
+	healseInst = Sound_Loading(healse, "Sound/heal.WAV");
 }
 
 // 再初期化
@@ -327,6 +327,8 @@ void CPlayer::SetHeal(int heal)
 	m_hp += heal;
 	CEffect* effect = m_pOwner->GetEffect();
 	effect->PlayerHealEffect();
+	healseInst->Play();
+	
 }
 
 // ヒットフラグセット
