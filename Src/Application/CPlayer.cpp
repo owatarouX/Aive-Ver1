@@ -166,6 +166,10 @@ void CPlayer::Updata(POINT aMousePos)
 // プレイヤー更新処理
 void CPlayer::UpDatePlayer(Math::Vector2 ScrollPos)
 {
+	//プレイヤーが"歩き"状態の時プレイヤーの状態を"立ち"の状態にする
+	if(m_status==eWalking)
+	m_status = eIdle;
+
 	// キー操作一覧
 	KeyOperation();
 
@@ -206,15 +210,47 @@ void CPlayer::UpDatePlayer(Math::Vector2 ScrollPos)
 	if (m_hp >= HP::PLAYER)m_hp = HP::PLAYER;
 
 	//アニメーション
+	switch (m_status)
+	{
+	case eIdle:
+		m_aTimer = 15;
+		m_aflame = 6;
+		break;
+	case eWalking:
+		m_aTimer = 10;
+		m_aflame = 6;
+		break;
+	case eAttack:
+		m_aTimer = 5;
+		m_aflame = 3;
+		break;
+	default:
+		break;
+	}
+
 	const int CNT_MAX = m_aTimer * m_aflame;
-	if (m_aCnt >= CNT_MAX + m_aTimer - 1)
+	if (m_aCnt >= CNT_MAX - 1)
+	{
 		m_aCnt = 0;
+	}
 	m_aCnt++;
+
+	//攻撃アニメーションの計算
+	if (m_status == eAttack)
+	{
+		const int CNT_MAX = m_aTimer * m_aflame;
+		if (m_aCnt >= CNT_MAX - 1)
+		{
+			m_aAttackCnt = 0;
+			m_status = eIdle;
+		}
+		m_aAttackCnt++;
+	}
+
 
 	//座標確定
 	m_pos.x += m_moveVal.x;
 	m_pos.y += m_moveVal.y;
-
 	m_moveVal = { 0,0 };
 	
 	//行列作成
@@ -242,7 +278,20 @@ void CPlayer::Draw()
 
 	//プレイヤー描画
 	SHADER.m_spriteShader.SetMatrix(m_mat);
-	Math::Rectangle scrRect = { -20,Animation(m_aCnt,348),160,64 }; // テクスチャ座標
+	switch (m_status)
+	{
+	case eIdle:
+		scrRect = { -20,Animation(m_aCnt,348),160,64 }; // テクスチャ座標
+		break;
+	case eWalking:
+		scrRect = { -20,Animation(m_aCnt,1044),160,64 }; // テクスチャ座標
+		break;
+	case eAttack:
+		scrRect = { -20,Animation(m_aCnt,0),160,64 }; // テクスチャ座標
+		break;
+	default:
+		break;
+	}
 	Math::Color color = { 1,1,1, m_alpha }; // 色（RGBAの順番で　0.0～1.0）
 	SHADER.m_spriteShader.DrawTex(m_pTexture, 0, 0, 160, 64, &scrRect, &color, Math::Vector2(0.5f, 0.5f));
 
@@ -378,21 +427,29 @@ void CPlayer::KeyOperation()
 	{
 		m_moveVal.y += SPEED::PLAYER;
 		m_direction = Up;
+		if(m_status==eIdle) //プレイヤーが"立ち"状態の時に"歩き"状態に変える
+		m_status = eWalking;
 	}
 	if (GetAsyncKeyState('S') & 0x8000)
 	{
 		m_moveVal.y -= SPEED::PLAYER;
 		m_direction = Down;
+		if (m_status == eIdle) //プレイヤーが"立ち"状態の時に"歩き"状態に変える
+			m_status = eWalking;
 	}
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
 		m_moveVal.x -= SPEED::PLAYER;
 		m_direction = Left;
+		if (m_status == eIdle) //プレイヤーが"立ち"状態の時に"歩き"状態に変える
+			m_status = eWalking;
 	}
 	if (GetAsyncKeyState('D') & 0x8000)
 	{
 		m_moveVal.x += SPEED::PLAYER;
 		m_direction = Right;
+		if (m_status == eIdle) //プレイヤーが"立ち"状態の時に"歩き"状態に変える
+			m_status = eWalking;
 	}
 
 	/* 攻撃 */
@@ -1437,6 +1494,8 @@ void CPlayer::SetSword()
 {
 	if (m_slashCnt < COOL_TIME::PLAYER_SLASH) return;	// 斬撃カウント制限
 	
+	m_status = eAttack; //プレイヤーの状態を"攻撃"にする
+
 	m_hiddenList.bSetHidden();	// 攻撃時隠れ身解除
 
 	CMap* map = m_pOwner->GetMap();

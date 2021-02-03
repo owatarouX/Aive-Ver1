@@ -88,6 +88,7 @@ private:		//外部からアクセス不可
 	eDirection		m_direction;	//プレイヤーの向き
 	eClick			m_LClick;
 	eClick			m_RClick;
+	eStatus			m_status;
 
 	KdTexture*		 m_pTexture;	//画像(テクスチャ)
 	Math::Vector2	 m_pos;			//座標
@@ -112,8 +113,11 @@ private:		//外部からアクセス不可
 	bool			 m_bLChange;//左武器変更フラグ
 
 	int	 m_aCnt;	//アニメーションカウント
+	int	 m_aAttackCnt; //攻撃アニメーションのカウント
 	int m_aTimer;	//アニメーションを何fに1枚動かす
 	int m_aflame;	//アニメーション枚数
+
+	Math::Rectangle scrRect; //テクスチャ座標
 
 	int				 m_BombPossession;		//爆弾所持数
 	int				 m_KeyPossession;		//鍵所持数
