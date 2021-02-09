@@ -742,14 +742,16 @@ void CPlayer::HitCheckMap()
 				////////////////////////////////////////////////////////////////
 				for (int i = 0; i < BULLET_MAX; i++)
 				{
-					bool hit = Utility::bHitCheck(m_bulletList[i].GetPos(), m_bulletList[i].GetMove(), { chipX[h][w],chipY[h][w] },
-						SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
-						Infor::RADIUS_32,Infor::RADIUS_32,Infor::RADIUS_32,Infor::RADIUS_32);
 					//ヒット時
-					if (!hit)
+					if (!Utility::bHitCheck(m_bulletList[i].GetPos(), m_bulletList[i].GetMove(), { chipX[h][w],chipY[h][w] },
+						SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
+						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 					{
 						m_bulletList[i].SetAlive();	//弾のフラグ下げ
+						continue;
 					}
+					if (!m_bulletList[i].IsAlive())continue;
+					if (m_bulletList[i].GetPos().x < chipX[0][0] - SHURIKEN_SIZE::LEFT) m_bulletList[i].SetAlive();
 				}
 			}
 		}
@@ -776,56 +778,6 @@ void CPlayer::HitCheckEnemy()
 
 		//生きてる敵のみ
 		if (!samuraiList[e].IsAlive()) continue;
-
-		////////////////////////////////////////////////////////////////
-		//		プレイヤーのヒットチェック								
-		////////////////////////////////////////////////////////////////
-		if (!m_HitFlg)	//無敵状態でないとき
-		{
-			int player_hit = Utility::iHitCheck(m_pos, m_moveVal, enePos.x, enePos.y,
-				PLAYER_SIZE::LEFT,PLAYER_SIZE::RIGHT,PLAYER_SIZE::TOP,PLAYER_SIZE::DOWN,
-				SAMURAI_SIZE::LEFT,SAMURAI_SIZE::RIGHT,SAMURAI_SIZE::TOP,SAMURAI_SIZE::DOWN);
-
-			//敵の現在座標の四辺
-			const float ENEMY_LEFT = enePos.x - Infor::RADIUS_32;	//左辺
-			const float ENEMY_RIGHT = enePos.x + Infor::RADIUS_32;	//右辺
-			const float ENEMY_TOP = enePos.y + Infor::RADIUS_32;		//上辺
-			const float ENEMY_BOTTOM = enePos.y - Infor::RADIUS_32;	//下辺
-
-			//当たり判定分岐処理
-			//1:上	2:下 3:左 4:右
-			int dmg = 5;
-			switch (player_hit)
-			{
-			case 1:
-				m_pos.y = ENEMY_TOP + Infor::RADIUS_32;
-				m_moveVal.y = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);			//体力減少
-				m_HitFlg = true;
-				
-				break;
-			case 2:
-				m_pos.y = ENEMY_BOTTOM - Infor::RADIUS_32;
-				m_moveVal.y = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);
-				m_HitFlg = true;
-				break;
-			case 3:
-				m_pos.x = ENEMY_LEFT - Infor::RADIUS_32;
-				m_moveVal.x = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);
-				m_HitFlg = true;
-				break;
-			case 4:
-				m_pos.x = ENEMY_RIGHT + Infor::RADIUS_32;
-				m_moveVal.x = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);
-				m_HitFlg = true;
-				break;
-			default:
-				break;
-			}
-		}
 		////////////////////////////////////////////////////////////////
 		//		弾のヒットチェック								
 		////////////////////////////////////////////////////////////////
@@ -834,13 +786,10 @@ void CPlayer::HitCheckEnemy()
 			//生きてる弾のみ
 			if (m_bulletList[b].IsAlive())
 			{
-				bool bullet_hit = true;
-				bullet_hit = Utility::bHitCheck(m_bulletList[b].GetPos(), m_bulletList[b].GetMove(), enePos,
-					SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
-					SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN);
-
 				//ヒット時
-				if (!bullet_hit)
+				if (!Utility::bHitCheck(m_bulletList[b].GetPos(), m_bulletList[b].GetMove(), enePos,
+					SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
+					SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN))
 				{
 					samuraiList[e].SetDamage(POWER::PLAYER_SHURIKEN);			//敵にダメージ
 					m_bulletList[b].SetAlive();	//弾のフラグ下げ
@@ -919,51 +868,6 @@ void CPlayer::HitCheckEnemy()
 
 		//生きてる敵のみ
 		if (!archerList[i].IsAlive()) continue;
-
-		////////////////////////////////////////////////////////////////
-		//		プレイヤーのヒットチェック								
-		////////////////////////////////////////////////////////////////
-		if (!m_HitFlg)	//無敵状態でないとき
-		{
-			int player_hit = Utility::iHitCheck(m_pos, m_moveVal, enePos.x, enePos.y,
-				PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
-				ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN);
-
-			//敵の現在座標の四辺
-			const float ENEMY_LEFT = enePos.x - Infor::RADIUS_32;	//左辺
-			const float ENEMY_RIGHT = enePos.x + Infor::RADIUS_32;	//右辺
-			const float ENEMY_TOP = enePos.y + Infor::RADIUS_32;		//上辺
-			const float ENEMY_BOTTOM = enePos.y - Infor::RADIUS_32;	//下辺
-
-			//当たり判定分岐処理
-			//1:上	2:下 3:左 4:右
-			switch (player_hit)
-			{
-			case 1:
-				m_pos.y = ENEMY_TOP + Infor::RADIUS_32;
-				m_moveVal.y = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);			//体力減少
-				m_HitFlg = true;
-				break;
-			case 2:
-				m_pos.y = ENEMY_BOTTOM - Infor::RADIUS_32;
-				m_moveVal.y = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);			//体力減少
-				m_HitFlg = true; break;
-			case 3:
-				m_pos.x = ENEMY_LEFT - Infor::RADIUS_32;
-				m_moveVal.x = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);			//体力減少
-				m_HitFlg = true; break;
-			case 4:
-				m_pos.x = ENEMY_RIGHT + Infor::RADIUS_32;
-				m_moveVal.x = 0;
-				SetDamage(POWER::ENEMY_PHYSICAL);			//体力減少
-				m_HitFlg = true; break;
-			default:
-				break;
-			}
-		}
 		////////////////////////////////////////////////////////////////
 		//		弾のヒットチェック								
 		////////////////////////////////////////////////////////////////
@@ -972,13 +876,10 @@ void CPlayer::HitCheckEnemy()
 			//生きてる弾のみ
 			if (m_bulletList[b].IsAlive())
 			{
-				bool bullet_hit = true;
-				bullet_hit = Utility::bHitCheck(m_bulletList[b].GetPos(), m_bulletList[b].GetMove(),enePos,
-					SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
-					ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN);
-
 				//ヒット時
-				if (!bullet_hit)
+				if (!Utility::bHitCheck(m_bulletList[b].GetPos(), m_bulletList[b].GetMove(), enePos,
+					SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
+					ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN))
 				{
 					archerList[i].SetDamage(POWER::PLAYER_SHURIKEN);	//敵にダメージ
 					m_bulletList[b].SetAlive();	//弾のフラグ下げ
@@ -1058,68 +959,6 @@ void CPlayer::HitCheckEnemy()
 
 		//生きてる敵のみ
 		if (!giantList[i].IsAlive()) continue;
-
-		////////////////////////////////////////////////////////////////
-		//		プレイヤーのヒットチェック								
-		////////////////////////////////////////////////////////////////
-		if (!m_HitFlg)	//無敵状態でないとき
-		{
-			int player_hit = Utility::iHitCheck(m_pos, m_moveVal, enePos.x, enePos.y,
-				PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
-				GIANT_SIZE::LEFT,GIANT_SIZE::RIGHT,GIANT_SIZE::TOP,GIANT_SIZE::DOWN);
-
-			//敵の現在座標の四辺
-			const float ENEMY_LEFT = enePos.x - Infor::RADIUS_32;	//左辺
-			const float ENEMY_RIGHT = enePos.x + Infor::RADIUS_32;	//右辺
-			const float ENEMY_TOP = enePos.y + Infor::RADIUS_32;		//上辺
-			const float ENEMY_BOTTOM = enePos.y - Infor::RADIUS_32;	//下辺
-
-			// 突進時当たると大ダメージ
-			int dmg = 0;
-			float knockBack = 0;
-			if (giantList[i].bGetRush())
-			{
-				dmg = 10;
-				knockBack = 80;
-			}
-			else
-			{
-				dmg = POWER::ENEMY_PHYSICAL;
-				knockBack = 0;
-			}
-
-			//当たり判定分岐処理
-			//1:上	2:下 3:左 4:右
-			switch (player_hit)
-			{
-			case 1:
-				m_pos.y = ENEMY_TOP + Infor::RADIUS_32;
-				m_moveVal.y = knockBack;
-				SetDamage(dmg);			//体力減少
-				m_HitFlg = true; 
-				break;
-			case 2:
-				m_pos.y = ENEMY_BOTTOM - Infor::RADIUS_32;
-				m_moveVal.y = -knockBack;
-				SetDamage(dmg);			//体力減少
-				m_HitFlg = true; 
-				break;
-			case 3:
-				m_pos.x = ENEMY_LEFT - Infor::RADIUS_32;
-				m_moveVal.x = -knockBack;
-				SetDamage(dmg);			//体力減少
-				m_HitFlg = true; 
-				break;
-			case 4:
-				m_pos.x = ENEMY_RIGHT + Infor::RADIUS_32;
-				m_moveVal.x = knockBack;
-				SetDamage(dmg);			//体力減少
-				m_HitFlg = true; 
-				break;
-			default:
-				break;
-			}
-		}
 		////////////////////////////////////////////////////////////////
 		//		弾のヒットチェック								
 		////////////////////////////////////////////////////////////////
@@ -1128,13 +967,10 @@ void CPlayer::HitCheckEnemy()
 			//生きてる弾のみ
 			if (!m_bulletList[b].IsAlive()) continue;
 			
-			bool bullet_hit = true;
-			bullet_hit = Utility::bHitCheck(m_bulletList[b].GetPos(), m_bulletList[b].GetMove(), enePos,
-				SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
-				GIANT_SIZE::LEFT, GIANT_SIZE::RIGHT, GIANT_SIZE::TOP, GIANT_SIZE::DOWN);
-
 			//ヒット時
-			if (!bullet_hit)
+			if (!Utility::bHitCheck(m_bulletList[b].GetPos(), m_bulletList[b].GetMove(), enePos,
+				SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
+				GIANT_SIZE::LEFT, GIANT_SIZE::RIGHT, GIANT_SIZE::TOP, GIANT_SIZE::DOWN))
 			{
 				giantList[i].SetDamage(POWER::PLAYER_SHURIKEN);	//敵にダメージ
 				m_bulletList[b].SetAlive();	//弾のフラグ下げ
@@ -1184,12 +1020,10 @@ void CPlayer::HitCheckEnemy()
 		{
 			if (!giantList[i].bGetBlastHit())
 			{
-				bool blast_hit = true;
-				blast_hit = Utility::bHitCheck(m_bombList.GetBlastPos(), { 0,0 }, enePos,
-					BLAST_SIZE::LEFT, BLAST_SIZE::RIGHT, BLAST_SIZE::TOP, BLAST_SIZE::DOWN,
-					GIANT_SIZE::LEFT, GIANT_SIZE::RIGHT, GIANT_SIZE::TOP, GIANT_SIZE::DOWN);
 				//ヒット時
-				if (!blast_hit)
+				if (!Utility::bHitCheck(m_bombList.GetBlastPos(), { 0,0 }, enePos,
+					BLAST_SIZE::LEFT, BLAST_SIZE::RIGHT, BLAST_SIZE::TOP, BLAST_SIZE::DOWN,
+					GIANT_SIZE::LEFT, GIANT_SIZE::RIGHT, GIANT_SIZE::TOP, GIANT_SIZE::DOWN))
 				{
 					giantList[i].SetDamage(POWER::PLAYER_BLAST);	//敵にダメージ
 					giantList[i].bSetBlastHit(true);

@@ -470,15 +470,15 @@ void Scene::GameUpdate()
 	// メッセージ
 	switch (m_message.GetMsgNum())
 	{
-	case 0: m_msgTex.Load("Texture/Message/Attack description.png");
+	case 0: m_msgTex.Load("Resource/Texture/Message/Attack description.png");
 		break;
-	case 1: m_msgTex.Load("Texture/Message/Weapon change description.png");
+	case 1: m_msgTex.Load("Resource/Texture/Message/Weapon change description.png");
 		break; 
-	case 2: m_msgTex.Load("Texture/Message/Weapon description.png");
+	case 2: m_msgTex.Load("Resource/Texture/Message/Weapon description.png");
 		break; 
-	case 3: m_msgTex.Load("Texture/Message/Door description.png");
+	case 3: m_msgTex.Load("Resource/Texture/Message/Door description.png");
 		break; 
-	case 4: m_msgTex.Load("Texture/Message/minoMassage.png");
+	case 4: m_msgTex.Load("Resource/Texture/Message/minoMassage.png");
 		break;
 	}
 	m_message.SetScrollPos(m_map.GetscrollPos());

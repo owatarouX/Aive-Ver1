@@ -62,6 +62,7 @@ private:	// 外部からアクセス不可
 	void Update_Sword(Math::Vector2 scrPos);
 
 	void HitCheckPlayer();	// プレイヤーとの当たり判定
+	void HitCheckEnemy_And_Player(Math::Vector2 enePos, int dmg, float knockBack, float Left,float Right,float Top,float Down);	// プレイヤーと敵の当たり判定
 	void HitCheckMap();		//マップとの当たり判定
 
 	CSamurai	m_samuraiList[SAMURAI_MAX];		// 侍クラスのリスト
