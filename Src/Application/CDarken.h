@@ -22,7 +22,6 @@ private:
 	float			m_size;		//サイズ
 	Math::Color		m_color;	//色
 	int				m_lifeSpan;	//有効期間(活動限界)
-	bool			m_loopFlg;	//繰り返しフラグ
 	Math::Matrix	m_mat;		//行列
 	KdTexture* m_pTexture;	//テクスチャ(アドレス)
 };

@@ -5,7 +5,9 @@ CBomb::CBomb()
 	, m_pos(0.0f, 0.0f)
 	, m_mat()
 	, m_bAlive(false)
-	,m_aTimer(5)
+	, m_aCnt(0)
+	, m_aTimer(5)
+	,m_scrollPos(0,0)
 {
 }
 
@@ -19,7 +21,8 @@ void CBomb::Init()
 	m_pos = { 0,0 };
 
 	m_bAlive = false;
-
+	m_aCnt = 0;
+	m_aTimer = 5;
 	m_scrollPos = { 0,0 };
 
 	//îöî≠èâä˙âª
@@ -42,7 +45,6 @@ void CBomb::Updata()
 		m_aCnt++;
 
 		//çsóÒçÏê¨
-		//m_mat = DirectX::XMMatrixTranslation(m_pos.x , m_pos.y, 0.0f);
 		m_mat = DirectX::XMMatrixTranslation(m_pos.x - m_scrollPos.x, m_pos.y - m_scrollPos.y, 0.0f);
 	}
 

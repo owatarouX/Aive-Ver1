@@ -2,7 +2,8 @@
 #include"Utility.h"
 
 CHidden::CHidden()
-	:m_bHidden(false)
+	:m_mat()
+	,m_bHidden(false)
 	, m_hiddenCnt(0)
 {
 }
@@ -11,20 +12,20 @@ CHidden::~CHidden()
 {
 }
 
-// ������
+// 初期化
 void CHidden::Init()
 {
 	m_bHidden = false;
 	m_hiddenCnt = 0;
 }
 
-// �X�V
+// 更新
 void CHidden::Updata()
 {
 	if (m_bHidden)
 	{
 		m_hiddenCnt++;
-		// �g�p����
+		// 隠れ身解除
 		if (m_hiddenCnt > HIDDEN_CNT_MAX)
 		{
 			m_bHidden = false;
@@ -40,16 +41,15 @@ void CHidden::Updata()
 	}
 }
 
-// �t���O��ԕύX
+// フラグセット
 void CHidden::bSetHidden()
 {
 	m_bHidden = false;
 }
 
-// �B��g����
+// 隠れ蓑使用
 void CHidden::Hidden()
 {
-	// �t���O��Ԑ؂�ւ�
 	if(!m_bHidden) m_bHidden = true;
 	else m_bHidden = false;
 }

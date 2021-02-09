@@ -51,15 +51,12 @@ void Scene::Update()
 
 void Scene::Init()
 {
-	//コンソール作成
-	//m_map.CreateConsole();
-
 	srand(timeGetTime());
 
 	Reset();
 
 	bgm = std::make_shared<KdSoundEffect>();
-	bgm->Load("Sound/BGM.WAV");
+	bgm->Load("Resource/Sound/BGM.WAV");
 	bgmInst = bgm->CreateInstance(false);
 	bgmInst->SetVolume(0.3);
 	//bgmInst->Play(true);
@@ -67,8 +64,6 @@ void Scene::Init()
 
 void Scene::Release()
 {
-	//m_map.DestroyConsole();
-
 	// プレイヤー
 	m_playerTex.Release();
 	m_bulletTex.Release();
@@ -163,70 +158,66 @@ void Scene::Reset()
 
 	/*テクスチャ*/
 	// プレイヤー
-	m_playerTex.Load("Texture/Player/player.png");
-	m_bulletTex.Load("Texture/Player/shuriken.png");
-	m_bombTex.Load("Texture/Player/bomb.png");
-	m_blastTex.Load("Texture/Player/blast.png");
+	m_playerTex.Load("Resource/Texture/Player/player.png");
+	m_bulletTex.Load("Resource/Texture/Player/shuriken.png");
+	m_bombTex.Load("Resource/Texture/Player/bomb.png");
+	m_blastTex.Load("Resource/Texture/Player/blast.png");
 
 	// 敵
-	m_samuraiTex.Load("Texture/Enemy/enemy.png");
-	m_archerTex.Load("Texture/Enemy/Archer.png");
-	m_arrowTex.Load("Texture/Enemy/arrow.png");
-	m_GiantTex.Load("Texture/Enemy/giant.png");
-	m_bossTex.Load("Texture/Enemy/idle_0.png");	// ボス
+	m_samuraiTex.Load("Resource/Texture/Enemy/enemy.png");
+	m_archerTex.Load("Resource/Texture/Enemy/Archer.png");
+	m_arrowTex.Load("Resource/Texture/Enemy/arrow.png");
+	m_GiantTex.Load("Resource/Texture/Enemy/giant.png");
+	m_bossTex.Load("Resource/Texture/Enemy/idle_0.png");	// ボス
 
 	// マップ
-	m_mapTex.Load("Texture/Map/Map1.png");
+	m_mapTex.Load("Resource/Texture/Map/Map1.png");
 	
 	// アイテム
-	m_ItemBombTex_t.Load("Texture/Item/BombStorage_true.png");		// 爆弾_有
-	m_ItemBombTex_f.Load("Texture/Item/BombStorage_false.png");		// 爆弾_無
-	m_ItemKeyTex.Load("Texture/Item/Key.png");						// 鍵
-	m_ItemHealthTex.Load("Texture/Item/onigirio.png");				// 回復
-	m_ItemMinoTex.Load("Texture/Item/hidemino.png");					// 隠れ蓑
+	m_ItemBombTex_t.Load("Resource/Texture/Item/BombStorage_true.png");		// 爆弾_有
+	m_ItemBombTex_f.Load("Resource/Texture/Item/BombStorage_false.png");		// 爆弾_無
+	m_ItemKeyTex.Load("Resource/Texture/Item/Key.png");						// 鍵
+	m_ItemHealthTex.Load("Resource/Texture/Item/onigirio.png");				// 回復
+	m_ItemMinoTex.Load("Resource/Texture/Item/hidemino.png");					// 隠れ蓑
 
 	// UI
-	m_backTex.Load("Texture/UI/back.png");
-	m_rframeTex.Load("Texture/UI/frameR.png");
-	m_lframeTex.Load("Texture/UI/frameL.png");
-	m_HPTex.Load("Texture/UI/HP.png");
-	m_HPbarTex.Load("Texture/UI/HPbar.png");
-	m_HideTex.Load("Texture/UI/Hide.png");
-	m_HidebarTex.Load("Texture/UI/Hidebar.png");
-	m_katanaTex.Load("Texture/UI/Katana.png");
-	m_shurikenTex.Load("Texture/UI/Shuriken.png");
-	m_iconBombTex.Load("Texture/UI/Bomb.png");
-	m_iconMinoTex.Load("Texture/UI/Hidemino.png");
-	m_stackBombTex.Load("Texture/UI/bomb_icon.png");
-	m_stackKeyTex.Load("Texture/UI/key.png");
+	m_backTex.Load("Resource/Texture/UI/back.png");
+	m_rframeTex.Load("Resource/Texture/UI/frameR.png");
+	m_lframeTex.Load("Resource/Texture/UI/frameL.png");
+	m_HPTex.Load("Resource/Texture/UI/HP.png");
+	m_HPbarTex.Load("Resource/Texture/UI/HPbar.png");
+	m_HideTex.Load("Resource/Texture/UI/Hide.png");
+	m_HidebarTex.Load("Resource/Texture/UI/Hidebar.png");
+	m_katanaTex.Load("Resource/Texture/UI/Katana.png");
+	m_shurikenTex.Load("Resource/Texture/UI/Shuriken.png");
+	m_iconBombTex.Load("Resource/Texture/UI/Bomb.png");
+	m_iconMinoTex.Load("Resource/Texture/UI/Hidemino.png");
+	m_stackBombTex.Load("Resource/Texture/UI/bomb_icon.png");
+	m_stackKeyTex.Load("Resource/Texture/UI/key.png");
 
 
 	// エフェクト
-	m_pSlashTex.Load("Texture/Effect/p_slash.png");
-	m_eSlashTex.Load("Texture/Effect/e_slash.png");
-	m_dmgTex.Load("Texture/Effect/dmg.png");
-	m_darkenTex.Load("Texture/Effect/Dark.gif");
-	m_HealTex.Load("Texture/Effect/heal.png");
+	m_pSlashTex.Load("Resource/Texture/Effect/p_slash.png");
+	m_eSlashTex.Load("Resource/Texture/Effect/e_slash.png");
+	m_dmgTex.Load("Resource/Texture/Effect/dmg.png");
+	m_darkenTex.Load("Resource/Texture/Effect/Dark.gif");
+	m_HealTex.Load("Resource/Texture/Effect/heal.png");
 
 	// メッセージ
-	m_msgTex.Load("Texture/Message/AOMessage.png");
+	m_msgTex.Load("Resource/Texture/Message/AOMessage.png");
 
-	// その他
-	titleTex.Load("Texture/Title/Op.png");
-	ExpTex.Load("Texture/Title/ex.png");
-	resultTex.Load("Texture/Result/end_01.png");
-
+	
 
 	/*クラスごとの初期化*/
 	//マップ
+	m_map.SetOwner(this);
 	m_map.Init();
 	m_map.SetTexture(&m_mapTex);
-	m_map.SetOwner(this);
 
 	//プレイヤー
+	m_player.SetOwner(this);
 	m_player.Init();
 	m_player.SetTexture(&m_playerTex);
-	m_player.SetOwner(this);
 	m_player.SetBulletTexture(&m_bulletTex);
 	m_player.SetSlashTexture(&m_pSlashTex);
 	m_player.SetBombTexture(&m_bombTex);
@@ -237,21 +228,22 @@ void Scene::Reset()
 	m_enemy.Init();					// 敵：初期化
 	m_enemy.SetTexture(&m_samuraiTex);		// 侍
 	m_enemy.SetArcherTexture(&m_archerTex);	// 弓兵
-	m_enemy.SetArrowTexture(&m_arrowTex);	// 矢(縦)
+	m_enemy.SetArrowTexture(&m_arrowTex);	// 矢
 	m_enemy.SetGiantTexture(&m_GiantTex);	// 大男
 	m_enemy.SetBossTexture(&m_bossTex);		// ボス
 	m_enemy.SetSwordTexture(&m_eSlashTex);// 敵斬撃
 
 	//アイテム
+	m_item.SetOwner(this);
+	m_item.Init();
 	m_item.SetTexBomb_t(&m_ItemBombTex_t);
 	m_item.SetTexBomb_f(&m_ItemBombTex_f);
 	m_item.SetTexKey(&m_ItemKeyTex);
 	m_item.SetTexHealth(&m_ItemHealthTex);
 	m_item.SetTexMino(&m_ItemMinoTex);
-	m_item.SetOwner(this);
-	m_item.Init();
 
 	//UI
+	m_ui.SetOwner(this);
 	m_ui.Init();
 	m_ui.SetbackTexture(&m_backTex);
 	m_ui.SetrframeTexture(&m_rframeTex);
@@ -266,20 +258,23 @@ void Scene::Reset()
 	m_ui.SetIconMinoTexture(&m_iconMinoTex);
 	m_ui.SetStackBombTexture(&m_stackBombTex);
 	m_ui.SetStackKeyTexture(&m_stackKeyTex);
-	m_ui.SetOwner(this);
 
 	// エフェクト
+	m_effect.SetOwner(this);
 	m_effect.Init();
 	m_effect.SetDmgTexture(&m_dmgTex);
 	m_effect.SetDarkTexture(&m_darkenTex);
 	m_effect.SetHealTexture(&m_HealTex);
-	m_effect.SetOwner(this);
 
 	// メッセージ
 	m_message.Init();
 	m_message.SetTexture(&m_msgTex);
 
 	/*Scene内の初期化*/
+
+	titleTex.Load("Resource/Texture/Title/Op.png");
+	ExpTex.Load("Resource/Texture/Title/ex.png");
+	resultTex.Load("Resource/Texture/Result/end_01.png");
 
 	//初期シーン　タイトル
 	sceneType = eSceneTitle;	//0:タイトル　1:ゲーム本編
@@ -307,7 +302,7 @@ void Scene::Reset()
 //タイトル:更新
 void Scene::TitleUpdate()
 {
-	GetMousePos(m_map.GetscrollPos());
+	GetMousePos({ 0,0 });
 
 	////////////////////////////////////////////////////////////
 	//	タイトルからゲーム本編								///
@@ -418,23 +413,27 @@ void Scene::GameUpdate()
 		{
 		//城外
 		case OutSide:
-			m_mapTex.Load("Texture/Map/Map1.png");
+			m_mapTex.Load("Resource/Texture/Map/Map1.png");
 			break;
 		//一階層
 		case OneFloor:
-			m_mapTex.Load("Texture/Map/Map2.png");
+			m_mapTex.Load("Resource/Texture/Map/Map2.png");
 			break;
 		//二階層
 		case TwoFloor:
-			m_mapTex.Load("Texture/Map/Map3.png");
+			m_mapTex.Load("Resource/Texture/Map/");
 			break;
 		//三階層
 		case ThreeFloor:
-			m_mapTex.Load("Texture/Map/Map4.png");
+			m_mapTex.Load("Resource/Texture/Map/Map3.png");
+			break;
+		//四階層
+		case FourFloor:
+			m_mapTex.Load("Resource/Texture/Map/Map4.png");
 			break;
 		//ボス階層
 		case BossFloor:
-			m_mapTex.Load("Texture/Map/Boss.png");
+			m_mapTex.Load("Resource/Texture/Map/Boss.png");
 			break;
 		}
 
@@ -479,7 +478,7 @@ void Scene::GameUpdate()
 		break; 
 	case 3: m_msgTex.Load("Texture/Message/Door description.png");
 		break; 
-	case 4: m_msgTex.Load("Texture/Message/.png");
+	case 4: m_msgTex.Load("Texture/Message/minoMassage.png");
 		break;
 	}
 	m_message.SetScrollPos(m_map.GetscrollPos());
@@ -538,7 +537,7 @@ void Scene::GameDraw()
 //説明:更新
 void Scene::ExplanationUpdate()
 {
-	GetMousePos(m_map.GetscrollPos());
+	GetMousePos({ 0,0 });
 
 	////////////////////////////////////////////////////////
 	//	説明からタイトル								///

@@ -3,6 +3,7 @@
 
 
 CItem::CItem()
+	:m_pOwner(nullptr)
 {
 }
 
@@ -112,18 +113,21 @@ void CItem::SetBomb()
 	{
 	//éŠO
 	case OutSide:
-		m_bombList[1].SetBomb({ 930.0f,270.0f });
+		m_bombList[0].SetBomb({ 930.0f,270.0f });
 		break;
 	//ˆêŠK‘w
 	case OneFloor:
-		m_bombList[1].SetBomb({ 1750, -750 });
-		m_bombList[2].SetBomb({ 464,-744 });
+		m_bombList[0].SetBomb({ 1750, -750 });
+		m_bombList[1].SetBomb({ 464,-744 });
 		break;
 	//“ñŠK‘w
 	case TwoFloor:
 		break;
 	//OŠK‘w
 	case ThreeFloor:
+		break;
+	//lŠK‘w
+	case FourFloor:
 		break;
 	//ƒ{ƒXŠK‘w
 	case BossFloor:
@@ -153,6 +157,9 @@ void CItem::SetKey()
 	//OŠK‘w
 	case ThreeFloor:
 		break;
+	//lŠK‘w
+	case FourFloor:
+		break;
 	}
 }
 
@@ -174,6 +181,9 @@ void CItem::SetMino()
 		break;
 		//OŠK‘w
 	case ThreeFloor:
+		break;
+	//lŠK‘w
+	case FourFloor:
 		break;
 	}
 }
@@ -241,6 +251,7 @@ bool CItem::DropHealth(bool bDrop, Math::Vector2 pos)
 		m_healthList[i].SetHealth(pos);		// ‰ñ•œƒhƒƒbƒv
 		return true;
 	}
+	return false;
 }
 
 // Œ®ƒhƒƒbƒvˆ—(trueFƒhƒƒbƒv)
@@ -253,5 +264,6 @@ bool CItem::DropKey(bool bDrop, Math::Vector2 pos)
 		m_keyList[i].SetKey(pos);		// Œ®ƒhƒƒbƒv
 		return true;
 	}
+	return false;
 }
 

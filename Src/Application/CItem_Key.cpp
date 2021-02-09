@@ -5,6 +5,7 @@ CItem_Key::CItem_Key()
 	, m_mat()
 	, m_pos(0, 0)
 	, m_bAlive(false)
+	, m_scrollPos(0, 0)
 {
 }
 

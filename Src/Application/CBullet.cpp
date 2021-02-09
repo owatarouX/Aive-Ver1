@@ -7,8 +7,8 @@ CBullet::CBullet()
 	, m_moveVal(0.0f, 0.0f)
 	, m_mat()
 	, m_bAlive(false)
-	, m_radius(8.0f)
 	, m_deg(0)
+	, m_scrollPos(0,0)
 {
 }
 
@@ -62,9 +62,9 @@ void CBullet::SetTexture(KdTexture* apTexture)
 }
 
 //ƒtƒ‰ƒOó‘Ôæ“¾
-void CBullet::SetAlive(const float bAlive)
+void CBullet::SetAlive()
 {
-	m_bAlive = bAlive;
+	m_bAlive = false;
 }
 
 //”­Ëˆ—
@@ -92,11 +92,6 @@ const Math::Vector2 CBullet::GetPos()
 const Math::Vector2 CBullet::GetMove()
 {
 	return m_moveVal;
-}
-
-const float CBullet::GetRadius()
-{
-	return m_radius;
 }
 
 void CBullet::SetScrollPos(Math::Vector2 scrPos)

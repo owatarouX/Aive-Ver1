@@ -9,9 +9,9 @@ CMap::CMap()
 	, m_chipY()				//座標Y
 	, m_mat()				//行列
 	, m_scroll(0,0)			//スクロール量
-	, m_pOwner()
-	, m_mapData()
+	, m_mapData(OutSide)
 	, m_bMapSwitch(false)	//マップ切り替えフラグ
+	, m_pOwner(nullptr)
 {
 }
 
@@ -423,6 +423,9 @@ void CMap::SetMapData()
 		m_mapData = ThreeFloor;
 		break;
 	case ThreeFloor:
+		m_mapData = FourFloor;
+		break;
+	case FourFloor:
 		m_mapData = BossFloor;
 		break;
 	}
@@ -461,6 +464,8 @@ void CMap::SetUnlock()
 		break;
 	case ThreeFloor:
 		break;
+	case FourFloor:
+		break;
 	case BossFloor:
 		break;
 	default:
@@ -493,6 +498,8 @@ void CMap::SetLock()
 		m_ChipData[12][4] = 52;
 		break;
 	case ThreeFloor:
+		break;
+	case FourFloor:
 		break;
 	case BossFloor:
 		break;
@@ -558,19 +565,21 @@ void CMap::LoadMapFile()
 	switch (m_mapData)
 	{
 	case OutSide:
-		fp = fopen("Data/Map/Map1.csv", "r");
+		fp = fopen("Resource/MapData/Map/Map1.csv", "r");
 		break;
 	case OneFloor:
-		fp = fopen("Data/Map/Map2.csv", "r");
+		fp = fopen("Resource/MapData/Map/Map2.csv", "r");
 		break;
 	case TwoFloor:
-		fp = fopen("Data/Map/Map3.csv", "r");
 		break;
 	case ThreeFloor:
-		fp = fopen("Data/Map/Map4.csv", "r");
+		fp = fopen("Resource/MapData/Map/Map3.csv", "r");
+		break;
+	case FourFloor:
+		fp = fopen("Resource/MapData/Map/Map4.csv", "r");
 		break;
 	case BossFloor:
-		fp = fopen("Data/Map/Boss.csv", "r");
+		fp = fopen("Resource/MapData/Map/Boss.csv", "r");
 		break;
 	default:
 		break;
@@ -585,44 +594,6 @@ void CMap::LoadMapFile()
 				fscanf(fp, "%d,", &m_ChipData[h][w]);
 			}
 		}
-		for (int h = 0; h < MAP_CHIP_H; h++)
-		{
-			for (int w = 0; w < MAP_CHIP_W; w++)
-			{
-				printf("%d ", &m_ChipData[h][w]);
-			}
-			printf("\n");
-		}
 		fclose(fp);
 	}
-
-	// コンソール出力データを確認
-	for (int h = 0; h < MAP_CHIP_H; h++)
-	{
-		for (int w = 0; w < MAP_CHIP_W; w++)
-		{
-			printf("%d", m_ChipData[h][w]);
-		}
-		printf("\n");
-	}
-}
-
-
-//コンソール作成
-void CMap::CreateConsole()
-{
-	// コンソールを割り当てる
-	AllocConsole();
-
-	//標準入出力を割り当てる
-	freopen_s(&fp_c, "CONOUT$", "w", stdout);
-}
-
-// コンソール破壊
-void CMap::DestroyConsole()
-{
-	fclose(fp_c);
-
-	// コンソール破壊
-	FreeConsole();
 }

@@ -7,6 +7,7 @@ enum eMapData
 	OneFloor,	//1階層
 	TwoFloor,	//2階層
 	ThreeFloor,	//3階層
+	FourFloor,	//4階層
 	BossFloor	//ボス部屋
 };
 
@@ -39,8 +40,6 @@ public:
 	void SetLock();						//カギ閉め
 
 	void LoadMapFile();		//マップファイル読み込み
-	void CreateConsole();	// コンソール作成
-	void DestroyConsole();	// コンソール破壊
 
 private:
 
@@ -50,15 +49,11 @@ private:
 	float				m_chipY[MAP_CHIP_H][MAP_CHIP_W];		//座標
 	Math::Matrix		m_mat[MAP_CHIP_H][MAP_CHIP_W];			//行列
 	Math::Vector2		m_scroll;								//スクロール量
-	Scene* m_pOwner;											//オーナー取得用
 
 	eMapData			m_mapData;			//マップ
 	bool				m_bMapSwitch;		//マップ切り替えフラグ
+	Scene* m_pOwner;											//オーナー取得用
 
 	void Scroll();			//スクロール処理
 	void ScrollRemit();		//画面端リミット
-
-	FILE* fp_c;			//コンソール用
-	
-
 };

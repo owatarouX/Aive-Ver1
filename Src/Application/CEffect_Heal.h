@@ -25,5 +25,4 @@ private:
 	float			 m_size;		// サイズ
 	Math::Color		 m_color;		// 色
 	int				 m_lifeSpan;	// 有効期間(活動限界)
-	int				 m_dmgAnime;	// アニメーションカウント
 };

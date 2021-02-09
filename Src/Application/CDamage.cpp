@@ -23,6 +23,8 @@ void CDamage::Init()
 	m_pos = { 0,0 };
 	m_moveVal = { 0,0 };
 	m_bAlive = false;
+	m_size = 0;
+	m_lifeSpan = 0;
 	m_dmgAnime = 3;
 }
 

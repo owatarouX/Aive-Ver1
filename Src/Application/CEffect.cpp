@@ -2,6 +2,7 @@
 #include"Scene.h"
 
 CEffect::CEffect()
+	:m_pOwner(nullptr)
 {
 }
 

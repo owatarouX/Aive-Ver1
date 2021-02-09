@@ -7,8 +7,8 @@ CEffect_Heal::CEffect_Heal()
 	, m_mat()
 	, m_bAlive(false)
 	, m_size(0)
+	, m_color(1,1,1,1)
 	, m_lifeSpan(0)
-	, m_dmgAnime(6)
 {
 }
 
@@ -22,7 +22,9 @@ void CEffect_Heal::Init()
 	m_pos = { 0,0 };
 	m_moveVal = { 0,0 };
 	m_bAlive = false;
-	m_dmgAnime = 3;
+	m_size = 1;
+	m_color = { 1,1,1,1 };
+	m_lifeSpan = 0;
 }
 
 // çXêV

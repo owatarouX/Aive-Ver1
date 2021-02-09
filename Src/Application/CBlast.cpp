@@ -6,6 +6,7 @@ CBlast::CBlast()
 	, m_pos(0.0f, 0.0f)
 	, m_mat()
 	, m_bAlive(false)
+	, m_aCnt(0)
 	, m_aTimer(5)
 	, m_scrollPos(0,0)
 {
@@ -21,7 +22,6 @@ void CBlast::Init()
 	m_pos = { 0,0 };
 
 	m_bAlive = false;
-
 	m_scrollPos = { 0,0 };
 }
 

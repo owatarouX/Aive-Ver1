@@ -6,7 +6,6 @@ CDarken::CDarken()
 	, m_size(1)
 	, m_color(1, 1, 1, 1)
 	, m_lifeSpan(0)
-	, m_loopFlg(false)
 	, m_mat()
 	, m_pTexture(nullptr)
 {
@@ -19,6 +18,10 @@ CDarken::~CDarken()
 // èâä˙âª
 void CDarken::Init()
 {
+	m_pos = { 0,0 };
+	m_move = { 0,0 };
+	m_size = 1;
+	m_color = { 1,1,1,1 };
 	m_lifeSpan = 0;
 }
 

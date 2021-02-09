@@ -8,8 +8,7 @@ CArrow::CArrow()
 	, m_mat()
 	, m_bAlive(false)
 	, m_deg()
-	, m_direct(LEFT)
-	, m_bDirect(false)
+	, m_scrollPos(0,0)
 {
 }
 
@@ -24,37 +23,12 @@ void CArrow::Init()
 	m_moveVal = { 0,0 };
 	m_bAlive = false;
 	m_deg = 0;
-	m_direct = LEFT;
-	m_bDirect = false;
 }
 
 // 更新
 void CArrow::Update()
 {
 	if (!m_bAlive) return;
-
-	/*if (!m_bDirect)
-	{
-		switch (ArrowDirect())
-		{
-		case LEFT:
-			m_direct = LEFT;
-			break;
-		case RIGHT:
-			m_direct = RIGHT;
-			break;
-		case TOP:
-			m_direct = TOP;
-			break;
-		case DOWN:
-			m_direct = DOWN;
-			break;
-		default:
-			MessageBox(NULL, L"no", L"hit", MB_OK);
-			break;
-		}
-		m_bDirect = true;
-	}*/
 
 	//座標確定
 	m_pos += m_moveVal;
@@ -111,14 +85,4 @@ void CArrow::Shot(const Math::Vector2 aScrPos, const Math::Vector2 aDestPos)
 	m_moveVal.y = sin(DirectX::XMConvertToRadians(m_deg)) * SPEED::ARROW;
 
 	m_bAlive = true;
-}
-
-// 矢の向き判別関係
-int CArrow::ArrowDirect()
-{
-	float s = 45.0f;
-	if		((m_deg >= s * 3) && (m_deg < s * 5)) return LEFT;
-	else if ((m_deg >= s * 7) || (m_deg < s)) return RIGHT;
-	else if ((m_deg >= s)	  && (m_deg < s * 3)) return TOP;
-	else if ((m_deg >= s * 5) && (m_deg < s * 7)) return DOWN;
 }

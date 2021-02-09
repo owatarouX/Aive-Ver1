@@ -77,7 +77,7 @@ public:
 	const int GetKeyPossession() { return m_KeyPossession; }	//鍵所持数取得
 	const bool bGetHit() { return m_HitFlg; }					// 無敵状態取得
 	const bool bGetHidden() { return m_hiddenList.bGetHidden(); }	// 隠れ身フラグ取得
-	const float GetHideCnt() { return m_hiddenList.GetHiddenCnt(); }
+	const int GetHideCnt() { return m_hiddenList.GetHiddenCnt(); }
 
 	//キー内容取得
 	const int GetR();

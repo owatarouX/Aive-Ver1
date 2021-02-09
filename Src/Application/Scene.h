@@ -63,7 +63,6 @@ private:
 	KdTexture m_arrowTex;
 	KdTexture m_GiantTex;
 	KdTexture m_bossTex;
-	KdTexture m_bossSwordTex;
 	
 	//マップ
 	KdTexture m_mapTex;
@@ -114,7 +113,7 @@ private:
 
 	//キー制御
 	int keyFlg;		//0:押してない1:押している
-	int clickFlg;	//マウスクリックフラグ
+	bool clickFlg;	//マウスクリックフラグ
 
 	
 	Math::Matrix Titlemat;

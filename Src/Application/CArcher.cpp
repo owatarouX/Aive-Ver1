@@ -20,6 +20,9 @@ CArcher::CArcher()
 	, m_moveCnt(MOVE_CNT_MAX)
 	, m_shotFlg(false)
 	, m_shotCnt(0)
+	, m_scrollPos(0,0)
+	, m_playerPos(0,0)
+	, m_bHidden(false)
 {
 }
 CArcher::~CArcher()
@@ -38,6 +41,9 @@ void CArcher::Init()
 	m_moveCnt = MOVE_CNT_MAX;
 	m_shotFlg = false;
 	m_shotCnt = 0;
+	m_scrollPos = { 0,0 };
+	m_playerPos = { 0,0 };
+	m_bHidden = false;
 }
 
 //更新
@@ -209,8 +215,8 @@ void CArcher::Walk()
 {
 	if (m_moveCnt >= MOVE_CNT_MAX)
 	{
-		float moveX = (rand() % 2 - 1);
-		float moveY = (rand() % 2 - 1);
+		float moveX = float(rand() % 2 - 1);
+		float moveY = float(rand() % 2 - 1);
 
 		// ランダム移動量セット
 		switch (int r = rand() % 16)

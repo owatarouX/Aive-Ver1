@@ -6,6 +6,7 @@ CMessage::CMessage()
 	, m_pos(0, 0)
 	, m_bAlive(false)
 	, m_msg(0)
+	, m_scrollPos(0,0)
 {
 }
 
@@ -17,7 +18,7 @@ void CMessage::Init()
 {
 	m_pos = { 0,0 };
 	m_bAlive = false;
-	m_msg = 0;
+	m_scrollPos = { 0,0 };
 }
 
 void CMessage::Update()

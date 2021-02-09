@@ -5,11 +5,15 @@ CSword::CSword()
 	,m_pos(0,0)
 	,m_move(0,0)
 	,m_mat()
+	,m_transMat()
+	,m_scaleMat()
+	,m_rotMat()
 	,m_size(1.0f,1.0f)
 	,m_bSlash(false)
 	,m_slashCnt(0)
 	,m_slashAnime(0)
 	,m_deg(0)
+	,m_scrollPos(0,0)
 {
 }
 
@@ -23,6 +27,7 @@ void CSword::Init()
 	m_pos = { 0,0 };		//座標
 	m_move = { 64,64 };		//移動量
 	m_bSlash = false;		//攻撃フラグ
+	m_slashCnt = 0;			//攻撃発生時間
 	m_scrollPos = { 0,0 };	//スクロール量取得用
 	m_slashAnime = 6;
 	m_deg = 0;
@@ -106,7 +111,7 @@ const bool CSword::bGetSlash()
 	return m_bSlash;
 }
 
-
+// スクロール量取得用
 void CSword::SetScrollPos(Math::Vector2 scrPos)
 {
 	m_scrollPos = scrPos;

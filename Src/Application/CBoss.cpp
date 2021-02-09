@@ -2,7 +2,7 @@
 #include"Utility.h"
 
 CBoss::CBoss()
-	:attackType()
+	:attackType(Stop)
 	, m_pTexture(nullptr)
 	, m_pos(0.0f, 0.0f)
 	, m_moveVal(0.0f, 0.0f)

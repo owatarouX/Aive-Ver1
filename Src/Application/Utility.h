@@ -57,16 +57,16 @@ namespace SPEED
 	const int PLAYER_SHURIKEN = 12;
 
 	// 侍
-	const int SAMURAI = 1.8;
+	const double SAMURAI = 1.5;
 	// 弓兵
-	const int ARCHER = 1.5;
+	const double ARCHER = 1.5;
 	// 矢
 	const int ARROW = 12;
 	// 大男
-	const int GIANT_NORMAL = 1.1;
+	const double GIANT_NORMAL = 1.1;
 	const int GIANT_RUSH = 6;
-	// ボスww
-	const int BOSS = 1.8;
+	// ボス
+	const double BOSS = 1.3;
 }
 
 // パラメータ：クールタイム
@@ -77,7 +77,7 @@ namespace COOL_TIME
 	const int PLAYER_SHURIKEN = 20;		// 手裏剣
 
 	// 侍
-	const int SAMURAI_SLASH = 40;
+	const int SAMURAI_SLASH = 80;
 	// 弓兵
 	const int ARCHER_ARROW = 80;
 	// 大男

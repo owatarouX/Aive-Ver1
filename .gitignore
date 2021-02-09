@@ -1,6 +1,7 @@
 .vs/
 Debug/
 System/
+Release/
 
 Pch.cpp
 Pch.h

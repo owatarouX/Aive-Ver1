@@ -24,7 +24,6 @@ private:
 	Math::Matrix	 m_mat;			// 行列
 	bool			 m_bAlive;		// 生存フラグ
 	float			 m_size;		// サイズ
-	Math::Color		 m_color;		// 色
 	int				 m_lifeSpan;	// 有効期間(活動限界)
 	int				 m_dmgAnime;	// アニメーションカウント
 };

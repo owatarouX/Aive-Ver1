@@ -6,6 +6,7 @@
 CEnemy::CEnemy()
 	:gimmickcount(0)
 	, m_bEvent(false)
+	,m_pOwner(nullptr)
 {
 }
 
@@ -408,6 +409,9 @@ void CEnemy::SetSamurai(int data)
 	//ŽOŠK‘w
 	case ThreeFloor:
 		break;
+	//ŽlŠK‘w
+	case FourFloor:
+		break;
 	}
 
 }
@@ -441,7 +445,9 @@ void CEnemy::SetArcher(int data)
 	//ŽOŠK‘w
 	case ThreeFloor:
 		break;
-	
+	//ŽlŠK‘w
+	case FourFloor:
+		break;
 	}
 }
 
@@ -458,6 +464,9 @@ void CEnemy::SetGiant(int data)
 		break;
 	//ŽOŠK‘w
 	case ThreeFloor:
+		break;
+	//ŽlŠK‘w
+	case FourFloor:
 		break;
 	}
 }
@@ -647,7 +656,7 @@ void CEnemy::HitCheckMap()
 			const float MAP_TOP = chipY[h][w] + Infor::RADIUS_32;		//ã•Ó
 			const float MAP_BOTTOM = chipY[h][w] - Infor::RADIUS_32;	//‰º•Ó
 
-			if (chipData[h][w] >= 10 && chipData[h][w] < 49 || chipData[h][w]>=80)
+			if (chipData[h][w] >= 10 && chipData[h][w] < 49 || chipData[h][w]>=78)
 			{
 				continue;
 			}

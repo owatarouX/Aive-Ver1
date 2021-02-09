@@ -1,14 +1,5 @@
 #pragma once
 
-// 矢の向き
-enum Direction
-{
-	LEFT,
-	RIGHT,
-	TOP,
-	DOWN
-};
-
 class CArrow
 {
 public:
@@ -36,10 +27,6 @@ private:
 	Math::Matrix	m_mat;			//合成行列
 	bool			m_bAlive;		//生存フラグ
 	float			m_deg;			//角度
-
-	int ArrowDirect();	// 矢の向き判別の関数
-	int 	m_direct;	// 向き取得
-	bool	m_bDirect;	// 発射時のみ方向取得
 
 	Math::Vector2	m_scrollPos;
 };

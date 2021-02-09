@@ -2,7 +2,9 @@
 
 //四辺の当たり判定チェック
 //当たったらtrueかfalseを返す
-bool Utility::bHitCheck(Math::Vector2 aScrPos, Math::Vector2 aScrMove, Math::Vector2 aDestPos, float aScrRad_Left, float aScrRad_Right, float aScrRad_Top, float aScrRad_Bottom, float aDesRad_Left, float aDesRad_Right, float aDesRad_Top, float aDesRad_Bottom)
+bool Utility::bHitCheck(Math::Vector2 aScrPos, Math::Vector2 aScrMove, Math::Vector2 aDestPos, 
+	float aScrRad_Left, float aScrRad_Right, float aScrRad_Top, float aScrRad_Bottom,
+	float aDesRad_Left, float aDesRad_Right, float aDesRad_Top, float aDesRad_Bottom)
 {
 	//キャラ1の現在座標の四辺
 	const float aScrLeft = aScrPos.x - aScrRad_Left;		//左辺
@@ -51,6 +53,7 @@ bool Utility::bHitCheck(Math::Vector2 aScrPos, Math::Vector2 aScrMove, Math::Vec
 			return false;
 		}
 	}
+	return true;
 }
 
 //四辺の当たり判定を個々に判定

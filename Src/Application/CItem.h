@@ -12,7 +12,7 @@ constexpr int BOMB_SETMAX = 3;
 // Œ®İ’u”
 constexpr int KEY_SETMAX = 3;
 // ‰ñ•œİ’uãŒÀ
-constexpr int HEALTH_SETMAX = 3;
+constexpr int HEALTH_SETMAX = 5;
 
 class CItem
 {

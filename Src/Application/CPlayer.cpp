@@ -4,7 +4,11 @@
 
 //コンストラクタ
 CPlayer::CPlayer()
-	:m_pTexture(nullptr)
+	: m_direction(Right)
+	, m_LClick(eShuriken)
+	, m_RClick(eSword)
+	, m_status(eIdle)
+	, m_pTexture(nullptr)
 	, m_pos(0.0f, 0.0f)
 	, m_moveVal(0.0f, 0.0f)
 	, m_mat()
@@ -18,16 +22,21 @@ CPlayer::CPlayer()
 	, m_alpha(1.0f)
 	, m_HitFlg(false)
 	, m_slashCnt(COOL_TIME::PLAYER_SLASH)
-	, m_shurikenCnt(COOL_TIME::PLAYER_SHURIKEN)
+	, m_shurikenCnt(COOL_TIME::PLAYER_SHURIKEN/2)
 	, m_bRClick(false)
 	, m_bLClick(false)
 	, m_bRChange(false)
 	, m_bLChange(false)
+	, m_aCnt(0)
+	, m_aAttackCnt(0)
 	, m_aTimer(15)
 	, m_aflame(5)
+	, scrRect(0,0,0,0)
 	, m_BombPossession(0)
 	, m_KeyPossession(0)
 	, m_bMinoPossession(false)
+	,m_pOwner(nullptr)
+	,m_ClickPoint()
 {
 }
 
@@ -97,10 +106,10 @@ void CPlayer::Init()
 	m_KeyPossession = 0;
 
 	//SE(サウンドの読み込みと実体化)
-	katanaseInst = Sound_Loading(katanase, "Sound/katana.WAV");
-	shurikenseInst = Sound_Loading(shurikense, "Sound/shuriken.WAV");
-	hitseInst = Sound_Loading(hitse,"Sound/hit.WAV");
-	healseInst = Sound_Loading(healse, "Sound/heal.WAV");
+	katanaseInst = Sound_Loading(katanase, "Resource/Sound/katana.WAV");
+	shurikenseInst = Sound_Loading(shurikense, "Resource/Sound/shuriken.WAV");
+	hitseInst = Sound_Loading(hitse,"Resource/Sound/hit.WAV");
+	healseInst = Sound_Loading(healse, "Resource/Sound/heal.WAV");
 }
 
 // 再初期化
@@ -108,22 +117,27 @@ void CPlayer::ReInit(int mapData)
 {
 	switch (mapData)
 	{
-		//一階層
+	//一階層
 	case OneFloor:
 		m_pos = { 1600,-1800 };
 		m_KeyPossession = 0;
 		break;
-		//二階層
+	//二階層
 	case TwoFloor:
+		m_pos = { 0, 0};
+		m_KeyPossession = 0;
+		break;
+	//三階層
+	case ThreeFloor:
 		m_pos = { -460,-2000 };
 		m_KeyPossession = 0;
 		break;
-		//三階層
-	case ThreeFloor:
+	//四階層
+	case FourFloor:
 		m_pos = { -460,100 };
 		m_KeyPossession = 0;
 		break;
-		//ボス
+	//ボス
 	case BossFloor:
 		m_pos = { 624,-1340 };
 		m_KeyPossession = 0;
@@ -252,7 +266,7 @@ void CPlayer::UpDatePlayer(Math::Vector2 ScrollPos)
 	m_pos.x += m_moveVal.x;
 	m_pos.y += m_moveVal.y;
 	m_moveVal = { 0,0 };
-	
+
 	//行列作成
 	m_transMat = DirectX::XMMatrixTranslation(m_pos.x - ScrollPos.x, m_pos.y - ScrollPos.y, 0.0f);
 	m_scaleMat = DirectX::XMMatrixScaling(m_size.x, m_size.y, 0.0f);
@@ -522,9 +536,10 @@ void CPlayer::HitCheckMap()
 			{
 				if (mapData == OneFloor)
 				{
-					if (!Utility::bHitCheck(m_pos, m_moveVal, { chipX[h][w],chipY[h][w] },
+					hit = Utility::iHitCheck(m_pos, m_moveVal, chipX[h][w], chipY[h][w],
 						PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
-						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
+						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32);
+					if (hit==1)
 					{
 						if (enemy->bGetEvent())map->SetLock();	// カギ閉め
 						enemy->Event();		// イベント発生
@@ -669,7 +684,7 @@ void CPlayer::HitCheckMap()
 						SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
 						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 					{
-						m_bulletList[i].SetAlive(false);	//弾のフラグ下げ
+						m_bulletList[i].SetAlive();	//弾のフラグ下げ
 					}
 				}
 			}
@@ -733,7 +748,7 @@ void CPlayer::HitCheckMap()
 					//ヒット時
 					if (!hit)
 					{
-						m_bulletList[i].SetAlive(false);	//弾のフラグ下げ
+						m_bulletList[i].SetAlive();	//弾のフラグ下げ
 					}
 				}
 			}
@@ -814,13 +829,13 @@ void CPlayer::HitCheckEnemy()
 		////////////////////////////////////////////////////////////////
 		//		弾のヒットチェック								
 		////////////////////////////////////////////////////////////////
-		for (int i = 0; i < BULLET_MAX; i++)
+		for (int b = 0; b < BULLET_MAX; b++)
 		{
 			//生きてる弾のみ
-			if (m_bulletList[i].IsAlive())
+			if (m_bulletList[b].IsAlive())
 			{
 				bool bullet_hit = true;
-				bullet_hit = Utility::bHitCheck(m_bulletList[i].GetPos(), m_bulletList[i].GetMove(), enePos,
+				bullet_hit = Utility::bHitCheck(m_bulletList[b].GetPos(), m_bulletList[b].GetMove(), enePos,
 					SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
 					SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN);
 
@@ -828,7 +843,7 @@ void CPlayer::HitCheckEnemy()
 				if (!bullet_hit)
 				{
 					samuraiList[e].SetDamage(POWER::PLAYER_SHURIKEN);			//敵にダメージ
-					m_bulletList[i].SetAlive(false);	//弾のフラグ下げ
+					m_bulletList[b].SetAlive();	//弾のフラグ下げ
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
@@ -876,15 +891,12 @@ void CPlayer::HitCheckEnemy()
 		{
 			if (!samuraiList[e].bGetBlastHit())
 			{
-				bool blast_hit = true;
-				blast_hit = Utility::bHitCheck(m_bombList.GetBlastPos(), { 0,0 }, enePos,
+				if (!Utility::bHitCheck(m_bombList.GetBlastPos(), { 0,0 }, enePos,
 					BLAST_SIZE::LEFT, BLAST_SIZE::RIGHT, BLAST_SIZE::TOP, BLAST_SIZE::DOWN,
-					SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN);
-				//ヒット時
-				if (!blast_hit)
+					SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN))
 				{
-					samuraiList[e].SetDamage(POWER::PLAYER_BLAST);			//敵にダメージ
-					samuraiList[e].bSetBlastHit(true);
+					samuraiList[e].SetDamage(POWER::PLAYER_BLAST);	//敵にダメージ
+					samuraiList[e].bSetSlashHit(true);
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
@@ -969,7 +981,7 @@ void CPlayer::HitCheckEnemy()
 				if (!bullet_hit)
 				{
 					archerList[i].SetDamage(POWER::PLAYER_SHURIKEN);	//敵にダメージ
-					m_bulletList[b].SetAlive(false);	//弾のフラグ下げ
+					m_bulletList[b].SetAlive();	//弾のフラグ下げ
 					for (int i = 0; i < EFFECT_DMG_MAX; i++)
 					{
 						if (dmgList[i].GetbAlive())continue;
@@ -1017,12 +1029,10 @@ void CPlayer::HitCheckEnemy()
 		{
 			if (!archerList[i].bGetBlastHit())
 			{
-				bool blast_hit = true;
-				blast_hit = Utility::bHitCheck(m_bombList.GetBlastPos(), { 0,0 }, enePos,
-					BLAST_SIZE::LEFT, BLAST_SIZE::RIGHT, BLAST_SIZE::TOP, BLAST_SIZE::DOWN,
-					ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN);
 				//ヒット時
-				if (!blast_hit)
+				if (!Utility::bHitCheck(m_bombList.GetBlastPos(), { 0,0 }, enePos,
+					BLAST_SIZE::LEFT, BLAST_SIZE::RIGHT, BLAST_SIZE::TOP, BLAST_SIZE::DOWN,
+					ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN))
 				{
 					archerList[i].SetDamage(POWER::PLAYER_BLAST);	//敵にダメージ
 					archerList[i].bSetSlashHit(true);
@@ -1127,7 +1137,7 @@ void CPlayer::HitCheckEnemy()
 			if (!bullet_hit)
 			{
 				giantList[i].SetDamage(POWER::PLAYER_SHURIKEN);	//敵にダメージ
-				m_bulletList[b].SetAlive(false);	//弾のフラグ下げ
+				m_bulletList[b].SetAlive();	//弾のフラグ下げ
 				for (int i = 0; i < EFFECT_DMG_MAX; i++)
 				{
 					if (dmgList[i].GetbAlive())continue;
@@ -1223,7 +1233,7 @@ void CPlayer::HitCheckEnemy()
 			if (!bullet_hit)
 			{
 				bossList->SetDamage(POWER::PLAYER_SHURIKEN);	//敵にダメージ
-				m_bulletList[i].SetAlive(false);	//弾のフラグ下げ
+				m_bulletList[i].SetAlive();	//弾のフラグ下げ
 				for (int i = 0; i < EFFECT_DMG_MAX; i++)
 				{
 					if (dmgList[i].GetbAlive())continue;
@@ -1435,7 +1445,7 @@ eClick CPlayer::ChangeItem(eClick click)
 	case eShuriken:
 		return eSword;
 	case eSword:
-		return eBomb;
+		if (m_BombPossession > 0)return eBomb;
 	case eBomb:
 		if (m_bMinoPossession) return eHidden;	// 隠れ蓑所持時使用可能
 		else return eShuriken;
@@ -1471,13 +1481,16 @@ void CPlayer::SetShuriken()
 	if (m_shurikenCnt < COOL_TIME::PLAYER_SHURIKEN) return;
 	
 	m_hiddenList.bSetHidden();	// 攻撃時隠れ身解除
-	CMap* map = m_pOwner->GetMap();		//マップクラス取得
-	Math::Vector2 ScrollPos = map->GetscrollPos();		//スクロール量取得
+	
 	// 弾発射
 	for (int i = 0; i < BULLET_MAX; i++)
 	{
 		if (!m_bulletList[i].IsAlive())
 		{
+			// プレイヤーの方向と逆方向にカーソルがある場合左右反転
+			if (m_pos.x < (float)m_ClickPoint.x && m_direction != Right) m_direction = Right;
+			else if (m_pos.x > (float)m_ClickPoint.x && m_direction != Left) m_direction = Left;
+			
 			// 発射角度を求める
 			float deg = Utility::GetAngleDeg(m_pos, { (float)m_ClickPoint.x, (float)m_ClickPoint.y });
 			// 発射
@@ -1497,15 +1510,14 @@ void CPlayer::SetSword()
 	m_status = eAttack; //プレイヤーの状態を"攻撃"にする
 
 	m_hiddenList.bSetHidden();	// 攻撃時隠れ身解除
-
-	CMap* map = m_pOwner->GetMap();
-	Math::Vector2 ScrollPos = map->GetscrollPos();
-
-	m_hiddenList.bSetHidden();	// 攻撃時隠れ身解除
 	
 	// 斬撃発動
 	if (!m_swordList.bGetSlash())
 	{
+		// プレイヤーの方向と逆方向にカーソルがある場合左右反転
+		if (m_pos.x < (float)m_ClickPoint.x && m_direction != Right) m_direction = Right;
+		else if (m_pos.x > (float)m_ClickPoint.x && m_direction != Left) m_direction = Left;
+
 		// 発射角度を求める
 		float deg = Utility::GetAngleDeg(m_pos, { (float)m_ClickPoint.x, (float)m_ClickPoint.y });
 		// 斬撃発生

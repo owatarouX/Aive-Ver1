@@ -22,6 +22,9 @@ CGiant::CGiant()
 	, m_bAtk(false)
 	, m_atkCnt(0)
 	, m_atkRnd(0)
+	, m_scrollPos(0,0)
+	, m_playerPos(0,0)
+	, m_bHidden(false)
 {
 }
 
@@ -46,6 +49,9 @@ void CGiant::Init()
 	m_bAtk = false;
 	m_atkCnt = 0;
 	m_atkRnd = 0;
+	m_scrollPos = { 0,0 };
+	m_playerPos = { 0,0 };
+	m_bHidden = false;
 }
 
 // çXêV

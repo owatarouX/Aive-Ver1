@@ -5,6 +5,7 @@ CItem_Health::CItem_Health()
 	, m_mat()
 	, m_pos(0, 0)
 	, m_bAlive(false)
+	, m_scrollPos(0,0)
 {
 }
 
@@ -35,7 +36,7 @@ void CItem_Health::Draw()
 
 	SHADER.m_spriteShader.SetMatrix(m_mat);
 	Math::Rectangle scrRect = { 0,0,32,32 };	// テクスチャ座標
-	Math::Color color = { 1,1,1,0.8 };			// 色（RGBAの順番で　0.0～1.0）
+	Math::Color color = { 1,1,1,1 };			// 色（RGBAの順番で　0.0～1.0）
 	SHADER.m_spriteShader.DrawTex(m_pTexture, 0, 0, 32, 32, &scrRect, &color, Math::Vector2(0.5f, 0.5f));
 
 }

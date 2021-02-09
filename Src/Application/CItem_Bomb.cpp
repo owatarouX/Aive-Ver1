@@ -8,6 +8,7 @@ CItem_Bomb::CItem_Bomb()
 	,m_pos(0,0)
 	,m_bAlive(false)
 	,m_bBombHit(false)
+	,m_scrollPos(0,0)
 {
 }
 
