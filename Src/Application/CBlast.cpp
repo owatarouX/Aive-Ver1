@@ -23,6 +23,7 @@ void CBlast::Init()
 
 	m_bAlive = false;
 	m_scrollPos = { 0,0 };
+	expseInst = Utility::Sound_Loading(expse, "Resource/Sound/Explosion.WAV");
 }
 
 //更新
@@ -85,6 +86,8 @@ void CBlast::Blast(const Math::Vector2 aBombPos)
 {
 	//爆風の生存フラグON
 	m_bAlive = true;
+
+	expseInst->Play();
 
 	//爆風発生位置
 	m_pos = aBombPos;

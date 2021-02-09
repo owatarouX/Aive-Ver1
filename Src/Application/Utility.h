@@ -182,4 +182,7 @@ namespace Utility
 	
 	//2点間の距離を求める
 	float GetDistance(Math::Vector2 src, Math::Vector2 dest);	//見る元の座標,見る先の座標 
+
+	//サウンド読み込み
+	std::shared_ptr<KdSoundInstance> Sound_Loading(std::shared_ptr<KdSoundEffect> se, const std::string& seName);
 }

@@ -106,10 +106,10 @@ void CPlayer::Init()
 	m_KeyPossession = 0;
 
 	//SE(サウンドの読み込みと実体化)
-	katanaseInst = Sound_Loading(katanase, "Resource/Sound/katana.WAV");
-	shurikenseInst = Sound_Loading(shurikense, "Resource/Sound/shuriken.WAV");
-	hitseInst = Sound_Loading(hitse,"Resource/Sound/hit.WAV");
-	healseInst = Sound_Loading(healse, "Resource/Sound/heal.WAV");
+	katanaseInst = Utility::Sound_Loading(katanase, "Resource/Sound/katana.WAV");
+	shurikenseInst = Utility::Sound_Loading(shurikense, "Resource/Sound/shuriken.WAV");
+	hitseInst = Utility::Sound_Loading(hitse,"Resource/Sound/hit.WAV");
+	healseInst = Utility::Sound_Loading(healse, "Resource/Sound/heal.WAV");
 }
 
 // 再初期化
@@ -1558,16 +1558,5 @@ void CPlayer::SetHidden()
 int CPlayer::Animation(int cnt, const int xtex)
 {
 	return cnt / m_aTimer * 116 + 38 + xtex;
-}
-
-std::shared_ptr<KdSoundInstance> CPlayer::Sound_Loading(std::shared_ptr<KdSoundEffect> se, const std::string &seName)
-{
-	//①領域確保
-	se = std::make_shared<KdSoundEffect>();
-	//②音読み込み
-	se->Load(seName);
-
-	return se->CreateInstance(false);
-
 }
 

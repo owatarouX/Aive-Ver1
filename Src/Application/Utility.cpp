@@ -150,4 +150,15 @@ float Utility::GetDistance(Math::Vector2 src, Math::Vector2 dest)
 	return c;
 }
 
+//サウンド読み込み
+std::shared_ptr<KdSoundInstance> Utility::Sound_Loading(std::shared_ptr<KdSoundEffect> se, const std::string& seName)
+{
+	//①領域確保
+	se = std::make_shared<KdSoundEffect>();
+	//②音読み込み
+	se->Load(seName);
+
+	return se->CreateInstance(false);
+
+}
 

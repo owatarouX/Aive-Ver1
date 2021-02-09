@@ -161,5 +161,4 @@ private:		//外部からアクセス不可
 	std::shared_ptr<KdSoundInstance> healseInst;
 
 	int Animation(int cnt, const int xtex);
-	std::shared_ptr<KdSoundInstance> Sound_Loading(std::shared_ptr<KdSoundEffect> se, const std::string &seName);
 };

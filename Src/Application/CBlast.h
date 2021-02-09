@@ -26,5 +26,8 @@ private:
 	int	 m_aCnt;
 	int m_aTimer;
 
+	std::shared_ptr<KdSoundEffect> expse;
+	std::shared_ptr<KdSoundInstance> expseInst;
+
 	Math::Vector2 m_scrollPos;
 };
