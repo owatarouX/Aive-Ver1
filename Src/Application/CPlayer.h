@@ -160,6 +160,9 @@ private:		//外部からアクセス不可
 	std::shared_ptr<KdSoundEffect> healse;
 	std::shared_ptr<KdSoundInstance> healseInst;
 
+	std::shared_ptr<KdSoundEffect> keypuse;
+	std::shared_ptr<KdSoundInstance> keypuseInst;
+
 	void Animation();
 	int AnimationCalc(int cnt, const int xtex);
 

@@ -110,6 +110,7 @@ void CPlayer::Init()
 	shurikenseInst = Utility::Sound_Loading(shurikense, "Resource/Sound/shuriken.WAV");
 	hitseInst = Utility::Sound_Loading(hitse,"Resource/Sound/hit.WAV");
 	healseInst = Utility::Sound_Loading(healse, "Resource/Sound/heal.WAV");
+	keypuseInst = Utility::Sound_Loading(healse, "Resource/Sound/key.WAV");
 }
 
 // Ä‰Šú‰»
@@ -1166,6 +1167,7 @@ void CPlayer::HitCheckItem()
 			16, 16, 16, 16))
 		{
 			ItemKey[i].SetAlive();		//Œ®‚Ìƒtƒ‰ƒO‰º‚°
+			keypuseInst->Play();
 			m_KeyPossession++;		//Œ®“üŽè
 		}
 	}
