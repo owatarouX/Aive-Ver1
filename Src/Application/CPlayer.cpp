@@ -223,44 +223,7 @@ void CPlayer::UpDatePlayer(Math::Vector2 ScrollPos)
 	//HP上限を設ける
 	if (m_hp >= HP::PLAYER)m_hp = HP::PLAYER;
 
-	//アニメーション
-	switch (m_status)
-	{
-	case eIdle:
-		m_aTimer = 15;
-		m_aflame = 6;
-		break;
-	case eWalking:
-		m_aTimer = 10;
-		m_aflame = 6;
-		break;
-	case eAttack:
-		m_aTimer = 5;
-		m_aflame = 3;
-		break;
-	default:
-		break;
-	}
-
-	const int CNT_MAX = m_aTimer * m_aflame;
-	if (m_aCnt >= CNT_MAX - 1)
-	{
-		m_aCnt = 0;
-	}
-	m_aCnt++;
-
-	//攻撃アニメーションの計算
-	if (m_status == eAttack)
-	{
-		const int CNT_MAX = m_aTimer * m_aflame;
-		if (m_aCnt >= CNT_MAX - 1)
-		{
-			m_aAttackCnt = 0;
-			m_status = eIdle;
-		}
-		m_aAttackCnt++;
-	}
-
+	Animation();
 
 	//座標確定
 	m_pos.x += m_moveVal.x;
@@ -295,13 +258,13 @@ void CPlayer::Draw()
 	switch (m_status)
 	{
 	case eIdle:
-		scrRect = { -20,Animation(m_aCnt,348),160,64 }; // テクスチャ座標
+		scrRect = { -20,AnimationCalc(m_aCnt,348),160,64 }; // テクスチャ座標
 		break;
 	case eWalking:
-		scrRect = { -20,Animation(m_aCnt,1044),160,64 }; // テクスチャ座標
+		scrRect = { -20,AnimationCalc(m_aCnt,1044),160,64 }; // テクスチャ座標
 		break;
 	case eAttack:
-		scrRect = { -20,Animation(m_aCnt,0),160,64 }; // テクスチャ座標
+		scrRect = { -20,AnimationCalc(m_aCnt,0),160,64 }; // テクスチャ座標
 		break;
 	default:
 		break;
@@ -1554,9 +1517,49 @@ void CPlayer::SetHidden()
 	}
 }
 
+void CPlayer::Animation()
+{
+	switch (m_status)
+	{
+	case eIdle:
+		m_aTimer = 15;
+		m_aflame = 6;
+		break;
+	case eWalking:
+		m_aTimer = 10;
+		m_aflame = 6;
+		break;
+	case eAttack:
+		m_aTimer = 5;
+		m_aflame = 3;
+		break;
+	default:
+		break;
+	}
+
+	const int CNT_MAX = m_aTimer * m_aflame;
+	if (m_aCnt >= CNT_MAX - 1)
+	{
+		m_aCnt = 0;
+	}
+	m_aCnt++;
+
+	//攻撃アニメーションの計算
+	if (m_status == eAttack)
+	{
+		const int CNT_MAX = m_aTimer * m_aflame;
+		if (m_aCnt >= CNT_MAX - 1)
+		{
+			m_aAttackCnt = 0;
+			m_status = eIdle;
+		}
+		m_aAttackCnt++;
+	}
+
+}
+
 // アニメーション
-int CPlayer::Animation(int cnt, const int xtex)
+int CPlayer::AnimationCalc(int cnt, const int xtex)
 {
 	return cnt / m_aTimer * 116 + 38 + xtex;
 }
-

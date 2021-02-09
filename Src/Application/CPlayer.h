@@ -82,7 +82,7 @@ public:
 	//キー内容取得
 	const int GetR();
 	const int GetL();
-
+		
 private:		//外部からアクセス不可
 
 	eDirection		m_direction;	//プレイヤーの向き
@@ -160,5 +160,7 @@ private:		//外部からアクセス不可
 	std::shared_ptr<KdSoundEffect> healse;
 	std::shared_ptr<KdSoundInstance> healseInst;
 
-	int Animation(int cnt, const int xtex);
+	void Animation();
+	int AnimationCalc(int cnt, const int xtex);
+
 };
