@@ -597,6 +597,46 @@ void CEnemy::HitCheckPlayer()
 		}
 	}
 
+	int knockBack = 20;
+	////////////////////////////////////////////////////////////////
+	//					侍との当たり判定								
+	////////////////////////////////////////////////////////////////
+	for (int i = 0; i < SAMURAI_MAX; i++)
+	{
+		if (!m_samuraiList[i].IsAlive()) continue;
+		// プレイヤーとの当たり判定関数
+		HitCheckEnemy_And_Player(m_samuraiList[i].GetPos(),POWER::ENEMY_PHYSICAL, knockBack, SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN);
+	}
+	////////////////////////////////////////////////////////////////
+	//					弓兵との当たり判定								
+	////////////////////////////////////////////////////////////////
+	for (int i = 0; i < ARCHER_MAX; i++)
+	{
+		if (!m_archerList[i].IsAlive())continue;
+		// プレイヤーとの当たり判定関数
+		HitCheckEnemy_And_Player(m_archerList[i].GetPos(), POWER::ENEMY_PHYSICAL, knockBack, ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN);
+	}
+	////////////////////////////////////////////////////////////////
+	//					大男との当たり判定								
+	////////////////////////////////////////////////////////////////
+	for (int i = 0; i < GIANT_MAX; i++)
+	{
+		if (!m_giantList[i].IsAlive())continue;
+		// 突進時当たると大ダメージ
+		int dmg = 0;
+		if (m_giantList[i].bGetRush())
+		{
+			dmg = 10;
+			knockBack = 80;
+		}
+		else dmg = POWER::ENEMY_PHYSICAL;
+		
+		// プレイヤーとの当たり判定関数
+		HitCheckEnemy_And_Player(m_giantList[i].GetPos(), dmg, knockBack, GIANT_SIZE::LEFT, GIANT_SIZE::RIGHT, GIANT_SIZE::TOP, GIANT_SIZE::DOWN);
+	}
+	////////////////////////////////////////////////////////////////
+	//					ボスとの当たり判定								
+	////////////////////////////////////////////////////////////////
 	if (m_bossList.IsAlive())
 	{
 		// ボス本体とのヒット関数　　　　　　　　
@@ -630,6 +670,56 @@ void CEnemy::HitCheckPlayer()
 			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 			break;
 		default:
+			break;
+		}
+	}
+}
+
+// プレイヤーと敵の当たり判定関数
+void CEnemy::HitCheckEnemy_And_Player(Math::Vector2 enePos, int dmg, float knockBack, float Left, float Right, float Top, float Down)
+{
+	CPlayer* player = m_pOwner->GetPlayer();
+	for (int e = 0; e < SAMURAI_MAX; e++)
+	{
+		//生きてる敵のみ
+		if (!m_samuraiList[e].IsAlive()) continue;
+		int player_hit = Utility::iHitCheck(player->GetPos(), player->GetMove(), enePos.x, enePos.y,
+			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
+			Left,Right,Top,Down);
+
+		//敵の現在座標の四辺
+		const float ENEMY_LEFT = enePos.x - Left;	//左辺
+		const float ENEMY_RIGHT = enePos.x + Right;	//右辺
+		const float ENEMY_TOP = enePos.y + Top;		//上辺
+		const float ENEMY_BOTTOM = enePos.y - Down;	//下辺
+
+		//当たり判定分岐処理
+		//1:上	2:下 3:左 4:右
+		switch (player_hit)
+		{
+		case 1:
+			player->SetPosY(ENEMY_TOP + PLAYER_SIZE::TOP);
+			player->SetMovevalY(knockBack);
+			player->SetDamage(dmg);			//体力減少
+			player->SetHitFlg();
+			break;
+		case 2:
+			player->SetPosY(ENEMY_BOTTOM - PLAYER_SIZE::DOWN);
+			player->SetMovevalY(-knockBack);
+			player->SetDamage(dmg);			//体力減少
+			player->SetHitFlg();
+			break;
+		case 3:
+			player->SetPosX(ENEMY_LEFT - PLAYER_SIZE::LEFT);
+			player->SetMovevalX(-knockBack);
+			player->SetDamage(dmg);			//体力減少
+			player->SetHitFlg();
+			break;
+		case 4:
+			player->SetPosX(ENEMY_RIGHT + PLAYER_SIZE::RIGHT);
+			player->SetMovevalX(knockBack);
+			player->SetDamage(dmg);			//体力減少
+			player->SetHitFlg();
 			break;
 		}
 	}

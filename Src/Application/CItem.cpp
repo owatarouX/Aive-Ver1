@@ -44,8 +44,7 @@ void CItem::Update()
 {
 	//マップクラス取得
 	CMap* map = m_pOwner->GetMap();
-	int mapData = map->GetMapData();
-
+	
 	//スクロール量取得
 	Math::Vector2 ScrollPos = map->GetscrollPos();
 	
