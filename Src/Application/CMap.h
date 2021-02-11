@@ -52,7 +52,9 @@ private:
 
 	eMapData			m_mapData;			//マップ
 	bool				m_bMapSwitch;		//マップ切り替えフラグ
-	Scene* m_pOwner;											//オーナー取得用
+	int gimmickcount;
+	Scene* m_pOwner;		//オーナー取得用
+	bool			    m_bGimmick;         //ギミックflg
 
 	void Scroll();			//スクロール処理
 	void ScrollRemit();		//画面端リミット

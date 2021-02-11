@@ -120,8 +120,9 @@ void CEnemy::Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos, bool 
 			sword->Init();	// ������
 			sword->SetTexture(m_pSlashTex);	// �e�N�X�`���ݒ�
 
-			// �a������
-			sword->Slash(m_samuraiList[i].GetPos(), m_samuraiList[i].GetDeg(), SAMURAI_SLASH_SIZE, 50);// �G�̍��W�A�p�x�A�T�C�Y�̐ݒ�A����
+			// 斬撃発生
+			sword->Slash(m_samuraiList[i].GetPos(), m_samuraiList[i].GetDeg(), 
+				SAMURAI_SLASH_SIZE, DISTANCE::SAMURAI_SLASH);
 			m_enemySwordList.push_back(sword);
 
 			m_samuraiList[i].bSetSlash(false);		// �a���t���O������Ĉ�x�������s����悤�� 
@@ -196,8 +197,9 @@ void CEnemy::Update_Boss(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hid
 		sword->Init();	// ������
 		sword->SetTexture(m_pSlashTex);	// �e�N�X�`���ݒ�
 
-		// �a������
-		sword->Slash(m_bossList.GetPos(), m_bossList.GetDeg(), BOSS_SLASH_SIZE, 120);// �G�̍��W�A�p�x�A�T�C�Y�̐ݒ�A����
+		// 斬撃発生
+		sword->Slash(m_bossList.GetPos(), m_bossList.GetDeg(), 
+			BOSS_SLASH_SIZE, DISTANCE::BOSS_SLASH);
 		m_enemySwordList.push_back(sword);
 
 		m_bossList.SetSlash(false);		// �a���t���O������Ĉ�x�������s����悤�� 
@@ -375,41 +377,42 @@ void CEnemy::SetSamurai(int data)
 	{
 	//��O
 	case OutSide:
-		m_samuraiList[1].SetSamurai({ 300.0f, -1080.0f });
-		m_samuraiList[2].SetSamurai({ 640.0f,230.0f });
-		m_samuraiList[3].SetSamurai({ 640.0f,110.0f });
+		m_samuraiList[0].SetSamurai({ 300.0f, -1080.0f });
+		m_samuraiList[1].SetSamurai({ 640.0f,230.0f });
+		m_samuraiList[2].SetSamurai({ 640.0f,110.0f });
 		break;
 	//��K�w
 	case OneFloor:
-		m_samuraiList[1].SetSamurai({ 731,-1531 });
+		m_samuraiList[0].SetSamurai({ 731,-1531 });
 
-		m_samuraiList[2].SetSamurai({ 1250,-900 });
-		m_samuraiList[3].SetSamurai({ 1600,-1250 });
-		m_samuraiList[4].SetSamurai({ 1500,-1000 });
+		m_samuraiList[1].SetSamurai({ 1250,-900 });
+		m_samuraiList[2].SetSamurai({ 1600,-1250 });
+		m_samuraiList[3].SetSamurai({ 1500,-1000 });
 
-		m_samuraiList[5].SetSamurai({ 1350, 100 });
-		m_samuraiList[6].SetSamurai({ 1550, 100 });
-		m_samuraiList[7].SetSamurai({ -400, -1950 });
-		m_samuraiList[8].SetSamurai({ -500, -1850 });
+		m_samuraiList[4].SetSamurai({ 1350, 100 });
+		m_samuraiList[5].SetSamurai({ 1550, 100 });
+		m_samuraiList[6].SetSamurai({ -400, -1950 });
+		m_samuraiList[7].SetSamurai({ -500, -1850 });
 
-		m_samuraiList[9].SetSamurai({ -84,-1250 });
-		m_samuraiList[10].SetSamurai({ -324,-1486 });
-		m_samuraiList[11].SetSamurai({ 221,-1486 });
+		m_samuraiList[8].SetSamurai({ -84,-1250 });
+		m_samuraiList[9].SetSamurai({ -324,-1486 });
+		m_samuraiList[10].SetSamurai({ 221,-1486 });
 		
-		m_samuraiList[12].SetSamurai({ 610,0 });
-		m_samuraiList[13].SetSamurai({ -400,-550 });
+		m_samuraiList[11].SetSamurai({ 610,0 });
+		m_samuraiList[12].SetSamurai({ -400,-550 });
 		break;
 	//��K�w
 	case TwoFloor:
+		
+		break;
+	//三階層
+	case ThreeFloor:
 		m_samuraiList[1].SetSamurai({ 165,-875 });
 		m_samuraiList[2].SetSamurai({ 600,-875 });
 		m_samuraiList[3].SetSamurai({ 1000,-875 });
 		m_samuraiList[4].SetSamurai({ 1635,-884 });
 		break;
-	//�O�K�w
-	case ThreeFloor:
-		break;
-	//�l�K�w
+	//四階層
 	case FourFloor:
 		break;
 	}
@@ -554,9 +557,8 @@ void CEnemy::HitCheckPlayer()
 		// �q�b�g�������������߂��Ƃ�
 		if (checkDist <= hitDist)
 		{
-			player->SetDamage(POWER::ARCHER_ARROW);	// �v���C���[�^�_���[�W
-			player->SetHitFlg();			// �q�b�g�t���O�Z�b�g
-			m_arrowList[i]->SetAlive();		// ��̃t���O����
+			player->SetDamage(POWER::ARCHER_ARROW);	// プレイヤー与ダメージ
+			m_arrowList[i]->SetAlive();		// 矢のフラグ下げ
 		}
 	}
 	////////////////////////////////////////////////////////////////
@@ -569,21 +571,21 @@ void CEnemy::HitCheckPlayer()
 		// �v���C���[�Ǝa���̋���
 		const float checkDist = Utility::GetDistance(playerPos, m_enemySwordList[i]->GetPos());
 		
-		// ���̎a���p����
-		if (m_enemySwordList[i]->GetSize() == SAMURAI_SLASH_SIZE)
+		// 侍の斬撃用判定
+		if (m_enemySwordList[i]->GetSize().x == SAMURAI_SLASH_SIZE.x ||
+			(m_enemySwordList[i]->GetSize().x == -SAMURAI_SLASH_SIZE.x))
 		{
 			// �q�b�g����̋���
 			const float hitDist = PLAYER_SIZE::LEFT+SLASH_SIZE::LEFT;
-
-			// �q�b�g�������������߂��Ƃ�
+			// ヒット判定よりも距離が近いとき
 			if (checkDist <= hitDist)
 			{
-				player->SetDamage(POWER::SAMURAI_SLASH);	// �v���C���[�^�_���[�W
-				player->SetHitFlg();		// �q�b�g�t���O�Z�b�g
+				player->SetDamage(POWER::SAMURAI_SLASH);	// プレイヤー与ダメージ
 			}
 		}
-		// �{�X�̎a���p����
-		else if (m_enemySwordList[i]->GetSize() == BOSS_SLASH_SIZE)
+		// ボスの斬撃用判定
+		if (m_enemySwordList[i]->GetSize().x == BOSS_SLASH_SIZE.x ||
+			(m_enemySwordList[i]->GetSize().x == -BOSS_SLASH_SIZE.x))
 		{
 			// �q�b�g����̋���
 			const float hitDist = PLAYER_SIZE::LEFT+BOSS_SIZE::LEFT;
@@ -591,8 +593,7 @@ void CEnemy::HitCheckPlayer()
 			// �q�b�g�������������߂��Ƃ�
 			if (checkDist <= hitDist)
 			{
-				player->SetDamage(POWER::BOSS_SLASH);		// �v���C���[�^�_���[�W
-				player->SetHitFlg();	// �q�b�g�t���O�Z�b�g
+				player->SetDamage(POWER::BOSS_SLASH);		// プレイヤー与ダメージ
 			}
 		}
 	}
@@ -701,26 +702,22 @@ void CEnemy::HitCheckEnemy_And_Player(Math::Vector2 enePos, int dmg, float knock
 		case 1:
 			player->SetPosY(ENEMY_TOP + PLAYER_SIZE::TOP);
 			player->SetMovevalY(knockBack);
-			player->SetDamage(dmg);			//�̗͌���
-			player->SetHitFlg();
+			player->SetDamage(dmg);			//体力減少
 			break;
 		case 2:
 			player->SetPosY(ENEMY_BOTTOM - PLAYER_SIZE::DOWN);
 			player->SetMovevalY(-knockBack);
-			player->SetDamage(dmg);			//�̗͌���
-			player->SetHitFlg();
+			player->SetDamage(dmg);			//体力減少
 			break;
 		case 3:
 			player->SetPosX(ENEMY_LEFT - PLAYER_SIZE::LEFT);
 			player->SetMovevalX(-knockBack);
-			player->SetDamage(dmg);			//�̗͌���
-			player->SetHitFlg();
+			player->SetDamage(dmg);			//体力減少
 			break;
 		case 4:
 			player->SetPosX(ENEMY_RIGHT + PLAYER_SIZE::RIGHT);
 			player->SetMovevalX(knockBack);
-			player->SetDamage(dmg);			//�̗͌���
-			player->SetHitFlg();
+			player->SetDamage(dmg);			//体力減少
 			break;
 		}
 	}
@@ -864,17 +861,6 @@ void CEnemy::HitCheckMap()
 					{
 						m_arrowList[i]->SetAlive();		// ��̃t���O����
 					}
-					//// �}�b�v�Ɩ�̋���
-					//const float checkDist = Utility::GetDistance(
-					//	m_arrowList[i]->GetPos(), { chipX[h][w],chipY[h][w] });
-					//// �q�b�g����̋���
-					//const float hitDist = 32 + 16;
-
-					//// �q�b�g�������������߂��Ƃ�
-					//if (checkDist <= hitDist)
-					//{
-					//	m_arrowList[i]->SetAlive();		// ��̃t���O����
-					//}
 				}
 			}
 		}

@@ -8,6 +8,7 @@ CEnemySword::CEnemySword()
 	, m_mat()
 	, m_transMat()
 	, m_scaleMat()
+	, m_rotMat()
 	, m_size(1.0f, 1.0f)
 	, m_bSlash(false)
 	, m_slashCnt(0)
@@ -47,10 +48,14 @@ void CEnemySword::Updata()
 	}
 	m_slashCnt++;
 
-	//行列作成
-	m_scaleMat = DirectX::XMMatrixScaling(m_size.x, m_size.y, 0.0f);
-	m_transMat = DirectX::XMMatrixTranslation(m_pos.x - m_scrollPos.x , m_pos.y - m_scrollPos.y, 0.0f);
-	m_mat = m_scaleMat * m_transMat;
+	//拡縮行列
+	m_scaleMat = DirectX::XMMatrixScaling(m_size.x, m_size.y, 1);
+	//回転行列
+	m_rotMat = DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(m_deg));
+	//移動行列
+	m_transMat = DirectX::XMMatrixTranslation(m_pos.x - m_scrollPos.x, m_pos.y - m_scrollPos.y, 0.0f);
+	//行列合成
+	m_mat = m_scaleMat * m_rotMat * m_transMat;
 }
 
 //描画処理
@@ -81,18 +86,18 @@ const Math::Vector2 CEnemySword::GetMove()
 }
 
 //攻撃処理(発生キャラ座標、角度、サイズ、発生距離）
-void CEnemySword::Slash(Math::Vector2 Pos, float deg, Math::Vector2 size, float s)
+void CEnemySword::Slash(Math::Vector2 Pos, float deg, Math::Vector2 size, float dist)
 {
 	m_bSlash = true;
 	m_pos = Pos;
 	m_deg = deg;
 	m_size = size;
-	m_move.x = cos(DirectX::XMConvertToRadians(m_deg)) * s;	// cos
-	m_move.y = sin(DirectX::XMConvertToRadians(m_deg)) * s;	// sin
+	m_move.x = cos(DirectX::XMConvertToRadians(m_deg)) * dist;	// cos
+	m_move.y = sin(DirectX::XMConvertToRadians(m_deg)) * dist;	// sin
 	m_pos += m_move;	// 移動量をセット
-	
-	// 斬撃が敵の座標より左の時
-	//if (m_pos.x <= Pos.x) m_size.x *= -1;	// 画像反転
+
+	// 画像反転処理
+	if (Pos.x > m_pos.x) m_size.y *=-1;
 }
 
 //フラグ状態取得

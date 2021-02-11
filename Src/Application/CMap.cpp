@@ -1,17 +1,18 @@
-#include"CMap.h"
+ï»¿#include"CMap.h"
 #include"Scene.h"
 #include"Utility.h"
 
 CMap::CMap()
-	:m_pTexture(nullptr)	//‰æ‘œ(ƒeƒNƒXƒ`ƒƒ)
-	, m_ChipData()			//ƒ}ƒbƒvƒf[ƒ^
-	, m_chipX()				//À•WX
-	, m_chipY()				//À•WY
-	, m_mat()				//s—ñ
-	, m_scroll(0,0)			//ƒXƒNƒ[ƒ‹—Ê
+	:m_pTexture(nullptr)	//ï¿½æ‘œ(ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½)
+	, m_ChipData()			//ï¿½}ï¿½bï¿½vï¿½fï¿½[ï¿½^
+	, m_chipX()				//ï¿½ï¿½ï¿½WX
+	, m_chipY()				//ï¿½ï¿½ï¿½WY
+	, m_mat()				//ï¿½sï¿½ï¿½
+	, m_scroll(0,0)			//ï¿½Xï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
 	, m_mapData(OutSide)
-	, m_bMapSwitch(false)	//ƒ}ƒbƒvØ‚è‘Ö‚¦ƒtƒ‰ƒO
+	, m_bMapSwitch(false)	//ï¿½}ï¿½bï¿½vï¿½Ø‚ï¿½Ö‚ï¿½ï¿½tï¿½ï¿½ï¿½O
 	, m_pOwner(nullptr)
+	, m_bGimmick(false)
 {
 }
 
@@ -19,13 +20,13 @@ CMap::~CMap()
 {
 }
 
-//‰Šú‰»
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void CMap::Init()
 {
 	m_mapData = OutSide;
 	m_bMapSwitch = false;
-
-	//ƒ}ƒbƒvî•ñƒ[ƒh
+	m_bGimmick = false;
+	//ï¿½}ï¿½bï¿½vï¿½ï¿½ñƒ[ï¿½h
 	LoadMapFile();
 
 	for (int h = 0; h < MAP_CHIP_H; h++)
@@ -38,28 +39,156 @@ void CMap::Init()
 	}
 }
 
-//XV
+//ï¿½Xï¿½V
 void CMap::Update()
 {
-	//ƒ}ƒbƒvXV
+	//ï¿½}ï¿½bï¿½vï¿½Xï¿½V
 	for (int h = 0; h < MAP_CHIP_H; h++)
 	{
 		for (int w = 0; w < MAP_CHIP_W; w++)
 		{
-			//ƒXƒNƒ[ƒ‹ˆ—
+			//ï¿½Xï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			Scroll();
 
-			//‰æ–Ê’[‚ÌƒŠƒ~ƒbƒg’è‹`
+			//ï¿½ï¿½Ê’[ï¿½Ìƒï¿½ï¿½~ï¿½bï¿½gï¿½ï¿½`
 			ScrollRemit();
 
 		}
 	}
 	
-	// ƒfƒoƒbƒO
+	// ï¿½fï¿½oï¿½bï¿½O
 	if (GetAsyncKeyState(VK_RETURN) & 0x8000) SetUnlock();
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000) SetLock();
 
-	//s—ñì¬
+	const int GMAX = 100;
+	gimmickcount++;
+	if (gimmickcount > GMAX)
+	{
+		gimmickcount = GMAX;
+	}
+
+	if (gimmickcount >= GMAX)
+	{
+		m_bGimmick = !m_bGimmick;
+
+		gimmickcount = 0;
+	}
+
+
+	if (m_bGimmick == false)
+	{
+		switch (m_mapData)
+		{
+		case OutSide:
+			break;
+		case OneFloor:	
+			break;
+		case TwoFloor:
+			m_ChipData[2][5] = 95;
+			m_ChipData[2][6] = 95;
+			m_ChipData[3][5] = 95;
+			m_ChipData[3][6] = 95;
+			m_ChipData[4][5] = 95;
+			m_ChipData[4][6] = 95;
+			m_ChipData[5][5] = 95;
+			m_ChipData[5][6] = 95;
+			m_ChipData[6][5] = 95;
+			m_ChipData[6][6] = 95;
+			m_ChipData[7][5] = 95;
+			m_ChipData[7][6] = 95;
+
+			m_ChipData[2][8] = 18;
+			m_ChipData[2][9] = 18;
+			m_ChipData[3][8] = 18;
+			m_ChipData[3][9] = 18;
+			m_ChipData[4][8] = 18;
+			m_ChipData[4][9] = 18;
+			m_ChipData[5][8] = 18;
+			m_ChipData[5][9] = 18;
+			m_ChipData[6][8] = 18;
+			m_ChipData[6][9] = 18;
+			m_ChipData[7][8] = 18;
+			m_ChipData[7][9] = 18;
+
+			m_ChipData[2][11] = 95;
+			m_ChipData[2][12] = 95;
+			m_ChipData[3][11] = 95;
+			m_ChipData[3][12] = 95;
+			m_ChipData[4][11] = 95;
+			m_ChipData[4][12] = 95;
+			m_ChipData[5][11] = 95;
+			m_ChipData[5][12] = 95;
+			m_ChipData[6][11] = 95;
+			m_ChipData[6][12] = 95;
+			m_ChipData[7][11] = 95;
+			m_ChipData[7][12] = 95;
+			break;
+		case ThreeFloor:
+			break;
+		case BossFloor:
+			break;
+		default:
+			break;
+		}
+	}
+	else if (m_bGimmick == true)
+	{
+		switch (m_mapData)
+		{
+		case OutSide:
+			break;
+		case OneFloor:
+			break;
+		case TwoFloor:
+			m_ChipData[2][5] = 18;
+			m_ChipData[2][6] = 18;
+			m_ChipData[3][5] = 18;
+			m_ChipData[3][6] = 18;
+			m_ChipData[4][5] = 18;
+			m_ChipData[4][6] = 18;
+			m_ChipData[5][5] = 18;
+			m_ChipData[5][6] = 18;
+			m_ChipData[6][5] = 18;
+			m_ChipData[6][6] = 18;
+			m_ChipData[7][5] = 18;
+			m_ChipData[7][6] = 18;
+
+			m_ChipData[2][8] = 95;
+			m_ChipData[2][9] = 95;
+			m_ChipData[3][8] = 95;
+			m_ChipData[3][9] = 95;
+			m_ChipData[4][8] = 95;
+			m_ChipData[4][9] = 95;
+			m_ChipData[5][8] = 95;
+			m_ChipData[5][9] = 95;
+			m_ChipData[6][8] = 95;
+			m_ChipData[6][9] = 95;
+			m_ChipData[7][8] = 95;
+			m_ChipData[7][9] = 95;
+
+			m_ChipData[2][11] = 18;
+			m_ChipData[2][12] = 18;
+			m_ChipData[3][11] = 18;
+			m_ChipData[3][12] = 18;
+			m_ChipData[4][11] = 18;
+			m_ChipData[4][12] = 18;
+			m_ChipData[5][11] = 18;
+			m_ChipData[5][12] = 18;
+			m_ChipData[6][11] = 18;
+			m_ChipData[6][12] = 18;
+			m_ChipData[7][11] = 18;
+			m_ChipData[7][12] = 18;
+			break;
+		case ThreeFloor:
+			break;
+		case BossFloor:
+			break;
+		default:
+			break;
+		}
+	}
+
+	//ï¿½sï¿½ï¿½ì¬
 	for (int h = 0; h < MAP_CHIP_H; h++)
 	{
 		for (int w = 0; w < MAP_CHIP_W; w++)
@@ -70,7 +199,7 @@ void CMap::Update()
 	}
 }
 
-//•`‰æ
+//ï¿½`ï¿½ï¿½
 void CMap::Draw()
 {
 	Math::Rectangle chipRect;
@@ -319,21 +448,25 @@ void CMap::Draw()
 			{
 				chipRect = { 0 ,256,64,64 };
 			}
-			else if (m_ChipData[h][w] == 63)
-			{
-				chipRect = { 64,256,64,64 };
-			}
 			else if (m_ChipData[h][w] == 62)
 			{
 				chipRect = { 128,256,64,64 };
+			}
+			else if (m_ChipData[h][w] == 63)
+			{
+			    chipRect = { 64,256,64,64 };
+			}
+			else if (m_ChipData[h][w] == 64)
+			{
+			    chipRect = { 576,128,64,64 };
 			}
 			else if (m_ChipData[h][w] == 65)
 			{
 				chipRect = { 512 ,128,64,64 };
 			}
-			else if (m_ChipData[h][w] == 64)
+			else if (m_ChipData[h][w] == 66)
 			{
-				chipRect = { 576,128,64,64 };
+			    chipRect = { 512 ,64,64,64 };
 			}
 			else if (m_ChipData[h][w] == 70)
 			{
@@ -359,6 +492,18 @@ void CMap::Draw()
 			{
 				chipRect = { 64,128,64,64 };
 			}
+			else if (m_ChipData[h][w] == 95)
+			{
+			    chipRect = { 128,128,64,64 };
+			}
+			else if (m_ChipData[h][w] == 96)
+			{
+			    chipRect = { 256,320,64,64 };
+			}
+			else if (m_ChipData[h][w] == 97)
+			{
+			    chipRect = { 256,320,64,64 };
+			}
 
 			SHADER.m_spriteShader.SetMatrix(m_mat[h][w]);
 			SHADER.m_spriteShader.DrawTex(m_pTexture, chipRect, 1.0f);
@@ -367,7 +512,7 @@ void CMap::Draw()
 	}
 }
 
-//ƒeƒNƒXƒ`ƒƒİ’è
+//ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½
 void CMap::SetTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -375,31 +520,31 @@ void CMap::SetTexture(KdTexture* apTexture)
 	m_pTexture = apTexture;
 }
 
-//ƒ}ƒbƒvXÀ•Wæ“¾
+//ï¿½}ï¿½bï¿½vXï¿½ï¿½ï¿½Wï¿½æ“¾
 float(*CMap::GetPosX())[MAP_CHIP_W]
 {
 	return m_chipX;
 }
 
-//ƒ}ƒbƒvYÀ•Wæ“¾
+//ï¿½}ï¿½bï¿½vYï¿½ï¿½ï¿½Wï¿½æ“¾
 float(*CMap::GetPosY())[MAP_CHIP_W]
 {
 	return m_chipY;
 }
 
-//ƒ}ƒbƒvƒf[ƒ^æ“¾
+//ï¿½}ï¿½bï¿½vï¿½fï¿½[ï¿½^ï¿½æ“¾
 int(*CMap::GetChipData())[MAP_CHIP_W]
 {
 	return m_ChipData;
 }
 
-//ƒXƒNƒ[ƒ‹—Êæ“¾
+//ï¿½Xï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Êæ“¾
 Math::Vector2 CMap::GetscrollPos()
 {
 	return m_scroll;
 }
 
-//ƒI[ƒi[İ’è
+//ï¿½Iï¿½[ï¿½iï¿½[ï¿½İ’ï¿½
 void CMap::SetOwner(Scene* apOwner)
 {
 	if (apOwner == nullptr) return;
@@ -407,14 +552,13 @@ void CMap::SetOwner(Scene* apOwner)
 	m_pOwner = apOwner;
 }
 
-//ƒ}ƒbƒvƒf[ƒ^‚Ì•ÏX
+//ï¿½}ï¿½bï¿½vï¿½fï¿½[ï¿½^ï¿½Ì•ÏX
 void CMap::SetMapData()
 {
 	switch (m_mapData)
 	{
 	case OutSide:
-		//m_mapData =OneFloor;
-		m_mapData = BossFloor; // ƒ{ƒXƒxƒ„ƒVƒ‡[ƒgƒJƒbƒg
+		m_mapData =OneFloor;
 		break;
 	case OneFloor:
 		m_mapData = TwoFloor;
@@ -432,13 +576,13 @@ void CMap::SetMapData()
 
 }
 
-//ƒ}ƒbƒvØ‚è‘Ö‚¦ƒtƒ‰ƒO”½“]
+//ï¿½}ï¿½bï¿½vï¿½Ø‚ï¿½Ö‚ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½]
 void CMap::SetMapSwitchFlg(bool flg)
 {
 	m_bMapSwitch = flg;
 }
 
-//Œ®ŠJ‚¯ˆ—
+//ï¿½ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void CMap::SetUnlock()
 {
 	const int ch = 10;
@@ -457,12 +601,16 @@ void CMap::SetUnlock()
 		m_ChipData[6][2] = ch;
 		break;
 	case TwoFloor:
+		m_ChipData[34][1] = 19;
+		m_ChipData[34][2] = 19;
+		m_ChipData[35][1] = 19;
+		m_ChipData[35][2] = 19;
+		break;
+	case ThreeFloor:
 		m_ChipData[11][3] = ch;
 		m_ChipData[12][3] = ch;
 		m_ChipData[11][4] = ch;
 		m_ChipData[12][4] = ch;
-		break;
-	case ThreeFloor:
 		break;
 	case FourFloor:
 		break;
@@ -473,7 +621,7 @@ void CMap::SetUnlock()
 	}
 }
 
-// ƒJƒM•Â‚ß
+// ï¿½Jï¿½Mï¿½Â‚ï¿½
 void CMap::SetLock()
 {
 	const int ch = 49;
@@ -508,18 +656,18 @@ void CMap::SetLock()
 	}
 }
 
-//ƒXƒNƒ[ƒ‹ˆ—
+//ï¿½Xï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void CMap::Scroll()
 {
-	//ƒvƒŒƒCƒ„[À•Wæ“¾
+	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Wï¿½æ“¾
 	CPlayer* player = m_pOwner->GetPlayer();
 	Math::Vector2 playerPos = player->GetPos();
 
-	//ƒXƒNƒ[ƒ‹À•W
+	//ï¿½Xï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½W
 	m_scroll = playerPos;
 }
 
-//‰æ–Ê’[ƒŠƒ~ƒbƒg’è‹`
+//ï¿½ï¿½Ê’[ï¿½ï¿½ï¿½~ï¿½bï¿½gï¿½ï¿½`
 void CMap::ScrollRemit()
 {
 	if (m_mapData == BossFloor)
@@ -529,14 +677,14 @@ void CMap::ScrollRemit()
 		static const float SCR_Y_MIN = m_chipY[31][1] + Screen::HalfHeight;
 		static const float SCR_Y_MAX = m_chipY[1][1] - Screen::HalfHeight;
 
-		//¶’[”»’è
-		if (m_scroll.x < SCR_X_MIN)	 m_scroll.x = SCR_X_MIN;  //’[‚É“’BŒÅ’è
-		//‰E’[”»’è
-		else if (m_scroll.x > SCR_X_MAX)	m_scroll.x = SCR_X_MAX; //’[‚É“’BŒÅ’è
-		//‰º’[”»’è
-		if (m_scroll.y < SCR_Y_MIN)		m_scroll.y = SCR_Y_MIN; //’[‚É“’BŒÅ’è
-		//ã’[”»’è
-		else if (m_scroll.y > SCR_Y_MAX)	m_scroll.y = SCR_Y_MAX; //’[‚É“’BŒÅ’è
+		//ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
+		if (m_scroll.x < SCR_X_MIN)	 m_scroll.x = SCR_X_MIN;  //ï¿½[ï¿½É“ï¿½ï¿½Bï¿½ï¿½ï¿½Å’ï¿½
+		//ï¿½Eï¿½[ï¿½ï¿½ï¿½ï¿½
+		else if (m_scroll.x > SCR_X_MAX)	m_scroll.x = SCR_X_MAX; //ï¿½[ï¿½É“ï¿½ï¿½Bï¿½ï¿½ï¿½Å’ï¿½
+		//ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
+		if (m_scroll.y < SCR_Y_MIN)		m_scroll.y = SCR_Y_MIN; //ï¿½[ï¿½É“ï¿½ï¿½Bï¿½ï¿½ï¿½Å’ï¿½
+		//ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
+		else if (m_scroll.y > SCR_Y_MAX)	m_scroll.y = SCR_Y_MAX; //ï¿½[ï¿½É“ï¿½ï¿½Bï¿½ï¿½ï¿½Å’ï¿½
 	}
 	else
 	{
@@ -545,41 +693,42 @@ void CMap::ScrollRemit()
 		static const float SCR_Y_MIN = m_chipY[MAP_CHIP_H - 1][0] + Screen::HalfHeight;
 		static const float SCR_Y_MAX = m_chipY[0][0] - Screen::HalfHeight;
 
-		//¶’[”»’è
-		if (m_scroll.x < SCR_X_MIN)	 m_scroll.x = SCR_X_MIN;  //’[‚É“’BŒÅ’è
-		//‰E’[”»’è
-		else if (m_scroll.x > SCR_X_MAX)	m_scroll.x = SCR_X_MAX; //’[‚É“’BŒÅ’è
-		//‰º’[”»’è
-		if (m_scroll.y < SCR_Y_MIN)		m_scroll.y = SCR_Y_MIN; //’[‚É“’BŒÅ’è
-		//ã’[”»’è
-		else if (m_scroll.y > SCR_Y_MAX)	m_scroll.y = SCR_Y_MAX; //’[‚É“’BŒÅ’è
+		//ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
+		if (m_scroll.x < SCR_X_MIN)	 m_scroll.x = SCR_X_MIN;  //ï¿½[ï¿½É“ï¿½ï¿½Bï¿½ï¿½ï¿½Å’ï¿½
+		//ï¿½Eï¿½[ï¿½ï¿½ï¿½ï¿½
+		else if (m_scroll.x > SCR_X_MAX)	m_scroll.x = SCR_X_MAX; //ï¿½[ï¿½É“ï¿½ï¿½Bï¿½ï¿½ï¿½Å’ï¿½
+		//ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
+		if (m_scroll.y < SCR_Y_MIN)		m_scroll.y = SCR_Y_MIN; //ï¿½[ï¿½É“ï¿½ï¿½Bï¿½ï¿½ï¿½Å’ï¿½
+		//ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½
+		else if (m_scroll.y > SCR_Y_MAX)	m_scroll.y = SCR_Y_MAX; //ï¿½[ï¿½É“ï¿½ï¿½Bï¿½ï¿½ï¿½Å’ï¿½
 	}
 }
 
-//ƒ}ƒbƒv“Ç‚İ‚İ
+//ï¿½}ï¿½bï¿½vï¿½Ç‚İï¿½ï¿½ï¿½
 void CMap::LoadMapFile()
 {
-	FILE* fp; // ƒtƒ@ƒCƒ‹‚Ìî•ñ‚ğŠi”[‚·‚é\‘¢‘Ì
+	FILE* fp; // ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½iï¿½[ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½
 
-	// ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	// ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ç‚İï¿½ï¿½ï¿½
 	switch (m_mapData)
 	{
 	case OutSide:
-		fp = fopen("Resource/MapData/Map/Map1.csv", "r");
+		fp = fopen("Resource/MapData/Map1.csv", "r");
 		break;
 	case OneFloor:
-		fp = fopen("Resource/MapData/Map/Map2.csv", "r");
+		fp = fopen("Resource/MapData/Map2.csv", "r");
 		break;
 	case TwoFloor:
+		fp = fopen("Resource/MapData/Map3.csv", "r");
 		break;
 	case ThreeFloor:
-		fp = fopen("Resource/MapData/Map/Map3.csv", "r");
+		fp = fopen("Resource/MapData/Map4.csv", "r");
 		break;
 	case FourFloor:
-		fp = fopen("Resource/MapData/Map/Map4.csv", "r");
+		fp = fopen("Resource/MapData/Map5.csv", "r");
 		break;
 	case BossFloor:
-		fp = fopen("Resource/MapData/Map/Boss.csv", "r");
+		fp = fopen("Resource/MapData/Boss.csv", "r");
 		break;
 	default:
 		break;

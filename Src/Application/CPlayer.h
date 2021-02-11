@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 
 #include"CBullet.h"
 #include"CSword.h"
 #include"CBomb.h"
 #include"CHidden.h"
 
-//ƒNƒ‰ƒX‚Ì‘O•ûéŒ¾
+//ï¿½Nï¿½ï¿½ï¿½Xï¿½Ì‘Oï¿½ï¿½ï¿½éŒ¾
 class Scene;
 
-enum eDirection	//Œü‚¢‚Ä‚¢‚é•ûŒü
+enum eDirection	//ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 	Up,
 	Down,
@@ -16,13 +16,13 @@ enum eDirection	//Œü‚¢‚Ä‚¢‚é•ûŒü
 	Right
 };
 
-//•ŠíƒZƒŒƒNƒg
+//ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½Nï¿½g
 enum eClick
 {
-	eShuriken,	//0.è— Œ•
-	eSword,		//1.“
-	eBomb,		//2.”š’e
-	eHidden		//3.‰B‚êg	
+	eShuriken,	//0.ï¿½è— ï¿½ï¿½
+	eSword,		//1.ï¿½ï¿½
+	eBomb,		//2.ï¿½ï¿½ï¿½e
+	eHidden		//3.ï¿½Bï¿½ï¿½g	
 };
 
 enum eStatus
@@ -32,124 +32,130 @@ enum eStatus
 	eAttack
 };
 
-//è— Œ•‚Ì—v‘f”
+//ï¿½è— ï¿½ï¿½ï¿½Ì—vï¿½fï¿½ï¿½
 constexpr int BULLET_MAX = 2;
 
-//”š’e‚Ì—v‘f”
+//ï¿½ï¿½ï¿½eï¿½Ì—vï¿½fï¿½ï¿½
 constexpr int BOMB_MAX = 5;
 
-//ƒvƒŒƒCƒ„[ƒNƒ‰ƒX
+//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Nï¿½ï¿½ï¿½X
 class CPlayer
 {
 public:
 
-	CPlayer();	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	~CPlayer();	//ƒfƒXƒgƒ‰ƒNƒ^
+	CPlayer();	//ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
+	~CPlayer();	//ï¿½fï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 
-	//ƒvƒŒƒCƒ„[
+	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[
 	void Init();
 	void ReInit(int mapData);
 	void Updata(POINT aMousePos);
 	void UpDatePlayer(Math::Vector2 ScrollPos);
 	void Draw();
 
-	//ƒZƒbƒ^[
+	//ï¿½Zï¿½bï¿½^ï¿½[
 	void SetTexture(KdTexture* apTexture);
 	void SetBulletTexture(KdTexture* apTexture);
 	void SetSlashTexture(KdTexture* apTexture);
 	void SetBombTexture(KdTexture* apTexture);
 	void SetBlastTexture(KdTexture* apTexture);
 	void SetOwner(Scene* apOwner);
-	void SetDamage(int dmg);	// ‘Ì—ÍŒ¸­
-	void SetHeal(int heal);		// ‘Ì—Í‰ñ•œ
-	void SetHitFlg();			// ƒqƒbƒgƒtƒ‰ƒOƒZƒbƒg
-	void SetPosX(float x);	// À•WƒZƒbƒgX(Œ»İÀ•W‚É‘«‚µZ)
-	void SetPosY(float y);	// À•WƒZƒbƒgY(Œ»İÀ•W‚É‘«‚µZ)
-	void SetMovevalX(float movex);	// ˆÚ“®—ÊƒZƒbƒgX(ˆÚ“®—Ê‚ğ“ü—Í)
-	void SetMovevalY(float movey);	// ˆÚ“®—ÊƒZƒbƒgY(ˆÚ“®—Ê‚ğ“ü—Í)
+	void SetDamage(int dmg);	// ï¿½Ì—ÍŒï¿½ï¿½ï¿½
+	void SetHeal(int heal);		// ï¿½Ì—Í‰ï¿½
+	void SetPosX(float x);	// ï¿½ï¿½ï¿½Wï¿½Zï¿½bï¿½gX(ï¿½ï¿½ï¿½İï¿½ï¿½Wï¿½É‘ï¿½ï¿½ï¿½ï¿½Z)
+	void SetPosY(float y);	// ï¿½ï¿½ï¿½Wï¿½Zï¿½bï¿½gY(ï¿½ï¿½ï¿½İï¿½ï¿½Wï¿½É‘ï¿½ï¿½ï¿½ï¿½Z)
+	void SetMovevalX(float movex);	// ï¿½Ú“ï¿½ï¿½ÊƒZï¿½bï¿½gX(ï¿½Ú“ï¿½ï¿½Ê‚ï¿½ï¿½ï¿½ï¿½)
+	void SetMovevalY(float movey);	// ï¿½Ú“ï¿½ï¿½ÊƒZï¿½bï¿½gY(ï¿½Ú“ï¿½ï¿½Ê‚ï¿½ï¿½ï¿½ï¿½)
 
-	//ƒQƒbƒ^[
+	//ï¿½Qï¿½bï¿½^ï¿½[
 	const bool IsAlive() { return m_bAlive; }
-	const Math::Vector2 GetPos() { return m_pos; }				//ƒvƒŒƒCƒ„[À•Wæ“¾
-	const Math::Vector2 GetMove() { return m_moveVal; }			//ƒvƒŒƒCƒ„[ˆÚ“®—Êæ“¾
-	const int GetHp() { return m_hp; }							//‘Ì—Í—Êæ“¾
-	const int GetBombPossession() { return m_BombPossession; }	//”š’eŠ”æ“¾
-	const int GetKeyPossession() { return m_KeyPossession; }	//Œ®Š”æ“¾
-	const bool bGetHit() { return m_HitFlg; }					// –³“Gó‘Ôæ“¾
-	const bool bGetHidden() { return m_hiddenList.bGetHidden(); }	// ‰B‚êgƒtƒ‰ƒOæ“¾
+	const Math::Vector2 GetPos() { return m_pos; }				//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Wï¿½æ“¾
+	const Math::Vector2 GetMove() { return m_moveVal; }			//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ú“ï¿½ï¿½Êæ“¾
+	const int GetHp() { return m_hp; }							//ï¿½Ì—Í—Êæ“¾
+	const int GetBombPossession() { return m_BombPossession; }	//ï¿½ï¿½ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾
+	const int GetKeyPossession() { return m_KeyPossession; }	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾
+	const bool bGetHit() { return m_HitFlg; }					// ï¿½ï¿½ï¿½Gï¿½ï¿½Ôæ“¾
+	const bool bGetHidden() { return m_hiddenList.bGetHidden(); }	// ï¿½Bï¿½ï¿½gï¿½tï¿½ï¿½ï¿½Oï¿½æ“¾
 	const int GetHideCnt() { return m_hiddenList.GetHiddenCnt(); }
-
-	const int GetDirection() {return m_direction;}		// ƒvƒŒƒCƒ„[‚ÌŒü‚«
-
-	//ƒL[“à—eæ“¾
-	const int GetR();
-	const int GetL();
+	const int GetR() { return m_RClick; }	// å³ã‚¯ãƒªãƒƒã‚¯æƒ…å ±å–å¾—
+	const int GetL() { return m_LClick; }	// å·¦ã‚¯ãƒªãƒƒã‚¯æƒ…å ±å–å¾—
 		
-private:		//ŠO•”‚©‚çƒAƒNƒZƒX•s‰Â
+private:		//ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Nï¿½Zï¿½Xï¿½sï¿½ï¿½
 
-	eDirection		m_direction;	//ƒvƒŒƒCƒ„[‚ÌŒü‚«
+	eDirection		m_direction;	//ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌŒï¿½ï¿½ï¿½
 	eClick			m_LClick;
 	eClick			m_RClick;
 	eStatus			m_status;
 
-	KdTexture*		 m_pTexture;	//‰æ‘œ(ƒeƒNƒXƒ`ƒƒ)
-	Math::Vector2	 m_pos;			//À•W
-	Math::Vector2	 m_moveVal;		//ˆÚ“®—Ê
-	Math::Matrix	 m_mat;			//s—ñ
-	Math::Matrix	 m_transMat;	//ˆÚ“®s—ñ
-	Math::Matrix	 m_scaleMat;	//Šg‘ås—ñ
-	Math::Vector2	 m_size;		//Šg‘åƒTƒCƒY
+	KdTexture*		 m_pTexture;	//ï¿½æ‘œ(ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½)
+	Math::Vector2	 m_pos;			//ï¿½ï¿½ï¿½W
+	Math::Vector2	 m_moveVal;		//ï¿½Ú“ï¿½ï¿½ï¿½
+	Math::Matrix	 m_mat;			//ï¿½sï¿½ï¿½
+	Math::Matrix	 m_transMat;	//ï¿½Ú“ï¿½ï¿½sï¿½ï¿½
+	Math::Matrix	 m_scaleMat;	//ï¿½gï¿½ï¿½sï¿½ï¿½
+	Math::Vector2	 m_size;		//ï¿½gï¿½ï¿½Tï¿½Cï¿½Y
 	
-	bool			 m_bAlive;		//¶‘¶ƒtƒ‰ƒO
+	bool			 m_bAlive;		//ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O
 	int				 m_hp;			//HP
-	bool			 m_bHeal;		//HP‰ñ•œƒ|ƒCƒ“ƒgƒtƒ‰ƒO
-	int				 m_hpCount;		//–³“GŠÔ
-	float			 m_alpha;		//‰æ‘œ‚Ì“§–¾“x
-	bool			 m_HitFlg;		//“–‚½‚è”»’èƒtƒ‰ƒO
-	float			 m_slashCnt;	//aŒ‚UŒ‚‚ÌƒN[ƒ‹ƒ^ƒCƒ€
-	float			 m_shurikenCnt;	//è— Œ•ƒN[ƒ‹ƒ^ƒCƒ€
+	bool			 m_bHeal;		//HPï¿½ñ•œƒ|ï¿½Cï¿½ï¿½ï¿½gï¿½tï¿½ï¿½ï¿½O
+	int				 m_invincibleCnt;	//ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½ï¿½
+	float			 m_alpha;		//ï¿½æ‘œï¿½Ì“ï¿½ï¿½ï¿½ï¿½x
+	bool			 m_HitFlg;		//ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½tï¿½ï¿½ï¿½O
+	float			 m_slashCnt;	//ï¿½aï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½ÌƒNï¿½[ï¿½ï¿½ï¿½^ï¿½Cï¿½ï¿½
+	float			 m_shurikenCnt;	//ï¿½è— ï¿½ï¿½ï¿½Nï¿½[ï¿½ï¿½ï¿½^ï¿½Cï¿½ï¿½
 
-	bool			 m_bRClick;	//‰EƒNƒŠƒbƒNƒtƒ‰ƒO
-	bool			 m_bLClick;	//¶ƒNƒŠƒbƒNƒtƒ‰ƒO
-	bool			 m_bRChange;//‰E•Ší•ÏXƒtƒ‰ƒO
-	bool			 m_bLChange;//¶•Ší•ÏXƒtƒ‰ƒO
+	bool			 m_bRClick;	//ï¿½Eï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½tï¿½ï¿½ï¿½O
+	bool			 m_bLClick;	//ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½tï¿½ï¿½ï¿½O
+	bool			 m_bRChange;//ï¿½Eï¿½ï¿½ï¿½ï¿½ÏXï¿½tï¿½ï¿½ï¿½O
+	bool			 m_bLChange;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏXï¿½tï¿½ï¿½ï¿½O
 
-	int	 m_aCnt;	//ƒAƒjƒ[ƒVƒ‡ƒ“ƒJƒEƒ“ƒg
-	int	 m_aAttackCnt; //UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒJƒEƒ“ƒg
-	int m_aTimer;	//ƒAƒjƒ[ƒVƒ‡ƒ“‚ğ‰½f‚É1–‡“®‚©‚·
-	int m_aflame;	//ƒAƒjƒ[ƒVƒ‡ƒ“–‡”
+	int	 m_aCnt;	//ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½g
+	int	 m_aAttackCnt; //ï¿½Uï¿½ï¿½ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÌƒJï¿½Eï¿½ï¿½ï¿½g
+	int m_aTimer;	//ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	int m_aflame;	//ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-	Math::Rectangle scrRect; //ƒeƒNƒXƒ`ƒƒÀ•W
+	Math::Rectangle scrRect; //ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½W
 
-	int				 m_BombPossession;		//”š’eŠ”
-	int				 m_KeyPossession;		//Œ®Š”
-	bool			 m_bMinoPossession;		//‰B‚ê–ªŠƒtƒ‰ƒO
+	int				 m_BombPossession;		//ï¿½ï¿½ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	int				 m_KeyPossession;		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	bool			 m_bMinoPossession;		//ï¿½Bï¿½ê–ªï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O
 
+	void KeyOperation();	// ï¿½Lï¿½[ï¿½ï¿½ï¿½ï¿½ê——
 
-	void KeyOperation();	// ƒL[‘€ìˆê——
+	/* ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ */
+	void HitCheckMap();			// ï¿½}ï¿½bï¿½v
+	bool bMapHitFunction(Math::Vector2 chipPos);		// ï¿½}ï¿½bï¿½vï¿½Æƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì”ï¿½ï¿½ï¿½Öï¿½
+	int iMapHitFunction(Math::Vector2 chipPos);		// ï¿½}ï¿½bï¿½vï¿½Æƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì”ï¿½ï¿½ï¿½Öï¿½
+	void HitMapCase(Math::Vector2 chipPos, int HitCase);		// ï¿½lï¿½Ó‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Öï¿½
+	void HitCheckEnemy();		// ï¿½G
+	// ï¿½Gï¿½Æè— ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Öï¿½
+	bool HitCheckEnemy_And_Bullet(Math::Vector2 enePos, float left, float right, float top, float down);	
+	// ï¿½Gï¿½Æaï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Öï¿½
+	bool HitCheckEnemy_And_Slash(Math::Vector2 enePos, bool bSlashHit, float size);		
+	// ï¿½Gï¿½Æ”ï¿½ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Öï¿½
+	bool HitCheckEnemy_And_Blast(Math::Vector2 enePos, bool bBlastHit, float left, float right, float top, float down);
+	void HitCheckBomb();		// ï¿½ï¿½ï¿½e
+	void HitCheckItem();		// ï¿½Aï¿½Cï¿½eï¿½ï¿½
 
-	/* “–‚½‚è”»’è */
-	void HitCheckMap();			// ƒ}ƒbƒv
-	void HitCheckEnemy();		// “G
-	void HitCheckBomb();		// ”š’e
-	void HitCheckItem();		// ƒAƒCƒeƒ€
-
-	void InviTime();			//–³“GŠÔ
-	eClick ChangeItem(eClick click);		//•Ší•ÏXŠÖ”
+	/* ï¿½ï¿½ï¿½ï¿½Ö˜A */
+	eClick ChangeItem(eClick click);		//ï¿½ï¿½ï¿½ï¿½ÏXï¿½Öï¿½
 	void Attack(bool flg, eClick click);
-	void SetShuriken();		//è— Œ•UŒ‚
-	void SetSword();		//“UŒ‚
-	void SetBomb();			//”š’eUŒ‚
-	void SetHidden();		//‰B‚êg 
+	void SetShuriken();		//ï¿½è— ï¿½ï¿½ï¿½Uï¿½ï¿½
+	void SetSword();		//ï¿½ï¿½ï¿½Uï¿½ï¿½
+	void SetBomb();			//ï¿½ï¿½ï¿½eï¿½Uï¿½ï¿½
+	void SetHidden();		//ï¿½Bï¿½ï¿½g 
 
-	Scene*			 m_pOwner;			//ƒI[ƒi[æ“¾—p
+	void invincibleTime();	//ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½ï¿½
+	void Inversion();		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]ï¿½Öï¿½
+
+	Scene*			 m_pOwner;			//ï¿½Iï¿½[ï¿½iï¿½[ï¿½æ“¾ï¿½p
 	POINT			 m_ClickPoint;
-	CBullet m_bulletList[BULLET_MAX];	//è— Œ•ƒNƒ‰ƒXæ“¾
-	CSword  m_swordList;				//aŒ‚ƒNƒ‰ƒXæ“¾
-	CBomb  m_bombList;					//”š’eƒNƒ‰ƒXæ“¾
-	CHidden m_hiddenList;				//‰B‚êgƒNƒ‰ƒXæ“¾
+	CBullet m_bulletList[BULLET_MAX];	//ï¿½è— ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½æ“¾
+	CSword  m_swordList;				//ï¿½aï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½æ“¾
+	CBomb  m_bombList;					//ï¿½ï¿½ï¿½eï¿½Nï¿½ï¿½ï¿½Xï¿½æ“¾
+	CHidden m_hiddenList;				//ï¿½Bï¿½ï¿½gï¿½Nï¿½ï¿½ï¿½Xï¿½æ“¾
 
-	//‰¹
+	//ï¿½ï¿½
 	std::shared_ptr<KdSoundEffect> katanase;
 	std::shared_ptr<KdSoundInstance> katanaseInst;
 

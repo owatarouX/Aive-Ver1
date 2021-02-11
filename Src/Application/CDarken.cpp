@@ -73,17 +73,11 @@ void CDarken::SetTexture(KdTexture* apTexture)
 	m_pTexture = apTexture;
 }
 
-// ƒ‰ƒ“ƒ_ƒ€
-float CDarken::Rnd()
-{
-	return rand() / (float)RAND_MAX;
-}
-
 void CDarken::EmitDark()
 {
 	m_pos = {0, 0};
 	m_move = { 0,0 };
-	m_size = Rnd() * 100;
+	m_size = 200;
 	m_color = { 1.0,1.0,1.0,1.0 };
 	m_lifeSpan = 100;
 }

@@ -36,7 +36,7 @@ public:
 
 	CItem_Bomb* GetBombItem() { return m_bombList; }		// 爆弾リスト取得
 	CItem_Key* GetKeyItem() { return m_keyList; }			// 鍵リスト取得
-	CItem_Health* GetHealehItem() { return m_healthList; }	// 回復リスト取得
+	CItem_Health* GetHealthItem() { return m_healthList; }	// 回復リスト取得
 	CItem_Mino* GetMinoItem() { return &m_minoList; }		// 隠れ蓑リスト取得
 
 	/* テクスチャ設定 */

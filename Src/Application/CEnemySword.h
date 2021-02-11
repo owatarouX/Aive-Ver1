@@ -17,7 +17,7 @@ public:
 	const Math::Vector2 GetSize() { return m_size; }		// サイズ取得
 
 	//攻撃処理
-	void Slash(Math::Vector2 Pos, float Deg,Math::Vector2 size, float s);	// 敵斬撃呼び出し&敵座標、敵とプレイヤーの角度、サイズ、距離
+	void Slash(Math::Vector2 Pos, float Deg,Math::Vector2 size, float dist);	// 敵斬撃呼び出し&敵座標、敵とプレイヤーの角度、サイズ、距離
 	void SetScrollPos(Math::Vector2 scrPos);	//スクロール量取得
 
 private:
@@ -28,6 +28,7 @@ private:
 	Math::Matrix	 m_mat;			//行列
 	Math::Matrix	 m_transMat;	//移動行列
 	Math::Matrix	 m_scaleMat;	//拡大行列
+	Math::Matrix	 m_rotMat;		//回転行列
 	Math::Vector2	 m_size;		//拡大サイズ
 	bool			 m_bSlash;		//攻撃フラグ
 	int				 m_slashCnt;	//攻撃発動時間

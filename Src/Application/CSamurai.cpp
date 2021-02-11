@@ -108,7 +108,7 @@ void CSamurai::Draw()
 	if (!m_bAlive) return;
 
 	SHADER.m_spriteShader.SetMatrix(m_mat);
-	SHADER.m_spriteShader.DrawTex(m_pTexture, Math::Rectangle(0, 0, 64, 64), 1.0f);
+	SHADER.m_spriteShader.DrawTex(m_pTexture, Math::Rectangle(0, 0, 62, 62), 1.0f);
 }
 
 //テクスチャ設定
@@ -214,20 +214,26 @@ void CSamurai::bSetHidden(bool flg)
 // 攻撃関数
 void CSamurai::Attack()
 {
-	// 一定距離まで近づいてくる
-	if (m_dist >= 90)	Homing(SPEED::SAMURAI);
-	else
+	const int stop = 90;
+	if (m_dist <=150)
 	{
-		m_moveVal = { 0,0 };
+		if(m_dist <= stop) m_moveVal = { 0,0 };
+		// 斬撃攻撃
 		if (m_atkCnt >= COOL_TIME::SAMURAI_SLASH)
 		{
 			bSetSlash(true);
 			m_atkCnt = 0;
 		}
-		m_atkCnt++;
+		m_atkCnt+=2;
 	}
-	if (m_atkCnt >= COOL_TIME::SAMURAI_SLASH)
-		m_atkCnt = COOL_TIME::SAMURAI_SLASH;	// カウント制限
+	else
+	{
+		Homing(SPEED::SAMURAI);		// プレイヤーを追跡
+		m_atkCnt++;
+		if(m_atkCnt >= COOL_TIME::SAMURAI_SLASH - 50)
+			m_atkCnt = COOL_TIME::SAMURAI_SLASH - 50;
+	}
+	
 }
 
 void CSamurai::Homing(float sp)
