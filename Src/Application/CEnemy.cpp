@@ -1,8 +1,8 @@
-#include"CEnemy.h"
+ï»¿#include"CEnemy.h"
 #include "Scene.h"
 #include"Utility.h"
 
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 CEnemy::CEnemy()
 	:gimmickcount(0)
 	, m_bEvent(false)
@@ -10,79 +10,79 @@ CEnemy::CEnemy()
 {
 }
 
-// ƒfƒXƒgƒ‰ƒNƒ^
+// ï¿½fï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 CEnemy::~CEnemy()
 {
 }
 
-// ‰Šú‰»
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void CEnemy::Init()
 {
 	CMap* pMap = m_pOwner->GetMap();
-	int mapData = pMap->GetMapData();	//ƒ}ƒbƒvƒf[ƒ^æ“¾
-	// ‰Šú‰»F˜
+	int mapData = pMap->GetMapData();	//ï¿½}ï¿½bï¿½vï¿½fï¿½[ï¿½^ï¿½æ“¾
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Fï¿½ï¿½
 	for (int i = 0; i < SAMURAI_MAX; i++)
 	{
 		m_samuraiList[i].Init();
 	}
-	SetSamurai(mapData);	// ˜‚Ì”z’u
+	SetSamurai(mapData);	// ï¿½ï¿½ï¿½Ì”zï¿½u
 
-	// ‰Šú‰»F‹|•º
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Fï¿½|ï¿½ï¿½
 	for (int i = 0; i < ARCHER_MAX; i++)
 	{
 		m_archerList[i].Init();
 	}
-	SetArcher(mapData);	// ‹|•º‚Ì”z’u
+	SetArcher(mapData);	// ï¿½|ï¿½ï¿½ï¿½Ì”zï¿½u
 
-	// ‰Šú‰»F‘å’j
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Fï¿½ï¿½j
 	for (int i = 0; i < GIANT_MAX; i++)
 	{
 		m_giantList[i].Init();
 	}
-	SetGiant(mapData);		// ‘å’j‚Ì”z’u
+	SetGiant(mapData);		// ï¿½ï¿½jï¿½Ì”zï¿½u
 
-	// ‰Šú‰»Fƒ{ƒX
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Fï¿½{ï¿½X
 	m_bossList.Init();
-	SetBoss(mapData);		// ƒ{ƒX‚Ì”z’u
+	SetBoss(mapData);		// ï¿½{ï¿½Xï¿½Ì”zï¿½u
 
 	gimmickcount = 0;
 	m_bEvent = false;
 }
 
-// XV
+// ï¿½Xï¿½V
 void CEnemy::Update()
 {
-	CPlayer* pPlayer = m_pOwner->GetPlayer();		// ƒvƒŒƒCƒ„[ƒNƒ‰ƒX‚Ìæ“¾
-	Math::Vector2 playerPos = pPlayer->GetPos();	// ƒvƒŒƒCƒ„[À•Wæ“¾
-	bool bHidden = pPlayer->bGetHidden();			// ‰B‚êgó‘Ôæ“¾
+	CPlayer* pPlayer = m_pOwner->GetPlayer();		// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Nï¿½ï¿½ï¿½Xï¿½Ìæ“¾
+	Math::Vector2 playerPos = pPlayer->GetPos();	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Wï¿½æ“¾
+	bool bHidden = pPlayer->bGetHidden();			// ï¿½Bï¿½ï¿½gï¿½ï¿½Ôæ“¾
 
 	CMap* pMap = m_pOwner->GetMap();
-	Math::Vector2 scrPos = pMap->GetscrollPos();	//ƒXƒNƒ[ƒ‹—Êæ“¾
+	Math::Vector2 scrPos = pMap->GetscrollPos();	//ï¿½Xï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Êæ“¾
 
-	// XVF˜
+	// ï¿½Xï¿½Vï¿½Fï¿½ï¿½
 	Update_Samurai(playerPos,scrPos, bHidden);
 	
-	// XVF‹|•º
+	// ï¿½Xï¿½Vï¿½Fï¿½|ï¿½ï¿½
 	Update_Archer(playerPos, scrPos, bHidden);
 
-	// XVF‘å’j
+	// ï¿½Xï¿½Vï¿½Fï¿½ï¿½j
 	Update_Giant(playerPos, scrPos, bHidden);
 
-	// XVFƒ{ƒX
+	// ï¿½Xï¿½Vï¿½Fï¿½{ï¿½X
 	Update_Boss(playerPos, scrPos, bHidden);
 
-	// XVF–î
+	// ï¿½Xï¿½Vï¿½Fï¿½ï¿½
 	Update_Arrow(scrPos);
 
-	// “G‚ÌaŒ‚ˆ—
+	// ï¿½Gï¿½Ìaï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Update_Sword(scrPos);
 
-	// ƒ}ƒbƒv‚Æ‚Ì“–‚½‚è”»’è
+	// ï¿½}ï¿½bï¿½vï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
 	HitCheckMap();
-	// ƒvƒŒƒCƒ„[‚Æ‚Ì“–‚½‚è”»’è
+	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
 	HitCheckPlayer();
 
-	//ƒMƒ~ƒbƒN
+	//ï¿½Mï¿½~ï¿½bï¿½N
 	const int GMAX = 100;
 	gimmickcount++;
 	if (gimmickcount > GMAX)
@@ -90,14 +90,14 @@ void CEnemy::Update()
 		gimmickcount = GMAX;
 	}
 
-	//ƒCƒxƒ“ƒgˆ—
+	//ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½
 	if(pMap->GetMapData()==OneFloor) Event();
 }
 
-// XVF˜
+// ï¿½Xï¿½Vï¿½Fï¿½ï¿½
 void CEnemy::Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
-	CPlayer* pPlayer = m_pOwner->GetPlayer();		// ƒvƒŒƒCƒ„[ƒNƒ‰ƒX‚Ìæ“¾
+	CPlayer* pPlayer = m_pOwner->GetPlayer();		// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Nï¿½ï¿½ï¿½Xï¿½Ìæ“¾
 
 	CItem* item = m_pOwner->GetItem();
 
@@ -108,31 +108,31 @@ void CEnemy::Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos, bool 
 		m_samuraiList[i].bSetHidden(hide);
 		m_samuraiList[i].Update();
 		
-		// ‰ñ•œƒAƒCƒeƒ€ƒhƒƒbƒvˆ—
+		// ï¿½ñ•œƒAï¿½Cï¿½eï¿½ï¿½ï¿½hï¿½ï¿½ï¿½bï¿½vï¿½ï¿½ï¿½ï¿½
 		if (item->DropHealth(m_samuraiList[i].bGetDrop(), m_samuraiList[i].GetPos())) m_samuraiList[i].bSetDrop();
 		
-		// aŒ‚UŒ‚ˆ—
+		// ï¿½aï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		if (m_samuraiList[i].bGetSlash())
 		{
-			// “GaŒ‚ƒNƒ‰ƒXƒƒ‚ƒŠV‹K
+			// ï¿½Gï¿½aï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½K
 			CEnemySword* sword = new CEnemySword;
 
-			sword->Init();	// ‰Šú‰»
-			sword->SetTexture(m_pSlashTex);	// ƒeƒNƒXƒ`ƒƒİ’è
+			sword->Init();	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			sword->SetTexture(m_pSlashTex);	// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½
 
-			// aŒ‚”­¶
-			sword->Slash(m_samuraiList[i].GetPos(), m_samuraiList[i].GetDeg(), SAMURAI_SLASH_SIZE, 50);// “G‚ÌÀ•WAŠp“xAƒTƒCƒY‚Ìİ’èA‹——£
+			// ï¿½aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			sword->Slash(m_samuraiList[i].GetPos(), m_samuraiList[i].GetDeg(), SAMURAI_SLASH_SIZE, 50);// ï¿½Gï¿½Ìï¿½ï¿½Wï¿½Aï¿½pï¿½xï¿½Aï¿½Tï¿½Cï¿½Yï¿½Ìİ’ï¿½Aï¿½ï¿½ï¿½ï¿½
 			m_enemySwordList.push_back(sword);
 
-			m_samuraiList[i].bSetSlash(false);		// aŒ‚ƒtƒ‰ƒO‚ğ‰º‚°‚Äˆê“x‚¾‚¯Às‚·‚é‚æ‚¤‚É 
+			m_samuraiList[i].bSetSlash(false);		// ï¿½aï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äˆï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½æ‚¤ï¿½ï¿½ 
 		}
 	}
 }
 
-// XVF‹|•º
+// ï¿½Xï¿½Vï¿½Fï¿½|ï¿½ï¿½
 void CEnemy::Update_Archer(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
-	CPlayer* pPlayer = m_pOwner->GetPlayer();		// ƒvƒŒƒCƒ„[ƒNƒ‰ƒX‚Ìæ“¾
+	CPlayer* pPlayer = m_pOwner->GetPlayer();		// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Nï¿½ï¿½ï¿½Xï¿½Ìæ“¾
 
 	for (int i = 0; i < ARCHER_MAX; i++)
 	{
@@ -141,29 +141,29 @@ void CEnemy::Update_Archer(Math::Vector2 playerPos, Math::Vector2 scrPos, bool h
 		m_archerList[i].bSetHidden(hide);
 		m_archerList[i].Update();
 
-		// ‹–ìƒtƒ‰ƒOtrue•”­ËƒJƒEƒ“ƒg0ˆÈ‰º‚Ì
+		// ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Otrueï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ËƒJï¿½Eï¿½ï¿½ï¿½g0ï¿½È‰ï¿½ï¿½Ìï¿½
 		if ((m_archerList[i].GetbVisibility()) && (m_archerList[i].GetShotCnt() >= COOL_TIME::ARCHER_ARROW))
 		{
-			// –îƒNƒ‰ƒXƒƒ‚ƒŠV‹Kì¬
+			// ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½ì¬
 			CArrow* arrow = new CArrow;
 
-			arrow->Init();		// ‰Šú‰»
-			arrow->SetTexture(m_pArrawTex);	// ƒeƒNƒXƒ`ƒƒİ’è
+			arrow->Init();		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			arrow->SetTexture(m_pArrawTex);	// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½
 
-			// ”­Ëˆ—
+			// ï¿½ï¿½ï¿½Ëï¿½ï¿½ï¿½
 			arrow->Shot(m_archerList[i].GetPos(), playerPos);
 			m_arrowList.push_back(arrow);
 
-			// ”­Ëƒtƒ‰ƒOtrue
+			// ï¿½ï¿½ï¿½Ëƒtï¿½ï¿½ï¿½Otrue
 			m_archerList[i].SetShotFlg(true);
 		}
 	}
 }
 
-// XVF‘å’j
+// ï¿½Xï¿½Vï¿½Fï¿½ï¿½j
 void CEnemy::Update_Giant(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
-	CPlayer* pPlayer = m_pOwner->GetPlayer();		// ƒvƒŒƒCƒ„[ƒNƒ‰ƒX‚Ìæ“¾
+	CPlayer* pPlayer = m_pOwner->GetPlayer();		// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Nï¿½ï¿½ï¿½Xï¿½Ìæ“¾
 
 	CMap* map = m_pOwner->GetMap();
 	int mapData = map->GetMapData();
@@ -176,56 +176,52 @@ void CEnemy::Update_Giant(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hi
 		m_giantList[i].bSetHidden(hide);
 		m_giantList[i].Update(mapData);
 
-		// Œ®ƒhƒƒbƒvˆ—
+		// ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½bï¿½vï¿½ï¿½ï¿½ï¿½
 		if (item->DropKey(m_giantList[i].bGetDrop(), m_giantList[i].GetPos())) m_giantList[i].bSetDrop();
 	}
 }
 
-// XVFƒ{ƒX
+// ï¿½Xï¿½Vï¿½Fï¿½{ï¿½X
 void CEnemy::Update_Boss(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
 	m_bossList.SetScrollPos(scrPos);
 	m_bossList.SetPlayerPos(playerPos);
 	m_bossList.Update();
 
-	if (m_bossList.GetSlash())	// aŒ‚ƒtƒ‰ƒO‚ªtrue‚É‚È‚Á‚½‚Æ‚«
+	if (m_bossList.GetSlash())	// ï¿½aï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½trueï¿½É‚È‚ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½
 	{
-		// “GaŒ‚ƒNƒ‰ƒXƒƒ‚ƒŠV‹K
+		// ï¿½Gï¿½aï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½K
 		CEnemySword* sword = new CEnemySword;
 
-		sword->Init();	// ‰Šú‰»
-		sword->SetTexture(m_pSlashTex);	// ƒeƒNƒXƒ`ƒƒİ’è
+		sword->Init();	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		sword->SetTexture(m_pSlashTex);	// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½
 
-		// aŒ‚”­¶
-		sword->Slash(m_bossList.GetPos(), m_bossList.GetDeg(), BOSS_SLASH_SIZE, 120);// “G‚ÌÀ•WAŠp“xAƒTƒCƒY‚Ìİ’èA‹——£
+		// ï¿½aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		sword->Slash(m_bossList.GetPos(), m_bossList.GetDeg(), BOSS_SLASH_SIZE, 120);// ï¿½Gï¿½Ìï¿½ï¿½Wï¿½Aï¿½pï¿½xï¿½Aï¿½Tï¿½Cï¿½Yï¿½Ìİ’ï¿½Aï¿½ï¿½ï¿½ï¿½
 		m_enemySwordList.push_back(sword);
 
-		m_bossList.SetSlash(false);		// aŒ‚ƒtƒ‰ƒO‚ğ‰º‚°‚Äˆê“x‚¾‚¯Às‚·‚é‚æ‚¤‚É 
+		m_bossList.SetSlash(false);		// ï¿½aï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äˆï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½æ‚¤ï¿½ï¿½ 
 	}
 
-	// ‹–ìƒtƒ‰ƒOtrue•”­ËƒJƒEƒ“ƒg0ˆÈ‰º‚Ì
+	// ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½Otrueï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ËƒJï¿½Eï¿½ï¿½ï¿½g0ï¿½È‰ï¿½ï¿½Ìï¿½
 	if ((m_bossList.iGetAttakeType() == Shot) && (m_bossList.GetShotCnt() >= COOL_TIME::BOSS_ARROW))
 	{
+		// ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Kï¿½ì¬
+		CArrow* arrow = new CArrow;
 
-		for (int i = 1; i < 4; i++)
-		{
-			// –îƒNƒ‰ƒXƒƒ‚ƒŠV‹Kì¬
-			CArrow* arrow = new CArrow;
+		arrow->Init();		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		arrow->SetTexture(m_pArrawTex);	// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½
 
-			arrow->Init();		// ‰Šú‰»
-			arrow->SetTexture(m_pArrawTex);	// ƒeƒNƒXƒ`ƒƒİ’è
+		// ï¿½ï¿½ï¿½Ëï¿½ï¿½ï¿½
+		arrow->Shot(m_bossList.GetPos(), playerPos);
+		m_arrowList.push_back(arrow);
 
-			// ”­Ëˆ—
-			arrow->Shot(m_bossList.GetPos(), { playerPos.x + (i*50), playerPos.y + (i * 50) });
-			m_arrowList.push_back(arrow);
-
-			// ”­Ëƒtƒ‰ƒOtrue
-			m_bossList.SetShotFlg(true);
-		}
+		// ï¿½ï¿½ï¿½Ëƒtï¿½ï¿½ï¿½Otrue
+		m_bossList.SetShotFlg(true);
 	}
 }
 
-// XVF–î
+// ï¿½Xï¿½Vï¿½Fï¿½ï¿½
 void CEnemy::Update_Arrow(Math::Vector2 scrPos)
 {
 	for (int i = 0; i < m_arrowList.size(); i++)
@@ -237,10 +233,10 @@ void CEnemy::Update_Arrow(Math::Vector2 scrPos)
 	std::vector<CArrow*>::iterator it;
 	it = m_arrowList.begin();
 
-	// •s—v‚È–î‚Ì—v‘f”íœ
+	// ï¿½sï¿½vï¿½È–ï¿½Ì—vï¿½fï¿½ï¿½ï¿½íœ
 	while (it != m_arrowList.end())
 	{
-		// ƒtƒ‰ƒOture‚È‚çƒXƒ‹[
+		// ï¿½tï¿½ï¿½ï¿½Otureï¿½È‚ï¿½Xï¿½ï¿½ï¿½[
 		if (!(*it)->IsAlive())
 		{
 			delete(*it);
@@ -251,7 +247,7 @@ void CEnemy::Update_Arrow(Math::Vector2 scrPos)
 	}
 }
 
-// XVFaŒ‚
+// ï¿½Xï¿½Vï¿½Fï¿½aï¿½ï¿½
 void CEnemy::Update_Sword(Math::Vector2 scrPos)
 {
 	for (int i = 0; i < m_enemySwordList.size(); i++)
@@ -263,10 +259,10 @@ void CEnemy::Update_Sword(Math::Vector2 scrPos)
 	std::vector<CEnemySword*>::iterator it;
 	it = m_enemySwordList.begin();
 
-	// •s—v‚È–î‚Ì—v‘f”íœ
+	// ï¿½sï¿½vï¿½È–ï¿½Ì—vï¿½fï¿½ï¿½ï¿½íœ
 	while (it != m_enemySwordList.end())
 	{
-		// ƒtƒ‰ƒOture‚È‚çƒXƒ‹[
+		// ï¿½tï¿½ï¿½ï¿½Otureï¿½È‚ï¿½Xï¿½ï¿½ï¿½[
 		if (!(*it)->bGetSlash())
 		{
 			delete(*it);
@@ -277,44 +273,44 @@ void CEnemy::Update_Sword(Math::Vector2 scrPos)
 	}
 }
 
-// •`‰æ
+// ï¿½`ï¿½ï¿½
 void CEnemy::Draw()
 {
-	// •`‰æF˜
+	// ï¿½`ï¿½ï¿½Fï¿½ï¿½
 	for (int i = 0; i < SAMURAI_MAX; i++)
 	{
 		m_samuraiList[i].Draw();
 	}
 
-	// •`‰æF‹|•º
+	// ï¿½`ï¿½ï¿½Fï¿½|ï¿½ï¿½
 	for (int i = 0; i < ARCHER_MAX; i++)
 	{
 		m_archerList[i].Draw();
 	}
 
-	// •`‰æF‘å’j
+	// ï¿½`ï¿½ï¿½Fï¿½ï¿½j
 	for (int i = 0; i < GIANT_MAX; i++)
 	{
 		m_giantList[i].Draw();
 	}
 
-	// •`‰æFƒ{ƒX
+	// ï¿½`ï¿½ï¿½Fï¿½{ï¿½X
 	m_bossList.Draw();
 	
-	// •`‰æF–î
+	// ï¿½`ï¿½ï¿½Fï¿½ï¿½
 	for (int i = 0; i < m_arrowList.size(); i++)
 	{
 		m_arrowList[i]->Draw();
 	}
 
-	// •`‰æF“GaŒ‚
+	// ï¿½`ï¿½ï¿½Fï¿½Gï¿½aï¿½ï¿½
 	for (int i = 0; i < m_enemySwordList.size(); i++)
 	{
 		m_enemySwordList[i]->Draw();
 	}
 }
 
-// ƒeƒNƒXƒ`ƒƒİ’èF˜
+// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½Fï¿½ï¿½
 void CEnemy::SetTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -325,7 +321,7 @@ void CEnemy::SetTexture(KdTexture* apTexture)
 	}
 }
 
-// ƒeƒNƒXƒ`ƒƒİ’èF‹|•º
+// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½Fï¿½|ï¿½ï¿½
 void CEnemy::SetArcherTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -336,7 +332,7 @@ void CEnemy::SetArcherTexture(KdTexture* apTexture)
 	}
 }
 
-// ƒeƒNƒXƒ`ƒƒİ’èF–î
+// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½Fï¿½ï¿½
 void CEnemy::SetArrowTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -344,7 +340,7 @@ void CEnemy::SetArrowTexture(KdTexture* apTexture)
 	m_pArrawTex = apTexture;
 }
 
-// ƒeƒNƒXƒ`ƒƒİ’èFaŒ‚
+// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½Fï¿½aï¿½ï¿½
 void CEnemy::SetSwordTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -352,7 +348,7 @@ void CEnemy::SetSwordTexture(KdTexture* apTexture)
 	m_pSlashTex = apTexture;
 }
 
-// ƒeƒNƒXƒ`ƒƒİ’èF‘å’j
+// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½Fï¿½ï¿½j
 void CEnemy::SetGiantTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -363,7 +359,7 @@ void CEnemy::SetGiantTexture(KdTexture* apTexture)
 	}
 }
 
-// ƒeƒNƒXƒ`ƒƒİ’èFƒ{ƒX
+// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½Fï¿½{ï¿½X
 void CEnemy::SetBossTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -371,19 +367,19 @@ void CEnemy::SetBossTexture(KdTexture* apTexture)
 	m_bossList.SetTexture(apTexture);
 }
 
-// ˜‚Ìİ’uŠÖ”
+// ï¿½ï¿½ï¿½Ìİ’uï¿½Öï¿½
 void CEnemy::SetSamurai(int data)
 {
-	//ƒf[ƒ^‚²‚Æ‚Ì”z’uİ’è
+	//ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½Æ‚Ì”zï¿½uï¿½İ’ï¿½
 	switch (data)
 	{
-	//éŠO
+	//ï¿½ï¿½O
 	case OutSide:
 		m_samuraiList[1].SetSamurai({ 300.0f, -1080.0f });
 		m_samuraiList[2].SetSamurai({ 640.0f,230.0f });
 		m_samuraiList[3].SetSamurai({ 640.0f,110.0f });
 		break;
-	//ˆêŠK‘w
+	//ï¿½ï¿½Kï¿½w
 	case OneFloor:
 		m_samuraiList[1].SetSamurai({ 731,-1531 });
 
@@ -403,34 +399,34 @@ void CEnemy::SetSamurai(int data)
 		m_samuraiList[12].SetSamurai({ 610,0 });
 		m_samuraiList[13].SetSamurai({ -400,-550 });
 		break;
-	//“ñŠK‘w
+	//ï¿½ï¿½Kï¿½w
 	case TwoFloor:
 		m_samuraiList[1].SetSamurai({ 165,-875 });
 		m_samuraiList[2].SetSamurai({ 600,-875 });
 		m_samuraiList[3].SetSamurai({ 1000,-875 });
 		m_samuraiList[4].SetSamurai({ 1635,-884 });
 		break;
-	//OŠK‘w
+	//ï¿½Oï¿½Kï¿½w
 	case ThreeFloor:
 		break;
-	//lŠK‘w
+	//ï¿½lï¿½Kï¿½w
 	case FourFloor:
 		break;
 	}
 
 }
 
-// ‹|•º”z’u
+// ï¿½|ï¿½ï¿½ï¿½zï¿½u
 void CEnemy::SetArcher(int data)
 {
-	//ƒf[ƒ^‚²‚Æ‚Ì”z’uİ’è
+	//ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½Æ‚Ì”zï¿½uï¿½İ’ï¿½
 	switch (data)
 	{
-	//éŠO
+	//ï¿½ï¿½O
 	case OutSide:
 		m_archerList[1].SetArchaer({ 925.0f, -250.0f });
 		break;
-	//ˆêŠK‘w
+	//ï¿½ï¿½Kï¿½w
 	case OneFloor:
 		m_archerList[1].SetArchaer({ 720.0f, -1250.0f });
 		m_archerList[2].SetArchaer({ 1600.0f, -650.0f });
@@ -443,46 +439,46 @@ void CEnemy::SetArcher(int data)
 		
 		m_archerList[7].SetArchaer({ 160,-22 });
 		break;
-	//“ñŠK‘w
+	//ï¿½ï¿½Kï¿½w
 	case TwoFloor:
 		break;
-	//OŠK‘w
+	//ï¿½Oï¿½Kï¿½w
 	case ThreeFloor:
 		break;
-	//lŠK‘w
+	//ï¿½lï¿½Kï¿½w
 	case FourFloor:
 		break;
 	}
 }
 
-// ‘å’j”z’u
+// ï¿½ï¿½jï¿½zï¿½u
 void CEnemy::SetGiant(int data)
 {
-	//ƒf[ƒ^‚²‚Æ‚Ì”z’uİ’è
+	//ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½Æ‚Ì”zï¿½uï¿½İ’ï¿½
 	switch (data)
 	{
-	//“ñŠK‘w
+	//ï¿½ï¿½Kï¿½w
 	case TwoFloor:
 		m_giantList[1].SetGiant({ 1675,210 });
 		m_giantList[2].SetGiant({ 1675,-1600 });
 		break;
-	//OŠK‘w
+	//ï¿½Oï¿½Kï¿½w
 	case ThreeFloor:
 		break;
-	//lŠK‘w
+	//ï¿½lï¿½Kï¿½w
 	case FourFloor:
 		break;
 	}
 }
 
-// ƒ{ƒX”z’u
+// ï¿½{ï¿½Xï¿½zï¿½u
 void CEnemy::SetBoss(int data)
 {
-	//ƒf[ƒ^‚²‚Æ‚Ì”z’uİ’è
+	//ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½Æ‚Ì”zï¿½uï¿½İ’ï¿½
 	if (data == BossFloor)m_bossList.SetBoss({ 609.0f,0.0f });
 }
 
-// ƒMƒ~ƒbƒN”­Ë
+// ï¿½Mï¿½~ï¿½bï¿½Nï¿½ï¿½ï¿½ï¿½
 void CEnemy::shot(Math::Vector2 apos, Math::Vector2 bpos)
 {
 	const int GMAX = 100;
@@ -491,10 +487,10 @@ void CEnemy::shot(Math::Vector2 apos, Math::Vector2 bpos)
 
 		CArrow* arrow = new CArrow;
 
-		arrow->Init();		// ‰Šú‰»
-		arrow->SetTexture(m_pArrawTex);	// ƒeƒNƒXƒ`ƒƒİ’è
+		arrow->Init();		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		arrow->SetTexture(m_pArrawTex);	// ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½İ’ï¿½
 
-		// ”­Ëˆ—
+		// ï¿½ï¿½ï¿½Ëï¿½ï¿½ï¿½
 		arrow->Shot(apos, bpos);
 		m_arrowList.push_back(arrow);
 
@@ -503,11 +499,11 @@ void CEnemy::shot(Math::Vector2 apos, Math::Vector2 bpos)
 	}
 }
 
-// ƒCƒxƒ“ƒgˆ—
+// ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½
 void CEnemy::Event()
 {
 	CMap* map = m_pOwner->GetMap();
-	// ƒCƒxƒ“ƒg”­¶“à—e
+	// ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½e
 	if (!m_bEvent)
 	{
 		m_giantList[1].SetGiant({ 409, -250 });
@@ -515,14 +511,14 @@ void CEnemy::Event()
 		m_bEvent = true;
 		return;
 	}
-	// ƒCƒxƒ“ƒgI—¹ˆ—
+	// ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (!m_giantList[1].IsAlive() && !m_giantList[2].IsAlive())
 	{
 		map->SetUnlock();
 	}
 }
 
-//ƒI[ƒi[İ’èæ“¾
+//ï¿½Iï¿½[ï¿½iï¿½[ï¿½İ’ï¿½æ“¾
 void CEnemy::SetOwner(Scene* apOwner)
 {
 	if (apOwner == nullptr) return;
@@ -530,103 +526,103 @@ void CEnemy::SetOwner(Scene* apOwner)
 	m_pOwner = apOwner;
 }
 
-// ƒvƒŒƒCƒ„[‚Æ‚Ì“–‚½‚è”»’è
+// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
 void CEnemy::HitCheckPlayer()
 {
 	CPlayer* player = m_pOwner->GetPlayer();
 
-	// ƒvƒŒƒCƒ„[‚ª¶‚«‚Ä‚¢‚é‚©A–³“Gó‘Ô‚Å‚È‚¢‚Éˆ—
+	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½Aï¿½ï¿½ï¿½Gï¿½ï¿½Ô‚Å‚È‚ï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½
 	if (!player->IsAlive() || player->bGetHit()) return;
 
-	Math::Vector2 playerPos = player->GetPos();		// ƒvƒŒƒCƒ„[‚ÌÀ•Wæ“¾
-	Math::Vector2 playerMove = player->GetMove();	// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—Êæ“¾
-	CEffect* effect = m_pOwner->GetEffect();		// ƒGƒtƒFƒNƒgƒNƒ‰ƒX
-	CDamage* dmgList = effect->GetDmgList();		// ƒ_ƒ[ƒWƒŠƒXƒg
+	Math::Vector2 playerPos = player->GetPos();		// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½Wï¿½æ“¾
+	Math::Vector2 playerMove = player->GetMove();	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌˆÚ“ï¿½ï¿½Êæ“¾
+	CEffect* effect = m_pOwner->GetEffect();		// ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Nï¿½ï¿½ï¿½X
+	CDamage* dmgList = effect->GetDmgList();		// ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Xï¿½g
 
 	////////////////////////////////////////////////////////////////
-	//					–î‚Æ‚Ì“–‚½‚è”»’è								
+	//					ï¿½ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½								
 	////////////////////////////////////////////////////////////////
 	for (int i = 0; i < m_arrowList.size(); i++)
 	{
 		if (!m_arrowList[i]->IsAlive()) continue;
 
-		// ƒvƒŒƒCƒ„[‚Æ–î‚Ì‹——£
+		// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æ–ï¿½Ì‹ï¿½ï¿½ï¿½
 		const float checkDist = Utility::GetDistance(playerPos, m_arrowList[i]->GetPos());
-		// ƒqƒbƒg”»’è‚Ì‹——£
+		// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 		const float hitDist = 16;
 
-		// ƒqƒbƒg”»’è‚æ‚è‚à‹——£‚ª‹ß‚¢‚Æ‚«
+		// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½Æ‚ï¿½
 		if (checkDist <= hitDist)
 		{
-			player->SetDamage(POWER::ARCHER_ARROW);	// ƒvƒŒƒCƒ„[—^ƒ_ƒ[ƒW
-			player->SetHitFlg();			// ƒqƒbƒgƒtƒ‰ƒOƒZƒbƒg
-			m_arrowList[i]->SetAlive();		// –î‚Ìƒtƒ‰ƒO‰º‚°
+			player->SetDamage(POWER::ARCHER_ARROW);	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½^ï¿½_ï¿½ï¿½ï¿½[ï¿½W
+			player->SetHitFlg();			// ï¿½qï¿½bï¿½gï¿½tï¿½ï¿½ï¿½Oï¿½Zï¿½bï¿½g
+			m_arrowList[i]->SetAlive();		// ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 		}
 	}
 	////////////////////////////////////////////////////////////////
-	//					aŒ‚‚Æ‚Ì“–‚½‚è”»’è								
+	//					ï¿½aï¿½ï¿½ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½								
 	////////////////////////////////////////////////////////////////
 	for (int i = 0; i < m_enemySwordList.size(); i++)
 	{
 		if (!m_enemySwordList[i]->bGetSlash()) continue;
 
-		// ƒvƒŒƒCƒ„[‚ÆaŒ‚‚Ì‹——£
+		// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æaï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 		const float checkDist = Utility::GetDistance(playerPos, m_enemySwordList[i]->GetPos());
 		
-		// ˜‚ÌaŒ‚—p”»’è
+		// ï¿½ï¿½ï¿½Ìaï¿½ï¿½ï¿½pï¿½ï¿½ï¿½ï¿½
 		if (m_enemySwordList[i]->GetSize() == SAMURAI_SLASH_SIZE)
 		{
-			// ƒqƒbƒg”»’è‚Ì‹——£
+			// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 			const float hitDist = PLAYER_SIZE::LEFT+SLASH_SIZE::LEFT;
 
-			// ƒqƒbƒg”»’è‚æ‚è‚à‹——£‚ª‹ß‚¢‚Æ‚«
+			// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½Æ‚ï¿½
 			if (checkDist <= hitDist)
 			{
-				player->SetDamage(POWER::SAMURAI_SLASH);	// ƒvƒŒƒCƒ„[—^ƒ_ƒ[ƒW
-				player->SetHitFlg();		// ƒqƒbƒgƒtƒ‰ƒOƒZƒbƒg
+				player->SetDamage(POWER::SAMURAI_SLASH);	// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½^ï¿½_ï¿½ï¿½ï¿½[ï¿½W
+				player->SetHitFlg();		// ï¿½qï¿½bï¿½gï¿½tï¿½ï¿½ï¿½Oï¿½Zï¿½bï¿½g
 			}
 		}
-		// ƒ{ƒX‚ÌaŒ‚—p”»’è
+		// ï¿½{ï¿½Xï¿½Ìaï¿½ï¿½ï¿½pï¿½ï¿½ï¿½ï¿½
 		else if (m_enemySwordList[i]->GetSize() == BOSS_SLASH_SIZE)
 		{
-			// ƒqƒbƒg”»’è‚Ì‹——£
+			// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 			const float hitDist = PLAYER_SIZE::LEFT+BOSS_SIZE::LEFT;
 
-			// ƒqƒbƒg”»’è‚æ‚è‚à‹——£‚ª‹ß‚¢‚Æ‚«
+			// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½Æ‚ï¿½
 			if (checkDist <= hitDist)
 			{
-				player->SetDamage(POWER::BOSS_SLASH);		// ƒvƒŒƒCƒ„[—^ƒ_ƒ[ƒW
-				player->SetHitFlg();	// ƒqƒbƒgƒtƒ‰ƒOƒZƒbƒg
+				player->SetDamage(POWER::BOSS_SLASH);		// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½^ï¿½_ï¿½ï¿½ï¿½[ï¿½W
+				player->SetHitFlg();	// ï¿½qï¿½bï¿½gï¿½tï¿½ï¿½ï¿½Oï¿½Zï¿½bï¿½g
 			}
 		}
 	}
 
 	int knockBack = 20;
 	////////////////////////////////////////////////////////////////
-	//					˜‚Æ‚Ì“–‚½‚è”»’è								
+	//					ï¿½ï¿½ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½								
 	////////////////////////////////////////////////////////////////
 	for (int i = 0; i < SAMURAI_MAX; i++)
 	{
 		if (!m_samuraiList[i].IsAlive()) continue;
-		// ƒvƒŒƒCƒ„[‚Æ‚Ì“–‚½‚è”»’èŠÖ”
+		// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Öï¿½
 		HitCheckEnemy_And_Player(m_samuraiList[i].GetPos(),POWER::ENEMY_PHYSICAL, knockBack, SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN);
 	}
 	////////////////////////////////////////////////////////////////
-	//					‹|•º‚Æ‚Ì“–‚½‚è”»’è								
+	//					ï¿½|ï¿½ï¿½ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½								
 	////////////////////////////////////////////////////////////////
 	for (int i = 0; i < ARCHER_MAX; i++)
 	{
 		if (!m_archerList[i].IsAlive())continue;
-		// ƒvƒŒƒCƒ„[‚Æ‚Ì“–‚½‚è”»’èŠÖ”
+		// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Öï¿½
 		HitCheckEnemy_And_Player(m_archerList[i].GetPos(), POWER::ENEMY_PHYSICAL, knockBack, ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN);
 	}
 	////////////////////////////////////////////////////////////////
-	//					‘å’j‚Æ‚Ì“–‚½‚è”»’è								
+	//					ï¿½ï¿½jï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½								
 	////////////////////////////////////////////////////////////////
 	for (int i = 0; i < GIANT_MAX; i++)
 	{
 		if (!m_giantList[i].IsAlive())continue;
-		// “Ëi“–‚½‚é‚Æ‘åƒ_ƒ[ƒW
+		// ï¿½Ëiï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‘ï¿½_ï¿½ï¿½ï¿½[ï¿½W
 		int dmg = 0;
 		if (m_giantList[i].bGetRush())
 		{
@@ -635,13 +631,13 @@ void CEnemy::HitCheckPlayer()
 		}
 		else dmg = POWER::ENEMY_PHYSICAL;
 		
-		// ƒvƒŒƒCƒ„[‚Æ‚Ì“–‚½‚è”»’èŠÖ”
+		// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Öï¿½
 		HitCheckEnemy_And_Player(m_giantList[i].GetPos(), dmg, knockBack, GIANT_SIZE::LEFT, GIANT_SIZE::RIGHT, GIANT_SIZE::TOP, GIANT_SIZE::DOWN);
 	}
 	////////////////////////////////////////////////////////////////
-	//					ƒ{ƒX‚Æ‚Ì“–‚½‚è”»’è								
+	//					ï¿½{ï¿½Xï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½								
 	////////////////////////////////////////////////////////////////
-	int bossknockback = 80;	//ƒmƒbƒNƒoƒbƒN‚Ì’l
+	int bossknockback = 80;	//ãƒãƒƒã‚¯ãƒãƒƒã‚¯ã®å€¤
 
 	if (m_bossList.IsAlive())
 	{
@@ -649,29 +645,29 @@ void CEnemy::HitCheckPlayer()
 		{
 			switch (m_bossList.GetDirection())
 			{
-			case 0:	// ƒ{ƒX‚ªãŒü‚«
-				player->SetPosY(m_bossList.GetPosY() + BOSS_SIZE::TOP + bossknockback);	// ƒ{ƒX‚Ìã•”‚ÉoŒ»
-				player->SetMovevalY(0);					// ˆÚ“®—Ê‚ğ0‚É
-				player->SetDamage(POWER::ENEMY_PHYSICAL);	// ƒvƒŒƒCƒ„[‚ÌHPŒ¸­
-				player->SetHitFlg();	// “–‚½‚Á‚Ä‚¢‚éó‘Ô‚É‚·‚é(–³“Gˆ—‚ğŒÄ‚Ño‚·‚½‚ß)
+			case 0:	// ãƒœã‚¹ãŒä¸Šå‘ã
+				player->SetPosY(m_bossList.GetPosY() + BOSS_SIZE::TOP + bossknockback);	// ãƒœã‚¹ã®ä¸Šéƒ¨ã«å‡ºç¾
+				player->SetMovevalY(0);					// ç§»å‹•é‡ã‚’0ã«
+				player->SetDamage(POWER::ENEMY_PHYSICAL);	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPæ¸›å°‘
+				player->SetHitFlg();	// å½“ãŸã£ã¦ã„ã‚‹çŠ¶æ…‹ã«ã™ã‚‹(ç„¡æ•µå‡¦ç†ã‚’å‘¼ã³å‡ºã™ãŸã‚)
 				break;
-			case 1: // ƒ{ƒX‚ª‰ºŒü‚«
-				player->SetPosY(m_bossList.GetPosY() - BOSS_SIZE::DOWN - bossknockback);	// ƒ{ƒX‚Ìã•”‚ÉoŒ»
-				player->SetMovevalY(0);						// ˆÚ“®—Ê‚ğ0‚É
-				player->SetDamage(POWER::ENEMY_PHYSICAL);	// ƒvƒŒƒCƒ„[‚ÌHPŒ¸­
-				player->SetHitFlg();	// “–‚½‚Á‚Ä‚¢‚éó‘Ô‚É‚·‚é(–³“Gˆ—‚ğŒÄ‚Ño‚·‚½‚ß)
+			case 1: // ãƒœã‚¹ãŒä¸‹å‘ã
+				player->SetPosY(m_bossList.GetPosY() - BOSS_SIZE::DOWN - bossknockback);	// ãƒœã‚¹ã®ä¸Šéƒ¨ã«å‡ºç¾
+				player->SetMovevalY(0);						// ç§»å‹•é‡ã‚’0ã«
+				player->SetDamage(POWER::ENEMY_PHYSICAL);	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPæ¸›å°‘
+				player->SetHitFlg();	// å½“ãŸã£ã¦ã„ã‚‹çŠ¶æ…‹ã«ã™ã‚‹(ç„¡æ•µå‡¦ç†ã‚’å‘¼ã³å‡ºã™ãŸã‚)
 				break;
-			case 2:	// ƒ{ƒX‚ª¶Œü‚«
-				player->SetPosX(m_bossList.GetPosX() - BOSS_SIZE::LEFT - bossknockback);	// ƒ{ƒX‚Ìã•”‚ÉoŒ»
-				player->SetMovevalX(0);					// ˆÚ“®—Ê‚ğ0‚É
-				player->SetDamage(POWER::ENEMY_PHYSICAL);	// ƒvƒŒƒCƒ„[‚ÌHPŒ¸­
-				player->SetHitFlg();	// “–‚½‚Á‚Ä‚¢‚éó‘Ô‚É‚·‚é(–³“Gˆ—‚ğŒÄ‚Ño‚·‚½‚ß)
+			case 2:	// ãƒœã‚¹ãŒå·¦å‘ã
+				player->SetPosX(m_bossList.GetPosX() - BOSS_SIZE::LEFT - bossknockback);	// ãƒœã‚¹ã®ä¸Šéƒ¨ã«å‡ºç¾
+				player->SetMovevalX(0);					// ç§»å‹•é‡ã‚’0ã«
+				player->SetDamage(POWER::ENEMY_PHYSICAL);	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPæ¸›å°‘
+				player->SetHitFlg();	// å½“ãŸã£ã¦ã„ã‚‹çŠ¶æ…‹ã«ã™ã‚‹(ç„¡æ•µå‡¦ç†ã‚’å‘¼ã³å‡ºã™ãŸã‚)
 				break;
-			case 3:	// ƒ{ƒX‚ª‰EŒü‚«
-				player->SetPosX(m_bossList.GetPosX() + BOSS_SIZE::RIGHT + bossknockback);	// ƒ{ƒX‚Ìã•”‚ÉoŒ»
-				player->SetMovevalX(0);					// ˆÚ“®—Ê‚ğ0‚É
-				player->SetDamage(POWER::ENEMY_PHYSICAL);	// ƒvƒŒƒCƒ„[‚ÌHPŒ¸­
-				player->SetHitFlg();	// “–‚½‚Á‚Ä‚¢‚éó‘Ô‚É‚·‚é(–³“Gˆ—‚ğŒÄ‚Ño‚·‚½‚ß)
+			case 3:	// ãƒœã‚¹ãŒå³å‘ã
+				player->SetPosX(m_bossList.GetPosX() + BOSS_SIZE::RIGHT + bossknockback);	// ãƒœã‚¹ã®ä¸Šéƒ¨ã«å‡ºç¾
+				player->SetMovevalX(0);					// ç§»å‹•é‡ã‚’0ã«
+				player->SetDamage(POWER::ENEMY_PHYSICAL);	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HPæ¸›å°‘
+				player->SetHitFlg();	// å½“ãŸã£ã¦ã„ã‚‹çŠ¶æ…‹ã«ã™ã‚‹(ç„¡æ•µå‡¦ç†ã‚’å‘¼ã³å‡ºã™ãŸã‚)
 				break;
 			default:
 				break;
@@ -680,57 +676,57 @@ void CEnemy::HitCheckPlayer()
 	}
 }
 
-// ƒvƒŒƒCƒ„[‚Æ“G‚Ì“–‚½‚è”»’èŠÖ”
+// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æ“Gï¿½Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Öï¿½
 void CEnemy::HitCheckEnemy_And_Player(Math::Vector2 enePos, int dmg, float knockBack, float Left, float Right, float Top, float Down)
 {
 	CPlayer* player = m_pOwner->GetPlayer();
 	for (int e = 0; e < SAMURAI_MAX; e++)
 	{
-		//¶‚«‚Ä‚é“G‚Ì‚İ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½Gï¿½Ì‚ï¿½
 		if (!m_samuraiList[e].IsAlive()) continue;
 		int player_hit = Utility::iHitCheck(player->GetPos(), player->GetMove(), enePos.x, enePos.y,
 			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
 			Left,Right,Top,Down);
 
-		//“G‚ÌŒ»İÀ•W‚Ìl•Ó
-		const float ENEMY_LEFT = enePos.x - Left;	//¶•Ó
-		const float ENEMY_RIGHT = enePos.x + Right;	//‰E•Ó
-		const float ENEMY_TOP = enePos.y + Top;		//ã•Ó
-		const float ENEMY_BOTTOM = enePos.y - Down;	//‰º•Ó
+		//ï¿½Gï¿½ÌŒï¿½ï¿½İï¿½ï¿½Wï¿½Ìlï¿½ï¿½
+		const float ENEMY_LEFT = enePos.x - Left;	//ï¿½ï¿½ï¿½ï¿½
+		const float ENEMY_RIGHT = enePos.x + Right;	//ï¿½Eï¿½ï¿½
+		const float ENEMY_TOP = enePos.y + Top;		//ï¿½ï¿½ï¿½
+		const float ENEMY_BOTTOM = enePos.y - Down;	//ï¿½ï¿½ï¿½ï¿½
 
-		//“–‚½‚è”»’è•ªŠòˆ—
-		//1:ã	2:‰º 3:¶ 4:‰E
+		//ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½è•ªï¿½òˆ—ï¿½
+		//1:ï¿½ï¿½	2:ï¿½ï¿½ 3:ï¿½ï¿½ 4:ï¿½E
 		switch (player_hit)
 		{
 		case 1:
 			player->SetPosY(ENEMY_TOP + PLAYER_SIZE::TOP);
 			player->SetMovevalY(knockBack);
-			player->SetDamage(dmg);			//‘Ì—ÍŒ¸­
+			player->SetDamage(dmg);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 			player->SetHitFlg();
 			break;
 		case 2:
 			player->SetPosY(ENEMY_BOTTOM - PLAYER_SIZE::DOWN);
 			player->SetMovevalY(-knockBack);
-			player->SetDamage(dmg);			//‘Ì—ÍŒ¸­
+			player->SetDamage(dmg);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 			player->SetHitFlg();
 			break;
 		case 3:
 			player->SetPosX(ENEMY_LEFT - PLAYER_SIZE::LEFT);
 			player->SetMovevalX(-knockBack);
-			player->SetDamage(dmg);			//‘Ì—ÍŒ¸­
+			player->SetDamage(dmg);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 			player->SetHitFlg();
 			break;
 		case 4:
 			player->SetPosX(ENEMY_RIGHT + PLAYER_SIZE::RIGHT);
 			player->SetMovevalX(knockBack);
-			player->SetDamage(dmg);			//‘Ì—ÍŒ¸­
+			player->SetDamage(dmg);			//ï¿½Ì—ÍŒï¿½ï¿½ï¿½
 			player->SetHitFlg();
 			break;
 		}
 	}
 }
 
-//ƒ}ƒbƒv‚Æ‚Ì“–‚½‚è”»’è
+//ï¿½}ï¿½bï¿½vï¿½Æ‚Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
 void CEnemy::HitCheckMap()
 {
 	CMap* map = m_pOwner->GetMap();
@@ -739,17 +735,17 @@ void CEnemy::HitCheckMap()
 	float(*chipY)[MAP_CHIP_W] = map->GetPosY();
 	int(*chipData)[MAP_CHIP_W] = map->GetChipData();
 
-	//ƒ}ƒbƒvƒf[ƒ^‚ğg‚Á‚Ä
+	//ï¿½}ï¿½bï¿½vï¿½fï¿½[ï¿½^ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½
 	int hit = 0;
 	for (int h = 0; h < MAP_CHIP_H; h++)
 	{
 		for (int w = 0; w < MAP_CHIP_W; w++)
 		{
-			//ƒ}ƒbƒv‚ÌŒ»İÀ•W‚Ìl•Ó
-			const float MAP_LEFT = chipX[h][w] - Infor::RADIUS_32;		//¶•Ó
-			const float MAP_RIGHT = chipX[h][w] + Infor::RADIUS_32;		//‰E•Ó
-			const float MAP_TOP = chipY[h][w] + Infor::RADIUS_32;		//ã•Ó
-			const float MAP_BOTTOM = chipY[h][w] - Infor::RADIUS_32;	//‰º•Ó
+			//ï¿½}ï¿½bï¿½vï¿½ÌŒï¿½ï¿½İï¿½ï¿½Wï¿½Ìlï¿½ï¿½
+			const float MAP_LEFT = chipX[h][w] - Infor::RADIUS_32;		//ï¿½ï¿½ï¿½ï¿½
+			const float MAP_RIGHT = chipX[h][w] + Infor::RADIUS_32;		//ï¿½Eï¿½ï¿½
+			const float MAP_TOP = chipY[h][w] + Infor::RADIUS_32;		//ï¿½ï¿½ï¿½
+			const float MAP_BOTTOM = chipY[h][w] - Infor::RADIUS_32;	//ï¿½ï¿½ï¿½ï¿½
 
 			if (chipData[h][w] >= 10 && chipData[h][w] < 49 || chipData[h][w]>=78)
 			{
@@ -758,7 +754,7 @@ void CEnemy::HitCheckMap()
 			else
 			{
 				////////////////////////////////////////////////////////////////
-				//		˜‚Æ‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+				//		ï¿½ï¿½ï¿½Æ‚Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 				////////////////////////////////////////////////////////////////
 				for (int i = 0; i < SAMURAI_MAX; i++)
 				{
@@ -787,7 +783,7 @@ void CEnemy::HitCheckMap()
 				}
 
 				////////////////////////////////////////////////////////////////
-				//		‹|•º‚Æ‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+				//		ï¿½|ï¿½ï¿½ï¿½Æ‚Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 				////////////////////////////////////////////////////////////////
 				for (int i = 0; i < ARCHER_MAX; i++)
 				{
@@ -815,7 +811,7 @@ void CEnemy::HitCheckMap()
 					}
 				}
 				////////////////////////////////////////////////////////////////
-				//		‘å’j‚Æ‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+				//		ï¿½ï¿½jï¿½Æ‚Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 				////////////////////////////////////////////////////////////////
 				for (int i = 0; i < GIANT_MAX; i++)
 				{
@@ -850,12 +846,12 @@ void CEnemy::HitCheckMap()
 						ARROW_SIZE::LEFT, ARROW_SIZE::RIGHT, ARROW_SIZE::TOP, ARROW_SIZE::DOWN,
 						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 					{
-						m_arrowList[i]->SetAlive();		// –î‚Ìƒtƒ‰ƒO‰º‚°
+						m_arrowList[i]->SetAlive();		// ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 					}
 				}
 			}
 			////////////////////////////////////////////////////////////////
-			//		–î‚Æ‚Ìƒqƒbƒgƒ`ƒFƒbƒN								
+			//		ï¿½ï¿½Æ‚Ìƒqï¿½bï¿½gï¿½`ï¿½Fï¿½bï¿½N								
 			////////////////////////////////////////////////////////////////
 			if (chipData[h][w] >= 10 && chipData[h][w] < 49 || chipData[h][w]>80)
 			{
@@ -866,18 +862,18 @@ void CEnemy::HitCheckMap()
 						ARROW_SIZE::LEFT, ARROW_SIZE::RIGHT, ARROW_SIZE::TOP, ARROW_SIZE::DOWN,
 						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 					{
-						m_arrowList[i]->SetAlive();		// –î‚Ìƒtƒ‰ƒO‰º‚°
+						m_arrowList[i]->SetAlive();		// ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 					}
-					//// ƒ}ƒbƒv‚Æ–î‚Ì‹——£
+					//// ï¿½}ï¿½bï¿½vï¿½Æ–ï¿½Ì‹ï¿½ï¿½ï¿½
 					//const float checkDist = Utility::GetDistance(
 					//	m_arrowList[i]->GetPos(), { chipX[h][w],chipY[h][w] });
-					//// ƒqƒbƒg”»’è‚Ì‹——£
+					//// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 					//const float hitDist = 32 + 16;
 
-					//// ƒqƒbƒg”»’è‚æ‚è‚à‹——£‚ª‹ß‚¢‚Æ‚«
+					//// ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½Æ‚ï¿½
 					//if (checkDist <= hitDist)
 					//{
-					//	m_arrowList[i]->SetAlive();		// –î‚Ìƒtƒ‰ƒO‰º‚°
+					//	m_arrowList[i]->SetAlive();		// ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 					//}
 				}
 			}
