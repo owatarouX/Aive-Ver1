@@ -650,25 +650,21 @@ void CEnemy::HitCheckPlayer()
 				player->SetPosY(m_bossList.GetPosY() + BOSS_SIZE::TOP + bossknockback);	// ボスの上部に出現
 				player->SetMovevalY(0);					// 移動量を0に
 				player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-				player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 				break;
 			case 1: // ボスが下向き
 				player->SetPosY(m_bossList.GetPosY() - BOSS_SIZE::DOWN - bossknockback);	// ボスの上部に出現
 				player->SetMovevalY(0);						// 移動量を0に
 				player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-				player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 				break;
 			case 2:	// ボスが左向き
 				player->SetPosX(m_bossList.GetPosX() - BOSS_SIZE::LEFT - bossknockback);	// ボスの上部に出現
 				player->SetMovevalX(0);					// 移動量を0に
 				player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-				player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 				break;
 			case 3:	// ボスが右向き
 				player->SetPosX(m_bossList.GetPosX() + BOSS_SIZE::RIGHT + bossknockback);	// ボスの上部に出現
 				player->SetMovevalX(0);					// 移動量を0に
 				player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-				player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 				break;
 			default:
 				break;
