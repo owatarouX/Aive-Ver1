@@ -3,7 +3,6 @@
 
 CBoss::CBoss()
 	:attackType(Stop)
-	, m_direction()
 	, m_pTexture(nullptr)
 	, m_pos(0.0f, 0.0f)
 	, m_moveVal(0.0f, 0.0f)
@@ -26,7 +25,6 @@ CBoss::CBoss()
 	, m_atkRnd(0)
 	, m_scrollPos(0.0f, 0.0f)
 	, m_playerPos(0.0f, 0.0f)
-	, playerHitFlg(false)
 {
 }
 
@@ -37,8 +35,6 @@ CBoss::~CBoss()
 
 void CBoss::Init()
 {
-	attackType = Stop;
-	m_direction = BUp;
 	m_bAlive = false;
 	m_dmg = 0;
 	m_bSlashHit = false;
@@ -47,40 +43,12 @@ void CBoss::Init()
 	m_bSlash = false;
 	m_slashCnt = 0;
 
-	
-
-	playerHitFlg = false;
-
-	
+	attackType = Stop;
 }
 
 void CBoss::Update()
 {
 	if (!m_bAlive) return;
-
-	playerHitFlg = false;	// 円判定の時に使用
-
-	// プレイヤーとの角度を求める(向きを決めるよう)
-	float m_DirectionDeg = Utility::GetAngleDeg(m_pos, m_playerPos);
-
-	if (m_DirectionDeg > 45 && m_DirectionDeg < 135)
-	{
-		m_direction = BUp;
-	}
-	else if (m_DirectionDeg > 135 && m_DirectionDeg < 225)
-	{
-		m_direction = BLeft;
-	}
-	else if (m_DirectionDeg > 225 && m_DirectionDeg < 315)
-	{
-		m_direction = BDown;
-	}
-	else if (m_DirectionDeg < 45 && m_DirectionDeg > 0 || m_DirectionDeg < 360 && m_DirectionDeg > 315)
-	{
-		m_direction = BRight;
-	}
-
-
 
 	// ダメージ処理
 	m_hp -= m_dmg;
@@ -95,7 +63,8 @@ void CBoss::Update()
 
 	// プレイヤーとの距離を求める
 	float m_dist = Utility::GetDistance(m_pos, m_playerPos);
-
+	// プレイヤーとの角度を求める
+	m_deg = Utility::GetAngleDeg(m_pos, m_playerPos);
 	m_moveVal = { 0.0f,0.0f };
 
 	if (m_slashCnt >= COOL_TIME::BOSS_SLASH) { m_slashCnt = COOL_TIME::BOSS_SLASH; }
@@ -104,33 +73,25 @@ void CBoss::Update()
 
 
 	Attake();
-	// messagebox(null, l"hit", l"hit", mb_ok);
-
-	if (m_dist < 100)
-	{
-		playerHitFlg = true;
-		//MessageBox(NULL, L"Hit", L"hit", MB_OK);
-	}
-	else if (m_dist > 100 && m_dist < 300)
-	{
-		//attackType = Slash;
-		//BossMoveRush();
-	}
-	else if (m_dist > 300 && m_dist < 400 )
+	// MessageBox(NULL, L"HIT", L"hit", MB_OK);
+	if (m_dist < 400 && m_dist > 300)
 	{
 		attackType = Homing;
 	}
-	else if (m_dist > 600 && m_dist < 800)
+	else if (m_dist < 300)
 	{
-		//attackType = Shot;
+		attackType = Slash;
+	}
+	else if (m_dist > 400 && m_dist < 800)
+	{
+		attackType = Shot;
 	}
 
-	//BossMoveRush();
 
 
 	m_pos.x += m_moveVal.x;
 	m_pos.y += m_moveVal.y;
-	m_mat = DirectX::XMMatrixTranslation(m_pos.x  - m_scrollPos.x, m_pos.y - m_scrollPos.y, 0.0f);
+	m_mat = DirectX::XMMatrixTranslation(m_pos.x - m_scrollPos.x, m_pos.y - m_scrollPos.y, 0.0f);
 }
 
 void CBoss::Draw()
@@ -279,7 +240,7 @@ void CBoss::BossMoveRush()
 	if (m_rushCnt >= RUSH_CNT_MAX)
 	{
 		m_rushCnt = 0;
-		m_bAtk = false;
+		//m_bAtk = false;
 	}
 	else if (m_rushCnt >= RUSH_CNT_MAX - RUSH_CNT_MAX / 6)
 	{
@@ -288,21 +249,14 @@ void CBoss::BossMoveRush()
 	}
 	else if (m_rushCnt >= RUSH_CNT_MAX / 7)
 	{
-		if (!m_bRush)
-		{
-			m_deg = Utility::GetAngleDeg(m_pos, m_playerPos);
-		}
-
-		m_moveVal.x = cos(DirectX::XMConvertToRadians(m_deg)) * 5;	// cos
-		m_moveVal.y = sin(DirectX::XMConvertToRadians(m_deg)) * 5;
-
+		if (!m_bRush) BossMoveHoming(5.0);
 		m_bRush = true;
 	}
 	else if (m_rushCnt >= 0)
 	{
-		const float sp = 2;// スピード
-		m_moveVal.x = -cos(DirectX::XMConvertToRadians(m_deg)) * sp;	// -を付けて引きを表現
-		m_moveVal.y = -sin(DirectX::XMConvertToRadians(m_deg)) * sp;	//
+		const float sp = 3;// スピード
+		m_moveVal.x = -cos(DirectX::XMConvertToRadians(m_deg)) * sp;
+		m_moveVal.y = -sin(DirectX::XMConvertToRadians(m_deg)) * sp;
 	}
 	m_rushCnt++;
 }

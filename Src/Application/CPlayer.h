@@ -79,6 +79,8 @@ public:
 	const bool bGetHidden() { return m_hiddenList.bGetHidden(); }	// 隠れ身フラグ取得
 	const int GetHideCnt() { return m_hiddenList.GetHiddenCnt(); }
 
+	const int GetDirection() {return m_direction;}		// プレイヤーの向き
+
 	//キー内容取得
 	const int GetR();
 	const int GetL();

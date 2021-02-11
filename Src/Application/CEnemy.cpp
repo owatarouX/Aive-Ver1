@@ -206,18 +206,22 @@ void CEnemy::Update_Boss(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hid
 	// 視野フラグtrue時＆発射カウント0以下の時
 	if ((m_bossList.iGetAttakeType() == Shot) && (m_bossList.GetShotCnt() >= COOL_TIME::BOSS_ARROW))
 	{
-		// 矢クラスメモリ新規作成
-		CArrow* arrow = new CArrow;
 
-		arrow->Init();		// 初期化
-		arrow->SetTexture(m_pArrawTex);	// テクスチャ設定
+		for (int i = 1; i < 4; i++)
+		{
+			// 矢クラスメモリ新規作成
+			CArrow* arrow = new CArrow;
 
-		// 発射処理
-		arrow->Shot(m_bossList.GetPos(), playerPos);
-		m_arrowList.push_back(arrow);
+			arrow->Init();		// 初期化
+			arrow->SetTexture(m_pArrawTex);	// テクスチャ設定
 
-		// 発射フラグtrue
-		m_bossList.SetShotFlg(true);
+			// 発射処理
+			arrow->Shot(m_bossList.GetPos(), { playerPos.x + (i*50), playerPos.y + (i * 50) });
+			m_arrowList.push_back(arrow);
+
+			// 発射フラグtrue
+			m_bossList.SetShotFlg(true);
+		}
 	}
 }
 
@@ -637,40 +641,41 @@ void CEnemy::HitCheckPlayer()
 	////////////////////////////////////////////////////////////////
 	//					ボスとの当たり判定								
 	////////////////////////////////////////////////////////////////
+	int bossknockback = 80;	//ノックバックの値
+
 	if (m_bossList.IsAlive())
 	{
-		// ボス本体とのヒット関数　　　　　　　　
-		int playerhit = Utility::iHitCheck(playerPos, playerMove, m_bossList.GetPosX(), m_bossList.GetPosY(),
-			PLAYER_SIZE::LEFT,PLAYER_SIZE::RIGHT,PLAYER_SIZE::TOP,PLAYER_SIZE::DOWN,
-			BOSS_SIZE::LEFT,BOSS_SIZE::RIGHT,BOSS_SIZE::TOP,BOSS_SIZE::DOWN);
-		switch (playerhit)
+		if (m_bossList.GetPlayerHit())
 		{
-		case 1:	// ボスの上部に触れたら
-			player->SetPosY(m_bossList.GetPosY() + 160);	// ボスの上部に出現
-			player->SetMovevalY(0);					// 移動量を0に
-			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
-			break;
-		case 2:	// ボスの下部に触れたら
-			player->SetPosY(m_bossList.GetPosY() - 150);	// ボスの上部に出現
-			player->SetMovevalY(0);					// 移動量を0に
-			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
-			break;
-		case 3:	// ボスの左に触れたら
-			player->SetPosX(m_bossList.GetPosX() - 100);	// ボスの上部に出現
-			player->SetMovevalX(0);					// 移動量を0に
-			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
-			break;
-		case 4:	// ボスの右に触れたら
-			player->SetPosX(m_bossList.GetPosX() + 180);	// ボスの上部に出現
-			player->SetMovevalX(0);					// 移動量を0に
-			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
-			break;
-		default:
-			break;
+			switch (m_bossList.GetDirection())
+			{
+			case 0:	// ボスが上向き
+				player->SetPosY(m_bossList.GetPosY() + BOSS_SIZE::TOP + bossknockback);	// ボスの上部に出現
+				player->SetMovevalY(0);					// 移動量を0に
+				player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
+				player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
+				break;
+			case 1: // ボスが下向き
+				player->SetPosY(m_bossList.GetPosY() - BOSS_SIZE::DOWN - bossknockback);	// ボスの上部に出現
+				player->SetMovevalY(0);						// 移動量を0に
+				player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
+				player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
+				break;
+			case 2:	// ボスが左向き
+				player->SetPosX(m_bossList.GetPosX() - BOSS_SIZE::LEFT - bossknockback);	// ボスの上部に出現
+				player->SetMovevalX(0);					// 移動量を0に
+				player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
+				player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
+				break;
+			case 3:	// ボスが右向き
+				player->SetPosX(m_bossList.GetPosX() + BOSS_SIZE::RIGHT + bossknockback);	// ボスの上部に出現
+				player->SetMovevalX(0);					// 移動量を0に
+				player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
+				player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
+				break;
+			default:
+				break;
+			}
 		}
 	}
 }

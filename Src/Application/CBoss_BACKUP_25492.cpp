@@ -2,8 +2,12 @@
 #include"Utility.h"
 
 CBoss::CBoss()
+<<<<<<< HEAD
 	:attackType(Stop)
+=======
+	:attackType()
 	, m_direction()
+>>>>>>> 城間君進捗
 	, m_pTexture(nullptr)
 	, m_pos(0.0f, 0.0f)
 	, m_moveVal(0.0f, 0.0f)
