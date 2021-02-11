@@ -26,6 +26,7 @@ CBoss::CBoss()
 	, m_atkRnd(0)
 	, m_scrollPos(0.0f, 0.0f)
 	, m_playerPos(0.0f, 0.0f)
+	, playerHitFlg(false)
 {
 }
 
@@ -36,6 +37,8 @@ CBoss::~CBoss()
 
 void CBoss::Init()
 {
+	attackType = Stop;
+	m_direction = BUp;
 	m_bAlive = false;
 	m_dmg = 0;
 	m_bSlashHit = false;
@@ -44,6 +47,7 @@ void CBoss::Init()
 	m_bSlash = false;
 	m_slashCnt = 0;
 
+	playerHitFlg = false;
 	attackType = Stop;
 }
 
@@ -51,6 +55,27 @@ void CBoss::Update()
 {
 	if (!m_bAlive) return;
 
+	playerHitFlg = false;	// �~����̎��Ɏg�p
+
+	// �v���C���[�Ƃ̊p�x����߂�(��������߂�悤)
+	float m_DirectionDeg = Utility::GetAngleDeg(m_pos, m_playerPos);
+
+	if (m_DirectionDeg > 45 && m_DirectionDeg < 135)
+	{
+		m_direction = BUp;
+	}
+	else if (m_DirectionDeg > 135 && m_DirectionDeg < 225)
+	{
+		m_direction = BLeft;
+	}
+	else if (m_DirectionDeg > 225 && m_DirectionDeg < 315)
+	{
+		m_direction = BDown;
+	}
+	else if (m_DirectionDeg < 45 && m_DirectionDeg > 0 || m_DirectionDeg < 360 && m_DirectionDeg > 315)
+	{
+		m_direction = BRight;
+	}
 	// �_���[�W����
 	m_hp -= m_dmg;
 	m_dmg = 0;
@@ -74,18 +99,23 @@ void CBoss::Update()
 
 
 	Attake();
-	// MessageBox(NULL, L"HIT", L"hit", MB_OK);
-	if (m_dist < 400 && m_dist > 300)
+	if (m_dist < 100)
+	{
+		playerHitFlg = true;
+		//MessageBox(NULL, L"Hit", L"hit", MB_OK);
+	}
+	else if (m_dist > 100 && m_dist < 300)
+	{
+		//attackType = Slash;
+		//BossMoveRush();
+	}
+	else if (m_dist > 300 && m_dist < 400 )
 	{
 		attackType = Homing;
 	}
-	else if (m_dist < 300)
+	else if (m_dist > 600 && m_dist < 800)
 	{
-		attackType = Slash;
-	}
-	else if (m_dist > 400 && m_dist < 800)
-	{
-		attackType = Shot;
+		//attackType = Shot;
 	}
 
 
@@ -250,14 +280,21 @@ void CBoss::BossMoveRush()
 	}
 	else if (m_rushCnt >= RUSH_CNT_MAX / 7)
 	{
-		if (!m_bRush) BossMoveHoming(5.0);
+		if (!m_bRush)
+		{
+			m_deg = Utility::GetAngleDeg(m_pos, m_playerPos);
+		}
+
+		m_moveVal.x = cos(DirectX::XMConvertToRadians(m_deg)) * 5;	// cos
+		m_moveVal.y = sin(DirectX::XMConvertToRadians(m_deg)) * 5;
+
 		m_bRush = true;
 	}
 	else if (m_rushCnt >= 0)
 	{
-		const float sp = 3;// �X�s�[�h
-		m_moveVal.x = -cos(DirectX::XMConvertToRadians(m_deg)) * sp;
-		m_moveVal.y = -sin(DirectX::XMConvertToRadians(m_deg)) * sp;
+		const float sp = 2;// �X�s�[�h
+		m_moveVal.x = -cos(DirectX::XMConvertToRadians(m_deg)) * sp;	// -��t���Ĉ�����\��
+		m_moveVal.y = -sin(DirectX::XMConvertToRadians(m_deg)) * sp;	//
 	}
 	m_rushCnt++;
 }

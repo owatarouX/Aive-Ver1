@@ -1,0 +1,9 @@
+diff a/Src/Application/CBoss.cpp b/Src/Application/CBoss.cpp	(rejected hunks)
+@@ -26,7 +26,6 @@
+ 	, m_atkRnd(0)
+ 	, m_scrollPos(0.0f, 0.0f)
+ 	, m_playerPos(0.0f, 0.0f)
+-	, playerHitFlg(false)
+ {
+ }
+ 
