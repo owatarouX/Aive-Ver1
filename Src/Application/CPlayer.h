@@ -62,7 +62,6 @@ public:
 	void SetOwner(Scene* apOwner);
 	void SetDamage(int dmg);	// 体力減少
 	void SetHeal(int heal);		// 体力回復
-	void SetHitFlg();			// ヒットフラグセット
 	void SetPosX(float x);	// 座標セットX(現在座標に足し算)
 	void SetPosY(float y);	// 座標セットY(現在座標に足し算)
 	void SetMovevalX(float movex);	// 移動量セットX(移動量を入力)
@@ -78,10 +77,8 @@ public:
 	const bool bGetHit() { return m_HitFlg; }					// 無敵状態取得
 	const bool bGetHidden() { return m_hiddenList.bGetHidden(); }	// 隠れ身フラグ取得
 	const int GetHideCnt() { return m_hiddenList.GetHiddenCnt(); }
-
-	//キー内容取得
-	const int GetR();
-	const int GetL();
+	const int GetR() { return m_RClick; }	// 右クリック情報取得
+	const int GetL() { return m_LClick; }	// 左クリック情報取得
 		
 private:		//外部からアクセス不可
 
@@ -101,7 +98,7 @@ private:		//外部からアクセス不可
 	bool			 m_bAlive;		//生存フラグ
 	int				 m_hp;			//HP
 	bool			 m_bHeal;		//HP回復ポイントフラグ
-	int				 m_hpCount;		//無敵時間
+	int				 m_invincibleCnt;	//無敵時間
 	float			 m_alpha;		//画像の透明度
 	bool			 m_HitFlg;		//当たり判定フラグ
 	float			 m_slashCnt;	//斬撃攻撃のクールタイム
@@ -123,22 +120,33 @@ private:		//外部からアクセス不可
 	int				 m_KeyPossession;		//鍵所持数
 	bool			 m_bMinoPossession;		//隠れ蓑所持フラグ
 
-
 	void KeyOperation();	// キー操作一覧
 
 	/* 当たり判定 */
 	void HitCheckMap();			// マップ
+	bool bMapHitFunction(Math::Vector2 chipPos);		// マップとプレイヤーの判定関数
+	int iMapHitFunction(Math::Vector2 chipPos);		// マップとプレイヤーの判定関数
+	void HitMapCase(Math::Vector2 chipPos, int HitCase);		// 四辺の当たり判定関数
 	void HitCheckEnemy();		// 敵
+	// 敵と手裏剣当たり判定関数
+	bool HitCheckEnemy_And_Bullet(Math::Vector2 enePos, float left, float right, float top, float down);	
+	// 敵と斬撃当たり判定関数
+	bool HitCheckEnemy_And_Slash(Math::Vector2 enePos, bool bSlashHit, float size);		
+	// 敵と爆弾当たり判定関数
+	bool HitCheckEnemy_And_Blast(Math::Vector2 enePos, bool bBlastHit, float left, float right, float top, float down);
 	void HitCheckBomb();		// 爆弾
 	void HitCheckItem();		// アイテム
 
-	void InviTime();			//無敵時間
+	/* 武器関連 */
 	eClick ChangeItem(eClick click);		//武器変更関数
 	void Attack(bool flg, eClick click);
 	void SetShuriken();		//手裏剣攻撃
 	void SetSword();		//刀攻撃
 	void SetBomb();			//爆弾攻撃
 	void SetHidden();		//隠れ身 
+
+	void invincibleTime();	//無敵時間
+	void Inversion();		//向き反転関数
 
 	Scene*			 m_pOwner;			//オーナー取得用
 	POINT			 m_ClickPoint;

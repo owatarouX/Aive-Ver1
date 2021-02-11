@@ -57,9 +57,9 @@ namespace SPEED
 	const int PLAYER_SHURIKEN = 12;
 
 	// 侍
-	const double SAMURAI = 1.5;
+	const double SAMURAI = 1.7;
 	// 弓兵
-	const double ARCHER = 1.5;
+	const double ARCHER = 1.4;
 	// 矢
 	const int ARROW = 12;
 	// 大男
@@ -77,7 +77,7 @@ namespace COOL_TIME
 	const int PLAYER_SHURIKEN = 20;		// 手裏剣
 
 	// 侍
-	const int SAMURAI_SLASH = 80;
+	const int SAMURAI_SLASH = 300;
 	// 弓兵
 	const int ARCHER_ARROW = 80;
 	// 大男
@@ -85,6 +85,14 @@ namespace COOL_TIME
 	// ボス
 	const int BOSS_SLASH = 80;
 	const int BOSS_ARROW = 120;
+}
+
+// 距離
+namespace DISTANCE
+{
+	const int SAMURAI_SLASH = 60;	// 侍と斬撃の距離
+	const int BOSS_SLASH = 150;	// ボスと斬撃の距離
+
 }
 
 // プレイヤーサイズ
@@ -162,6 +170,38 @@ namespace ARROW_SIZE
 	const float DOWN = 16;
 }
 
+// アイテム：爆弾サイズ
+namespace ITEM_BOMB_SIZE
+{
+	const float LEFT = 56;
+	const float RIGHT = 40;
+	const float TOP = 24;
+	const float DOWN = 24;
+}
+// アイテム：鍵サイズ
+namespace ITEM_KEY_SIZE
+{
+	const float LEFT = 16;
+	const float RIGHT = 16;
+	const float TOP = 16;
+	const float DOWN = 16;
+}
+// アイテム：回復サイズ
+namespace ITEM_HELSE_SIZE
+{
+	const float LEFT = 16;
+	const float RIGHT = 16;
+	const float TOP = 16;
+	const float DOWN = 16;
+}
+// アイテム：隠れ蓑サイズ
+namespace ITEM_HIDE_SIZE
+{
+	const float LEFT = 32;
+	const float RIGHT = 32;
+	const float TOP = 32;
+	const float DOWN = 32;
+}
 
 //汎用処理欄
 namespace Utility

@@ -12,6 +12,7 @@ CMap::CMap()
 	, m_mapData(OutSide)
 	, m_bMapSwitch(false)	//マップ切り替えフラグ
 	, m_pOwner(nullptr)
+	, m_bGimmick(false)
 {
 }
 
@@ -24,7 +25,7 @@ void CMap::Init()
 {
 	m_mapData = OutSide;
 	m_bMapSwitch = false;
-
+	m_bGimmick = false;
 	//マップ情報ロード
 	LoadMapFile();
 
@@ -58,6 +59,134 @@ void CMap::Update()
 	// デバッグ
 	if (GetAsyncKeyState(VK_RETURN) & 0x8000) SetUnlock();
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000) SetLock();
+
+	const int GMAX = 100;
+	gimmickcount++;
+	if (gimmickcount > GMAX)
+	{
+		gimmickcount = GMAX;
+	}
+
+	if (gimmickcount >= GMAX)
+	{
+		m_bGimmick = !m_bGimmick;
+
+		gimmickcount = 0;
+	}
+
+
+	if (m_bGimmick == false)
+	{
+		switch (m_mapData)
+		{
+		case OutSide:
+			break;
+		case OneFloor:	
+			break;
+		case TwoFloor:
+			m_ChipData[2][5] = 95;
+			m_ChipData[2][6] = 95;
+			m_ChipData[3][5] = 95;
+			m_ChipData[3][6] = 95;
+			m_ChipData[4][5] = 95;
+			m_ChipData[4][6] = 95;
+			m_ChipData[5][5] = 95;
+			m_ChipData[5][6] = 95;
+			m_ChipData[6][5] = 95;
+			m_ChipData[6][6] = 95;
+			m_ChipData[7][5] = 95;
+			m_ChipData[7][6] = 95;
+
+			m_ChipData[2][8] = 18;
+			m_ChipData[2][9] = 18;
+			m_ChipData[3][8] = 18;
+			m_ChipData[3][9] = 18;
+			m_ChipData[4][8] = 18;
+			m_ChipData[4][9] = 18;
+			m_ChipData[5][8] = 18;
+			m_ChipData[5][9] = 18;
+			m_ChipData[6][8] = 18;
+			m_ChipData[6][9] = 18;
+			m_ChipData[7][8] = 18;
+			m_ChipData[7][9] = 18;
+
+			m_ChipData[2][11] = 95;
+			m_ChipData[2][12] = 95;
+			m_ChipData[3][11] = 95;
+			m_ChipData[3][12] = 95;
+			m_ChipData[4][11] = 95;
+			m_ChipData[4][12] = 95;
+			m_ChipData[5][11] = 95;
+			m_ChipData[5][12] = 95;
+			m_ChipData[6][11] = 95;
+			m_ChipData[6][12] = 95;
+			m_ChipData[7][11] = 95;
+			m_ChipData[7][12] = 95;
+			break;
+		case ThreeFloor:
+			break;
+		case BossFloor:
+			break;
+		default:
+			break;
+		}
+	}
+	else if (m_bGimmick == true)
+	{
+		switch (m_mapData)
+		{
+		case OutSide:
+			break;
+		case OneFloor:
+			break;
+		case TwoFloor:
+			m_ChipData[2][5] = 18;
+			m_ChipData[2][6] = 18;
+			m_ChipData[3][5] = 18;
+			m_ChipData[3][6] = 18;
+			m_ChipData[4][5] = 18;
+			m_ChipData[4][6] = 18;
+			m_ChipData[5][5] = 18;
+			m_ChipData[5][6] = 18;
+			m_ChipData[6][5] = 18;
+			m_ChipData[6][6] = 18;
+			m_ChipData[7][5] = 18;
+			m_ChipData[7][6] = 18;
+
+			m_ChipData[2][8] = 95;
+			m_ChipData[2][9] = 95;
+			m_ChipData[3][8] = 95;
+			m_ChipData[3][9] = 95;
+			m_ChipData[4][8] = 95;
+			m_ChipData[4][9] = 95;
+			m_ChipData[5][8] = 95;
+			m_ChipData[5][9] = 95;
+			m_ChipData[6][8] = 95;
+			m_ChipData[6][9] = 95;
+			m_ChipData[7][8] = 95;
+			m_ChipData[7][9] = 95;
+
+			m_ChipData[2][11] = 18;
+			m_ChipData[2][12] = 18;
+			m_ChipData[3][11] = 18;
+			m_ChipData[3][12] = 18;
+			m_ChipData[4][11] = 18;
+			m_ChipData[4][12] = 18;
+			m_ChipData[5][11] = 18;
+			m_ChipData[5][12] = 18;
+			m_ChipData[6][11] = 18;
+			m_ChipData[6][12] = 18;
+			m_ChipData[7][11] = 18;
+			m_ChipData[7][12] = 18;
+			break;
+		case ThreeFloor:
+			break;
+		case BossFloor:
+			break;
+		default:
+			break;
+		}
+	}
 
 	//行列作成
 	for (int h = 0; h < MAP_CHIP_H; h++)
@@ -319,21 +448,25 @@ void CMap::Draw()
 			{
 				chipRect = { 0 ,256,64,64 };
 			}
-			else if (m_ChipData[h][w] == 63)
-			{
-				chipRect = { 64,256,64,64 };
-			}
 			else if (m_ChipData[h][w] == 62)
 			{
 				chipRect = { 128,256,64,64 };
+			}
+			else if (m_ChipData[h][w] == 63)
+			{
+			    chipRect = { 64,256,64,64 };
+			}
+			else if (m_ChipData[h][w] == 64)
+			{
+			    chipRect = { 576,128,64,64 };
 			}
 			else if (m_ChipData[h][w] == 65)
 			{
 				chipRect = { 512 ,128,64,64 };
 			}
-			else if (m_ChipData[h][w] == 64)
+			else if (m_ChipData[h][w] == 66)
 			{
-				chipRect = { 576,128,64,64 };
+			    chipRect = { 512 ,64,64,64 };
 			}
 			else if (m_ChipData[h][w] == 70)
 			{
@@ -358,6 +491,18 @@ void CMap::Draw()
 			else if (m_ChipData[h][w] == 90)
 			{
 				chipRect = { 64,128,64,64 };
+			}
+			else if (m_ChipData[h][w] == 95)
+			{
+			    chipRect = { 128,128,64,64 };
+			}
+			else if (m_ChipData[h][w] == 96)
+			{
+			    chipRect = { 256,320,64,64 };
+			}
+			else if (m_ChipData[h][w] == 97)
+			{
+			    chipRect = { 256,320,64,64 };
 			}
 
 			SHADER.m_spriteShader.SetMatrix(m_mat[h][w]);
@@ -414,7 +559,6 @@ void CMap::SetMapData()
 	{
 	case OutSide:
 		m_mapData =OneFloor;
-		//m_mapData = BossFloor; // ボスベヤショートカット
 		break;
 	case OneFloor:
 		m_mapData = TwoFloor;
@@ -457,12 +601,16 @@ void CMap::SetUnlock()
 		m_ChipData[6][2] = ch;
 		break;
 	case TwoFloor:
+		m_ChipData[34][1] = 19;
+		m_ChipData[34][2] = 19;
+		m_ChipData[35][1] = 19;
+		m_ChipData[35][2] = 19;
+		break;
+	case ThreeFloor:
 		m_ChipData[11][3] = ch;
 		m_ChipData[12][3] = ch;
 		m_ChipData[11][4] = ch;
 		m_ChipData[12][4] = ch;
-		break;
-	case ThreeFloor:
 		break;
 	case FourFloor:
 		break;
@@ -565,21 +713,22 @@ void CMap::LoadMapFile()
 	switch (m_mapData)
 	{
 	case OutSide:
-		fp = fopen("Resource/MapData/Map/Map1.csv", "r");
+		fp = fopen("Resource/MapData/Map1.csv", "r");
 		break;
 	case OneFloor:
-		fp = fopen("Resource/MapData/Map/Map2.csv", "r");
+		fp = fopen("Resource/MapData/Map2.csv", "r");
 		break;
 	case TwoFloor:
+		fp = fopen("Resource/MapData/Map3.csv", "r");
 		break;
 	case ThreeFloor:
-		fp = fopen("Resource/MapData/Map/Map3.csv", "r");
+		fp = fopen("Resource/MapData/Map4.csv", "r");
 		break;
 	case FourFloor:
-		fp = fopen("Resource/MapData/Map/Map4.csv", "r");
+		fp = fopen("Resource/MapData/Map5.csv", "r");
 		break;
 	case BossFloor:
-		fp = fopen("Resource/MapData/Map/Boss.csv", "r");
+		fp = fopen("Resource/MapData/Boss.csv", "r");
 		break;
 	default:
 		break;

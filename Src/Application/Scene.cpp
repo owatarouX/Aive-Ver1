@@ -164,7 +164,7 @@ void Scene::Reset()
 	m_blastTex.Load("Resource/Texture/Player/blast.png");
 
 	// “G
-	m_samuraiTex.Load("Resource/Texture/Enemy/enemy.png");
+	m_samuraiTex.Load("Resource/Texture/Enemy/samurai.png");
 	m_archerTex.Load("Resource/Texture/Enemy/Archer.png");
 	m_arrowTex.Load("Resource/Texture/Enemy/arrow.png");
 	m_GiantTex.Load("Resource/Texture/Enemy/giant.png");
@@ -399,10 +399,7 @@ void Scene::GameUpdate()
 	if (m_map.GetMapSwitchFlg())
 	{
 		CDarken* darkenList = m_effect.GetDarkenList();
-		for (int i = 0; i < DARKEN_MAX; i++)
-		{
-			darkenList[i].EmitDark();
-		}
+		darkenList->EmitDark();		// ˆÃ“]ƒGƒtƒFƒNƒg
 
 		//ƒ}ƒbƒvî•ñ‚ÌØ‚è‘Ö‚¦
 		m_map.SetMapData();
@@ -421,15 +418,15 @@ void Scene::GameUpdate()
 			break;
 		//“ñŠK‘w
 		case TwoFloor:
-			m_mapTex.Load("Resource/Texture/Map/");
+			m_mapTex.Load("Resource/Texture/Map/Map3.png");
 			break;
 		//OŠK‘w
 		case ThreeFloor:
-			m_mapTex.Load("Resource/Texture/Map/Map3.png");
+			m_mapTex.Load("Resource/Texture/Map/Map4.png");
 			break;
 		//lŠK‘w
 		case FourFloor:
-			m_mapTex.Load("Resource/Texture/Map/Map4.png");
+			m_mapTex.Load("Resource/Texture/Map/Map5.png");
 			break;
 		//ƒ{ƒXŠK‘w
 		case BossFloor:

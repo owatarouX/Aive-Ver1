@@ -167,24 +167,8 @@ void CItem::SetMino()
 {
 	CMap* map = m_pOwner->GetMap();
 	int mapData = map->GetMapData();	//マップデータ取得
-
-	//データごとの配置設定
-	switch (mapData)
-	{
-		//一階層
-	case OneFloor:
-		m_minoList.SetMino({ 1400,-1600 });
-		break;
-		//二階層
-	case TwoFloor:
-		break;
-		//三階層
-	case ThreeFloor:
-		break;
-	//四階層
-	case FourFloor:
-		break;
-	}
+	
+	if (mapData == TwoFloor) m_minoList.SetMino({ 1755,75 });
 }
 
 //テクスチャ設定：爆弾true

@@ -121,7 +121,8 @@ void CEnemy::Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos, bool 
 			sword->SetTexture(m_pSlashTex);	// テクスチャ設定
 
 			// 斬撃発生
-			sword->Slash(m_samuraiList[i].GetPos(), m_samuraiList[i].GetDeg(), SAMURAI_SLASH_SIZE, 50);// 敵の座標、角度、サイズの設定、距離
+			sword->Slash(m_samuraiList[i].GetPos(), m_samuraiList[i].GetDeg(), 
+				SAMURAI_SLASH_SIZE, DISTANCE::SAMURAI_SLASH);
 			m_enemySwordList.push_back(sword);
 
 			m_samuraiList[i].bSetSlash(false);		// 斬撃フラグを下げて一度だけ実行するように 
@@ -197,7 +198,8 @@ void CEnemy::Update_Boss(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hid
 		sword->SetTexture(m_pSlashTex);	// テクスチャ設定
 
 		// 斬撃発生
-		sword->Slash(m_bossList.GetPos(), m_bossList.GetDeg(), BOSS_SLASH_SIZE, 120);// 敵の座標、角度、サイズの設定、距離
+		sword->Slash(m_bossList.GetPos(), m_bossList.GetDeg(), 
+			BOSS_SLASH_SIZE, DISTANCE::BOSS_SLASH);
 		m_enemySwordList.push_back(sword);
 
 		m_bossList.SetSlash(false);		// 斬撃フラグを下げて一度だけ実行するように 
@@ -375,39 +377,40 @@ void CEnemy::SetSamurai(int data)
 	{
 	//城外
 	case OutSide:
-		m_samuraiList[1].SetSamurai({ 300.0f, -1080.0f });
-		m_samuraiList[2].SetSamurai({ 640.0f,230.0f });
-		m_samuraiList[3].SetSamurai({ 640.0f,110.0f });
+		m_samuraiList[0].SetSamurai({ 300.0f, -1080.0f });
+		m_samuraiList[1].SetSamurai({ 640.0f,230.0f });
+		m_samuraiList[2].SetSamurai({ 640.0f,110.0f });
 		break;
 	//一階層
 	case OneFloor:
-		m_samuraiList[1].SetSamurai({ 731,-1531 });
+		m_samuraiList[0].SetSamurai({ 731,-1531 });
 
-		m_samuraiList[2].SetSamurai({ 1250,-900 });
-		m_samuraiList[3].SetSamurai({ 1600,-1250 });
-		m_samuraiList[4].SetSamurai({ 1500,-1000 });
+		m_samuraiList[1].SetSamurai({ 1250,-900 });
+		m_samuraiList[2].SetSamurai({ 1600,-1250 });
+		m_samuraiList[3].SetSamurai({ 1500,-1000 });
 
-		m_samuraiList[5].SetSamurai({ 1350, 100 });
-		m_samuraiList[6].SetSamurai({ 1550, 100 });
-		m_samuraiList[7].SetSamurai({ -400, -1950 });
-		m_samuraiList[8].SetSamurai({ -500, -1850 });
+		m_samuraiList[4].SetSamurai({ 1350, 100 });
+		m_samuraiList[5].SetSamurai({ 1550, 100 });
+		m_samuraiList[6].SetSamurai({ -400, -1950 });
+		m_samuraiList[7].SetSamurai({ -500, -1850 });
 
-		m_samuraiList[9].SetSamurai({ -84,-1250 });
-		m_samuraiList[10].SetSamurai({ -324,-1486 });
-		m_samuraiList[11].SetSamurai({ 221,-1486 });
+		m_samuraiList[8].SetSamurai({ -84,-1250 });
+		m_samuraiList[9].SetSamurai({ -324,-1486 });
+		m_samuraiList[10].SetSamurai({ 221,-1486 });
 		
-		m_samuraiList[12].SetSamurai({ 610,0 });
-		m_samuraiList[13].SetSamurai({ -400,-550 });
+		m_samuraiList[11].SetSamurai({ 610,0 });
+		m_samuraiList[12].SetSamurai({ -400,-550 });
 		break;
 	//二階層
 	case TwoFloor:
+		
+		break;
+	//三階層
+	case ThreeFloor:
 		m_samuraiList[1].SetSamurai({ 165,-875 });
 		m_samuraiList[2].SetSamurai({ 600,-875 });
 		m_samuraiList[3].SetSamurai({ 1000,-875 });
 		m_samuraiList[4].SetSamurai({ 1635,-884 });
-		break;
-	//三階層
-	case ThreeFloor:
 		break;
 	//四階層
 	case FourFloor:
@@ -555,7 +558,6 @@ void CEnemy::HitCheckPlayer()
 		if (checkDist <= hitDist)
 		{
 			player->SetDamage(POWER::ARCHER_ARROW);	// プレイヤー与ダメージ
-			player->SetHitFlg();			// ヒットフラグセット
 			m_arrowList[i]->SetAlive();		// 矢のフラグ下げ
 		}
 	}
@@ -570,20 +572,20 @@ void CEnemy::HitCheckPlayer()
 		const float checkDist = Utility::GetDistance(playerPos, m_enemySwordList[i]->GetPos());
 		
 		// 侍の斬撃用判定
-		if (m_enemySwordList[i]->GetSize() == SAMURAI_SLASH_SIZE)
+		if (m_enemySwordList[i]->GetSize().x == SAMURAI_SLASH_SIZE.x ||
+			(m_enemySwordList[i]->GetSize().x == -SAMURAI_SLASH_SIZE.x))
 		{
 			// ヒット判定の距離
 			const float hitDist = PLAYER_SIZE::LEFT+SLASH_SIZE::LEFT;
-
 			// ヒット判定よりも距離が近いとき
 			if (checkDist <= hitDist)
 			{
 				player->SetDamage(POWER::SAMURAI_SLASH);	// プレイヤー与ダメージ
-				player->SetHitFlg();		// ヒットフラグセット
 			}
 		}
 		// ボスの斬撃用判定
-		else if (m_enemySwordList[i]->GetSize() == BOSS_SLASH_SIZE)
+		if (m_enemySwordList[i]->GetSize().x == BOSS_SLASH_SIZE.x ||
+			(m_enemySwordList[i]->GetSize().x == -BOSS_SLASH_SIZE.x))
 		{
 			// ヒット判定の距離
 			const float hitDist = PLAYER_SIZE::LEFT+BOSS_SIZE::LEFT;
@@ -592,7 +594,6 @@ void CEnemy::HitCheckPlayer()
 			if (checkDist <= hitDist)
 			{
 				player->SetDamage(POWER::BOSS_SLASH);		// プレイヤー与ダメージ
-				player->SetHitFlg();	// ヒットフラグセット
 			}
 		}
 	}
@@ -649,25 +650,21 @@ void CEnemy::HitCheckPlayer()
 			player->SetPosY(m_bossList.GetPosY() + 160);	// ボスの上部に出現
 			player->SetMovevalY(0);					// 移動量を0に
 			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 			break;
 		case 2:	// ボスの下部に触れたら
 			player->SetPosY(m_bossList.GetPosY() - 150);	// ボスの上部に出現
 			player->SetMovevalY(0);					// 移動量を0に
 			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 			break;
 		case 3:	// ボスの左に触れたら
 			player->SetPosX(m_bossList.GetPosX() - 100);	// ボスの上部に出現
 			player->SetMovevalX(0);					// 移動量を0に
 			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 			break;
 		case 4:	// ボスの右に触れたら
 			player->SetPosX(m_bossList.GetPosX() + 180);	// ボスの上部に出現
 			player->SetMovevalX(0);					// 移動量を0に
 			player->SetDamage(POWER::ENEMY_PHYSICAL);	// プレイヤーのHP減少
-			player->SetHitFlg();	// 当たっている状態にする(無敵処理を呼び出すため)
 			break;
 		default:
 			break;
@@ -701,25 +698,21 @@ void CEnemy::HitCheckEnemy_And_Player(Math::Vector2 enePos, int dmg, float knock
 			player->SetPosY(ENEMY_TOP + PLAYER_SIZE::TOP);
 			player->SetMovevalY(knockBack);
 			player->SetDamage(dmg);			//体力減少
-			player->SetHitFlg();
 			break;
 		case 2:
 			player->SetPosY(ENEMY_BOTTOM - PLAYER_SIZE::DOWN);
 			player->SetMovevalY(-knockBack);
 			player->SetDamage(dmg);			//体力減少
-			player->SetHitFlg();
 			break;
 		case 3:
 			player->SetPosX(ENEMY_LEFT - PLAYER_SIZE::LEFT);
 			player->SetMovevalX(-knockBack);
 			player->SetDamage(dmg);			//体力減少
-			player->SetHitFlg();
 			break;
 		case 4:
 			player->SetPosX(ENEMY_RIGHT + PLAYER_SIZE::RIGHT);
 			player->SetMovevalX(knockBack);
 			player->SetDamage(dmg);			//体力減少
-			player->SetHitFlg();
 			break;
 		}
 	}
@@ -863,17 +856,6 @@ void CEnemy::HitCheckMap()
 					{
 						m_arrowList[i]->SetAlive();		// 矢のフラグ下げ
 					}
-					//// マップと矢の距離
-					//const float checkDist = Utility::GetDistance(
-					//	m_arrowList[i]->GetPos(), { chipX[h][w],chipY[h][w] });
-					//// ヒット判定の距離
-					//const float hitDist = 32 + 16;
-
-					//// ヒット判定よりも距離が近いとき
-					//if (checkDist <= hitDist)
-					//{
-					//	m_arrowList[i]->SetAlive();		// 矢のフラグ下げ
-					//}
 				}
 			}
 		}

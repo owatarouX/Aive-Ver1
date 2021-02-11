@@ -19,10 +19,8 @@ void CEffect::Init()
 		m_dmgList[i].Init();
 	}
 	// 暗転エフェクト初期化
-	for (int i = 0; i < DARKEN_MAX; i++)
-	{
-		m_darkenList[i].Init();
-	}
+	m_darkenList.Init();
+
 	// 回復エフェクト
 	for (int i = 0; i < HEAL_MAX; i++)
 	{
@@ -42,10 +40,8 @@ void CEffect::UpDate()
 		m_dmgList[i].UpDate(scrollPos);
 	}
 	// 暗転エフェクト
-	for (int i = 0; i < DARKEN_MAX; i++)
-	{
-		m_darkenList[i].Update();
-	}
+	m_darkenList.Update();
+
 	// 回復エフェクト
 	for (int i = 0; i < HEAL_MAX; i++)
 	{
@@ -62,10 +58,8 @@ void CEffect::Draw()
 		m_dmgList[i].Draw();
 	}
 	// 暗転エフェクト
-	for (int i = 0; i < DARKEN_MAX; i++)
-	{
-		m_darkenList[i].Draw();
-	}
+	m_darkenList.Draw();
+	
 	// 回復エフェクト
 	for (int i = 0; i < HEAL_MAX; i++)
 	{
@@ -87,10 +81,7 @@ void CEffect::SetDmgTexture(KdTexture* apTexture)
 void CEffect::SetDarkTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr)return;
-	for (int i = 0; i < EFFECT_DMG_MAX; i++)
-	{
-		m_darkenList[i].SetTexture(apTexture);
-	}
+	m_darkenList.SetTexture(apTexture);
 }
 
 // テクスチャ：回復エフェクト
@@ -104,13 +95,12 @@ void CEffect::SetHealTexture(KdTexture* apTexture)
 }
 
 // プレイヤーのヒットエフェクト発生
-void CEffect::PlayerHitEffect()
+void CEffect::HitEffect(Math::Vector2 pos, Math::Vector2 move, float size)
 {
-	CPlayer* player = m_pOwner->GetPlayer();
 	for (int i = 0; i < EFFECT_DMG_MAX; i++)
 	{
-		if (!m_dmgList[i].GetbAlive())continue;
-		m_dmgList[i].EmitDmg(player->GetPos(), player->GetMove(), 1.5);
+		if (m_dmgList[i].GetbAlive())continue;
+		m_dmgList[i].EmitDmg(pos, move, size);
 		return;
 	}
 }
