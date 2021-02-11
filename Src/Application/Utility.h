@@ -123,8 +123,8 @@ namespace GIANT_SIZE
 // ボスサイズ
 namespace BOSS_SIZE
 {
-	const float LEFT = 40;
-	const float RIGHT = 73;
+	const float LEFT = 40 + 40 ;
+	const float RIGHT = 73 - 40 ;
 	const float TOP = 70;
 	const float DOWN = 80;
 }

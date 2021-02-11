@@ -145,6 +145,7 @@ void Scene::ImGuiUpdate()
 		ImGui::Text("Item_KeyNum : %d", m_player.GetKeyPossession());
 		ImGui::Text("BossHp : %d", BossList->GetHp());
 		ImGui::Text("Activate : %f", m_player.GetHideCnt());
+		ImGui::Text("BossDirection : %d", BossList->GetDirection());
 
 		ImGui::Checkbox("HideFlg", &a);
 
@@ -173,7 +174,7 @@ void Scene::Reset()
 	m_archerTex.Load("Texture/Enemy/Archer.png");
 	m_arrowTex.Load("Texture/Enemy/arrow.png");
 	m_GiantTex.Load("Texture/Enemy/giant.png");
-	m_bossTex.Load("Texture/Enemy/idle_0.png");	// ボス
+	m_bossTex.Load("Texture/Enemy/boss1.png");	// ボス
 
 	// マップ
 	m_mapTex.Load("Texture/Map/Map1.png");
