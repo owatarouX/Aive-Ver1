@@ -10,6 +10,14 @@ enum eattackType
 	Rush
 };
 
+enum BossDirection	//向いている方向
+{
+	BUp,
+	BDown,
+	BLeft,
+	BRight
+};
+
 
 class CBoss
 {
@@ -53,12 +61,15 @@ public:
 	const int iGetAttakeType() { return attackType; }	// 攻撃方法取得
 	const int GetShotCnt() { return m_shotCnt; }	// 発射カウント取得
 	bool Getm_bRush() { return m_bRush; }			// 突進フラグ
+	bool GetPlayerHit() { return playerHitFlg; }	// プレイヤーに当たったか
+	const int GetDirection() { return m_direction; }// 方向
 
 
 
 private:
 
 	eattackType attackType;		// 攻撃行動
+	BossDirection	m_direction;	// ボスの向き
 	KdTexture* m_pTexture;		// 画像(テクスチャ)
 	Math::Vector2	m_pos;		// 座標
 	Math::Vector2	m_moveVal;	// 移動量
@@ -85,6 +96,8 @@ private:
 	bool			m_bAtk;				// 攻撃フラグ
 	int				m_atkCnt;			// 攻撃カウント
 	int				m_atkRnd;			// ランダムで攻撃変更
+
+	bool			playerHitFlg;		// プレイヤーと触れたか
 
 	Math::Vector2	 m_scrollPos;	//スクロール量取得用
 	Math::Vector2	 m_playerPos;	//プレイヤーの座標取得用

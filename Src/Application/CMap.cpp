@@ -413,8 +413,8 @@ void CMap::SetMapData()
 	switch (m_mapData)
 	{
 	case OutSide:
-		m_mapData =OneFloor;
-		//m_mapData = BossFloor; // ボスベヤショートカット
+		//m_mapData =OneFloor;
+		m_mapData = BossFloor; // ボスベヤショートカット
 		break;
 	case OneFloor:
 		m_mapData = TwoFloor;
