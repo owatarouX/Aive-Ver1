@@ -60,7 +60,7 @@ void CMap::Update()
 	if (GetAsyncKeyState(VK_RETURN) & 0x8000) SetUnlock();
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000) SetLock();
 
-	const int GMAX = 100;
+	const int GMAX = 60;
 	gimmickcount++;
 	if (gimmickcount > GMAX)
 	{
@@ -74,7 +74,6 @@ void CMap::Update()
 		gimmickcount = 0;
 	}
 
-
 	if (m_bGimmick == false)
 	{
 		switch (m_mapData)
@@ -84,44 +83,84 @@ void CMap::Update()
 		case OneFloor:	
 			break;
 		case TwoFloor:
-			m_ChipData[2][5] = 95;
-			m_ChipData[2][6] = 95;
-			m_ChipData[3][5] = 95;
-			m_ChipData[3][6] = 95;
-			m_ChipData[4][5] = 95;
-			m_ChipData[4][6] = 95;
-			m_ChipData[5][5] = 95;
-			m_ChipData[5][6] = 95;
-			m_ChipData[6][5] = 95;
-			m_ChipData[6][6] = 95;
-			m_ChipData[7][5] = 95;
-			m_ChipData[7][6] = 95;
+			m_ChipData[21][33] = 95;
+			m_ChipData[22][33] = 95;
+			m_ChipData[21][34] = 95;
+			m_ChipData[22][34] = 95;
+			m_ChipData[21][35] = 95;
+			m_ChipData[22][35] = 95;
+			m_ChipData[21][36] = 95;
+			m_ChipData[22][36] = 95;
+			m_ChipData[21][37] = 95;
+			m_ChipData[22][37] = 95;
+			m_ChipData[21][38] = 95;
+			m_ChipData[22][38] = 95;
 
-			m_ChipData[2][8] = 18;
-			m_ChipData[2][9] = 18;
-			m_ChipData[3][8] = 18;
-			m_ChipData[3][9] = 18;
-			m_ChipData[4][8] = 18;
-			m_ChipData[4][9] = 18;
-			m_ChipData[5][8] = 18;
-			m_ChipData[5][9] = 18;
-			m_ChipData[6][8] = 18;
-			m_ChipData[6][9] = 18;
-			m_ChipData[7][8] = 18;
-			m_ChipData[7][9] = 18;
+			m_ChipData[25][33] = 101;
+			m_ChipData[26][33] = 101;
+			m_ChipData[25][34] = 101;
+			m_ChipData[26][34] = 101;
+			m_ChipData[25][35] = 101;
+			m_ChipData[26][35] = 101;
+			m_ChipData[25][36] = 101;
+			m_ChipData[26][36] = 101;
+			m_ChipData[25][37] = 101;
+			m_ChipData[26][37] = 101;
+			m_ChipData[25][38] = 101;
+			m_ChipData[26][38] = 101;
 
-			m_ChipData[2][11] = 95;
-			m_ChipData[2][12] = 95;
-			m_ChipData[3][11] = 95;
-			m_ChipData[3][12] = 95;
-			m_ChipData[4][11] = 95;
-			m_ChipData[4][12] = 95;
-			m_ChipData[5][11] = 95;
-			m_ChipData[5][12] = 95;
-			m_ChipData[6][11] = 95;
-			m_ChipData[6][12] = 95;
-			m_ChipData[7][11] = 95;
-			m_ChipData[7][12] = 95;
+			m_ChipData[30][33] = 95;
+			m_ChipData[29][33] = 95;
+			m_ChipData[30][34] = 95;
+			m_ChipData[29][34] = 95;
+			m_ChipData[30][35] = 95;
+			m_ChipData[29][35] = 95;
+			m_ChipData[30][36] = 95;
+			m_ChipData[29][36] = 95;
+			m_ChipData[30][37] = 95;
+			m_ChipData[29][37] = 95;
+			m_ChipData[30][38] = 95;
+			m_ChipData[29][38] = 95;
+
+			m_ChipData[32][31] = 101;
+			m_ChipData[32][32] = 101;
+			m_ChipData[33][31] = 101;
+			m_ChipData[33][32] = 101;
+			m_ChipData[34][31] = 101;
+			m_ChipData[34][32] = 101;
+			m_ChipData[35][31] = 101;
+			m_ChipData[35][32] = 101;
+			m_ChipData[36][31] = 101;
+			m_ChipData[36][32] = 101;
+			m_ChipData[37][31] = 101;
+			m_ChipData[37][32] = 101;
+
+			m_ChipData[32][27] = 95;
+			m_ChipData[32][28] = 95;
+			m_ChipData[33][27] = 95;
+			m_ChipData[33][28] = 95;
+			m_ChipData[34][27] = 95;
+			m_ChipData[34][28] = 95;
+			m_ChipData[35][27] = 95;
+			m_ChipData[35][28] = 95;
+			m_ChipData[36][27] = 95;
+			m_ChipData[36][28] = 95;
+			m_ChipData[37][27] = 95;
+			m_ChipData[37][28] = 95;
+
+			m_ChipData[32][23] = 101;
+			m_ChipData[32][24] = 101;
+			m_ChipData[33][23] = 101;
+			m_ChipData[33][24] = 101;
+			m_ChipData[34][23] = 101;
+			m_ChipData[34][24] = 101;
+			m_ChipData[35][23] = 101;
+			m_ChipData[35][24] = 101;
+			m_ChipData[36][23] = 101;
+			m_ChipData[36][24] = 101;
+			m_ChipData[37][23] = 101;
+			m_ChipData[37][24] = 101;
+
 			break;
 		case ThreeFloor:
 			break;
@@ -140,44 +179,84 @@ void CMap::Update()
 		case OneFloor:
 			break;
 		case TwoFloor:
-			m_ChipData[2][5] = 18;
-			m_ChipData[2][6] = 18;
-			m_ChipData[3][5] = 18;
-			m_ChipData[3][6] = 18;
-			m_ChipData[4][5] = 18;
-			m_ChipData[4][6] = 18;
-			m_ChipData[5][5] = 18;
-			m_ChipData[5][6] = 18;
-			m_ChipData[6][5] = 18;
-			m_ChipData[6][6] = 18;
-			m_ChipData[7][5] = 18;
-			m_ChipData[7][6] = 18;
+			m_ChipData[21][33] = 101;
+			m_ChipData[22][33] = 101;
+			m_ChipData[21][34] = 101;
+			m_ChipData[22][34] = 101;
+			m_ChipData[21][35] = 101;
+			m_ChipData[22][35] = 101;
+			m_ChipData[21][36] = 101;
+			m_ChipData[22][36] = 101;
+			m_ChipData[21][37] = 101;
+			m_ChipData[22][37] = 101;
+			m_ChipData[21][38] = 101;
+			m_ChipData[22][38] = 101;
 
-			m_ChipData[2][8] = 95;
-			m_ChipData[2][9] = 95;
-			m_ChipData[3][8] = 95;
-			m_ChipData[3][9] = 95;
-			m_ChipData[4][8] = 95;
-			m_ChipData[4][9] = 95;
-			m_ChipData[5][8] = 95;
-			m_ChipData[5][9] = 95;
-			m_ChipData[6][8] = 95;
-			m_ChipData[6][9] = 95;
-			m_ChipData[7][8] = 95;
-			m_ChipData[7][9] = 95;
+			m_ChipData[25][33] = 95;
+			m_ChipData[26][33] = 95;
+			m_ChipData[25][34] = 95;
+			m_ChipData[26][34] = 95;
+			m_ChipData[25][35] = 95;
+			m_ChipData[26][35] = 95;
+			m_ChipData[25][36] = 95;
+			m_ChipData[26][36] = 95;
+			m_ChipData[25][37] = 95;
+			m_ChipData[26][37] = 95;
+			m_ChipData[25][38] = 95;
+			m_ChipData[26][38] = 95;
 
-			m_ChipData[2][11] = 18;
-			m_ChipData[2][12] = 18;
-			m_ChipData[3][11] = 18;
-			m_ChipData[3][12] = 18;
-			m_ChipData[4][11] = 18;
-			m_ChipData[4][12] = 18;
-			m_ChipData[5][11] = 18;
-			m_ChipData[5][12] = 18;
-			m_ChipData[6][11] = 18;
-			m_ChipData[6][12] = 18;
-			m_ChipData[7][11] = 18;
-			m_ChipData[7][12] = 18;
+			m_ChipData[30][33] = 101;
+			m_ChipData[29][33] = 101;
+			m_ChipData[30][34] = 101;
+			m_ChipData[29][34] = 101;
+			m_ChipData[30][35] = 101;
+			m_ChipData[29][35] = 101;
+			m_ChipData[30][36] = 101;
+			m_ChipData[29][36] = 101;
+			m_ChipData[30][37] = 101;
+			m_ChipData[29][37] = 101;
+			m_ChipData[30][38] = 101;
+			m_ChipData[29][38] = 101;
+
+			m_ChipData[32][31] = 95;
+			m_ChipData[32][32] = 95;
+			m_ChipData[33][31] = 95;
+			m_ChipData[33][32] = 95;
+			m_ChipData[34][31] = 95;
+			m_ChipData[34][32] = 95;
+			m_ChipData[35][31] = 95;
+			m_ChipData[35][32] = 95;
+			m_ChipData[36][31] = 95;
+			m_ChipData[36][32] = 95;
+			m_ChipData[37][31] = 95;
+			m_ChipData[37][32] = 95;
+
+			m_ChipData[32][27] = 101;
+			m_ChipData[32][28] = 101;
+			m_ChipData[33][27] = 101;
+			m_ChipData[33][28] = 101;
+			m_ChipData[34][27] = 101;
+			m_ChipData[34][28] = 101;
+			m_ChipData[35][27] = 101;
+			m_ChipData[35][28] = 101;
+			m_ChipData[36][27] = 101;
+			m_ChipData[36][28] = 101;
+			m_ChipData[37][27] = 101;
+			m_ChipData[37][28] = 101;
+
+			m_ChipData[32][23] = 95;
+			m_ChipData[32][24] = 95;
+			m_ChipData[33][23] = 95;
+			m_ChipData[33][24] = 95;
+			m_ChipData[34][23] = 95;
+			m_ChipData[34][24] = 95;
+			m_ChipData[35][23] = 95;
+			m_ChipData[35][24] = 95;
+			m_ChipData[36][23] = 95;
+			m_ChipData[36][24] = 95;
+			m_ChipData[37][23] = 95;
+			m_ChipData[37][24] = 95;
+
 			break;
 		case ThreeFloor:
 			break;
@@ -498,11 +577,51 @@ void CMap::Draw()
 			}
 			else if (m_ChipData[h][w] == 96)
 			{
-			    chipRect = { 256,320,64,64 };
+			    chipRect = { 320,128,64,64 };
 			}
 			else if (m_ChipData[h][w] == 97)
 			{
-			    chipRect = { 256,320,64,64 };
+			    chipRect = { 384,128,64,64 };
+			}
+			else if (m_ChipData[h][w] == 101)
+			{
+			    chipRect = { 192,128,64,64 };
+			}
+			else if (m_ChipData[h][w] == 111)
+			{
+			    chipRect = { 256,64,64,64 };
+			}
+			else if (m_ChipData[h][w] == 112)
+			{
+			    chipRect = { 320,64,64,64 };
+			}
+			else if (m_ChipData[h][w] == 113)
+			{
+			    chipRect = { 384,64,64,64 };
+			}
+			else if (m_ChipData[h][w] == 114)
+			{
+			    chipRect = { 448 ,64,64,64 };
+			}
+			else if (m_ChipData[h][w] == 115)
+			{
+			    chipRect = { 64,128,64,64 };
+			}
+			else if (m_ChipData[h][w] == 116)
+			{
+			    chipRect = { 256,192,64,64 };
+			}
+			else if (m_ChipData[h][w] == 117)
+			{
+			    chipRect = { 320,192,64,64 };
+			}
+			else if (m_ChipData[h][w] == 118)
+			{
+			    chipRect = { 320,256,64,64 };
+			}
+			else if (m_ChipData[h][w] == 119)
+			{
+			    chipRect = { 128,192,64,64 };
 			}
 
 			SHADER.m_spriteShader.SetMatrix(m_mat[h][w]);
@@ -559,8 +678,6 @@ void CMap::SetMapData()
 	{
 	case OutSide:
 		m_mapData =OneFloor;
-		m_mapData = TwoFloor;
-		//m_mapData = BossFloor;//ボスルームショトカ
 		break;
 	case OneFloor:
 		m_mapData = TwoFloor;

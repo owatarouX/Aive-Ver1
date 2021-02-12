@@ -495,6 +495,12 @@ void CPlayer::HitCheckMap()
 				if (hit == 2 || hit == 4)map->SetUnlock();
 				HitMapCase({ chipX[h][w],chipY[h][w] }, hit);
 			}
+			else if (chipData[h][w] >= 111 && chipData[h][w] <= 119)	//	Map5の階層判定
+			{
+				// 通常の壁判定
+				hit = iMapHitFunction({ chipX[h][w],chipY[h][w] });
+				HitMapCase({ chipX[h][w],chipY[h][w] }, hit);
+			}
 			else if (chipData[h][w] == 80)	//データ：ギミック
 			{
 				// 矢の発射
