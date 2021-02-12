@@ -559,6 +559,8 @@ void CMap::SetMapData()
 	{
 	case OutSide:
 		m_mapData =OneFloor;
+		m_mapData = TwoFloor;
+		//m_mapData = BossFloor;//ボスルームショトカ
 		break;
 	case OneFloor:
 		m_mapData = TwoFloor;

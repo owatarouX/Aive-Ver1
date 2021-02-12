@@ -403,6 +403,16 @@ void CEnemy::SetSamurai(int data)
 		break;
 	//��K�w
 	case TwoFloor:
+		m_samuraiList[0].SetSamurai({ 200,-350 });
+		m_samuraiList[1].SetSamurai({ 400,-350 });
+		m_samuraiList[2].SetSamurai({ 600,-350 });
+		m_samuraiList[3].SetSamurai({ 800,-350 });
+		m_samuraiList[4].SetSamurai({ 1000,-350 });
+		m_samuraiList[5].SetSamurai({ 1200,-350 });
+
+		m_samuraiList[6].SetSamurai({ 500, -1000 });
+		m_samuraiList[7].SetSamurai({ 700, -1000 });
+
 		
 		break;
 	//三階層
@@ -444,6 +454,8 @@ void CEnemy::SetArcher(int data)
 		break;
 	//��K�w
 	case TwoFloor:
+		m_archerList[1].SetArchaer({ 300, -1000 });
+		m_archerList[2].SetArchaer({ 1000, -1000 });
 		break;
 	//�O�K�w
 	case ThreeFloor:
@@ -462,8 +474,10 @@ void CEnemy::SetGiant(int data)
 	{
 	//��K�w
 	case TwoFloor:
-		m_giantList[1].SetGiant({ 1675,210 });
-		m_giantList[2].SetGiant({ 1675,-1600 });
+		m_giantList[1].SetGiant({ 150,-1400});
+		m_giantList[2].SetGiant({ 1200,-1400 });
+
+
 		break;
 	//�O�K�w
 	case ThreeFloor:
@@ -858,6 +872,39 @@ void CEnemy::HitCheckMap()
 						m_arrowList[i]->SetAlive();		// ��̃t���O����
 					}
 				}
+			}
+
+			// ボスとのマップ判定
+
+			if (!m_bossList.IsAlive()) continue;
+
+			hit = Utility::iHitCheck(m_bossList.GetPos(), m_bossList.GetMove(), chipX[h][w], chipY[h][w],
+				BOSS_SIZE::LEFT, BOSS_SIZE::RIGHT, BOSS_SIZE::TOP, BOSS_SIZE::DOWN,
+				Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32);
+
+			switch (hit)
+			{
+			case 1://マップの上
+				m_bossList.SetPosY(MAP_TOP + BOSS_SIZE::TOP + 15);
+				m_bossList.SetMoveY(0);
+				m_bossList.SetMoveX(0);
+				break;
+			case 2://マップの下
+				m_bossList.SetPosY(MAP_BOTTOM - BOSS_SIZE::DOWN );
+				m_bossList.SetMoveY(0);
+				m_bossList.SetMoveX(0);
+				break;
+			case 3://マップの左
+				m_bossList.SetPosX(MAP_LEFT - BOSS_SIZE::LEFT );
+				m_bossList.SetMoveY(0);
+				m_bossList.SetMoveX(0);
+				break;
+			case 4://マップの右
+				m_bossList.SetPosX(MAP_RIGHT + BOSS_SIZE::RIGHT+80 );
+				m_bossList.SetMoveY(0);
+				m_bossList.SetMoveX(0);
+			break; default:
+				break;
 			}
 		}
 	}

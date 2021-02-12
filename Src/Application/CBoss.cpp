@@ -48,16 +48,15 @@ void CBoss::Init()
 	m_slashCnt = 0;
 
 	playerHitFlg = false;
-	attackType = Stop;
 }
 
 void CBoss::Update()
 {
 	if (!m_bAlive) return;
 
-	playerHitFlg = false;	// �~����̎��Ɏg�p
+	playerHitFlg = false;	// 円判定の時に使用
 
-	// �v���C���[�Ƃ̊p�x����߂�(��������߂�悤)
+	// プレイヤーとの角度を求める(向きを決めるよう)
 	float m_DirectionDeg = Utility::GetAngleDeg(m_pos, m_playerPos);
 
 	if (m_DirectionDeg > 45 && m_DirectionDeg < 135)
@@ -90,7 +89,7 @@ void CBoss::Update()
 	// �v���C���[�Ƃ̋�������߂�
 	float m_dist = Utility::GetDistance(m_pos, m_playerPos);
 	// �v���C���[�Ƃ̊p�x����߂�
-	m_deg = Utility::GetAngleDeg(m_pos, m_playerPos);
+	//m_deg = Utility::GetAngleDeg(m_pos, m_playerPos);
 	m_moveVal = { 0.0f,0.0f };
 
 	if (m_slashCnt >= COOL_TIME::BOSS_SLASH) { m_slashCnt = COOL_TIME::BOSS_SLASH; }
@@ -106,12 +105,12 @@ void CBoss::Update()
 	}
 	else if (m_dist > 100 && m_dist < 300)
 	{
-		//attackType = Slash;
+		attackType = Rush;
 		//BossMoveRush();
 	}
 	else if (m_dist > 300 && m_dist < 400 )
 	{
-		attackType = Homing;
+		//attackType = Homing;
 	}
 	else if (m_dist > 600 && m_dist < 800)
 	{
@@ -266,12 +265,21 @@ void CBoss::BossMoveShot()
 	if (m_shotCnt <= COOL_TIME::BOSS_ARROW) m_shotCnt++;
 }
 // �{�X�̍s���S�F�ːi
+
+
+
+
+
+
+
+
+
 void CBoss::BossMoveRush()
 {
 	if (m_rushCnt >= RUSH_CNT_MAX)
 	{
 		m_rushCnt = 0;
-		//m_bAtk = false;
+		m_bAtk = false;
 	}
 	else if (m_rushCnt >= RUSH_CNT_MAX - RUSH_CNT_MAX / 6)
 	{
