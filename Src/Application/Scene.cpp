@@ -14,9 +14,9 @@ void Scene::Draw2D()
 		//ゲーム本編
 		GameDraw();
 		break;
-	case eSceneExplanation:
+	case eSceneDescription:
 		//説明
-		ExplanationDraw();
+		DescriptDraw();
 		break;
 	case eSceneResult:
 		//リザルト
@@ -38,9 +38,9 @@ void Scene::Update()
 		//ゲーム本編
 		GameUpdate();
 		break;
-	case eSceneExplanation:
+	case eSceneDescription:
 		//説明
-		ExplanationUpdate();
+		DescriptUpdate();
 		break;
 	case eSceneResult:
 		//説明
@@ -59,7 +59,7 @@ void Scene::Init()
 	bgm->Load("Resource/Sound/BGM.WAV");
 	bgmInst = bgm->CreateInstance(false);
 	bgmInst->SetVolume(0.3);
-	//bgmInst->Play(true);
+	bgmInst->Play(true);
 }
 
 void Scene::Release()
@@ -111,9 +111,11 @@ void Scene::Release()
 	m_msgTex.Release();
 
 	// その他
-	titleTex.Release();
-	ExpTex.Release();
-	resultTex.Release();
+	m_titleTex.Release();
+	m_lineTex.Release();
+	
+	m_descriptTex.Release();
+	m_resultTex.Release();
 	delete spriteFont;
 }
 
@@ -125,7 +127,8 @@ void Scene::ImGuiUpdate()
 	ImGui::SetNextWindowSize(ImVec2(200, 300), ImGuiSetCond_Once);
 
 	CBoss* BossList = m_enemy.GetBossList();
-	bool a = m_player.bGetHidden();
+	bool a = m_title.bGetToGame();
+	bool b = m_title.bGetToDescript();
 
 	// デバッグウィンドウ
 	if (ImGui::Begin("Debug Window"))
@@ -140,8 +143,9 @@ void Scene::ImGuiUpdate()
 		ImGui::Text("Item_KeyNum : %d", m_player.GetKeyPossession());
 		ImGui::Text("BossHp : %d", BossList->GetHp());
 		ImGui::Text("Activate : %f", m_player.GetHideCnt());
-
-		ImGui::Checkbox("HideFlg", &a);
+		
+		ImGui::Checkbox("gameF", &a);
+		ImGui::Checkbox("descF", &b);
 
 	}
 	ImGui::End();
@@ -157,6 +161,14 @@ void Scene::Reset()
 	//MessageBox(NULL, L"HIT", L"hit", MB_OK);
 
 	/*テクスチャ*/
+
+	// タイトル画面
+	m_titleTex.Load("Resource/Texture/Title/Op.png");
+	m_lineTex.Load("Resource/Texture/Title/Line.png");
+
+	// 説明画面
+	m_descriptTex.Load("Resource/Texture/Description/descript.png");
+
 	// プレイヤー
 	m_playerTex.Load("Resource/Texture/Player/player.png");
 	m_bulletTex.Load("Resource/Texture/Player/shuriken.png");
@@ -195,7 +207,6 @@ void Scene::Reset()
 	m_stackBombTex.Load("Resource/Texture/UI/bomb_icon.png");
 	m_stackKeyTex.Load("Resource/Texture/UI/key.png");
 
-
 	// エフェクト
 	m_pSlashTex.Load("Resource/Texture/Effect/p_slash.png");
 	m_eSlashTex.Load("Resource/Texture/Effect/e_slash.png");
@@ -206,9 +217,20 @@ void Scene::Reset()
 	// メッセージ
 	m_msgTex.Load("Resource/Texture/Message/AOMessage.png");
 
-	
+	// リザルト
+	m_resultTex.Load("Resource/Texture/Result/clear.png");
 
 	/*クラスごとの初期化*/
+	// タイトル
+	m_title.Init();
+	m_title.SetTexTitle(&m_titleTex);
+	m_title.SetTexLine(&m_lineTex);
+
+	// ゲーム説明
+	m_descript.Init();
+	m_descript.SetTexDescript(&m_descriptTex);
+	m_descript.SetTexLine(&m_lineTex);
+
 	//マップ
 	m_map.SetOwner(this);
 	m_map.Init();
@@ -270,30 +292,13 @@ void Scene::Reset()
 	m_message.Init();
 	m_message.SetTexture(&m_msgTex);
 
-	/*Scene内の初期化*/
-
-	titleTex.Load("Resource/Texture/Title/Op.png");
-	ExpTex.Load("Resource/Texture/Title/ex.png");
-	resultTex.Load("Resource/Texture/Result/end_01.png");
+	// リザルト
+	m_result.Init();
+	m_result.SetTexResult(&m_resultTex);
+	m_result.SetTexLine(&m_lineTex);
 
 	//初期シーン　タイトル
-	sceneType = eSceneTitle;	//0:タイトル　1:ゲーム本編
-
-	//キー制御
-	keyFlg = 0;		//0:押してない1:押している
-	clickFlg = false;
-
-	//ゲームスタートボタン
-	gameStartPos = { 9, -10 };
-	gameStartFlg = false;
-
-	//説明スタートボタン
-	ExplanationStartPos = { 9, -137 };
-	ExplanationStartFlg = false;
-
-	//タイトルスタートボタン
-	TitleStartPos = { 488, -243 };
-	TitleStartFlg = false;
+	sceneType = eSceneTitle;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -304,88 +309,24 @@ void Scene::TitleUpdate()
 {
 	GetMousePos({ 0,0 });
 
-	////////////////////////////////////////////////////////////
-	//	タイトルからゲーム本編								///
-	////////////////////////////////////////////////////////////
+	// 更新処理
+	m_title.Update(m_mouse.cur);
 
-	float Left = gameStartPos.x - 190;
-	float Right = gameStartPos.x + 190;
-	float Top = gameStartPos.y + 50;
-	float Bottom = gameStartPos.y - 50;
-
-	gameStartFlg = false;
-
-	//強調枠内の判定
-	if (m_mouse.cur.x > Left && m_mouse.cur.x < Right)
+	int trans = m_title.SceneTransition();
+	switch (trans)
 	{
-		if (m_mouse.cur.y > Bottom && m_mouse.cur.y < Top)
-		{
-			gameStartFlg = true;	//枠を表示
-
-			if (GetAsyncKeyState(VK_LBUTTON))
-			{
-				sceneType = eSceneGame;	//ゲーム画面移行
-				clickFlg = true;
-			}
-			else
-			{
-				clickFlg = false;
-			}
-		}
+	case 1: sceneType = eSceneGame;
+		break;
+	case 2:sceneType = eSceneDescription;
+		break;
+	default:
+		break;
 	}
-
-	///////////////////////////////////////////////////////
-	//	タイトルから説明								///
-	///////////////////////////////////////////////////////
-
-	float exLeft = ExplanationStartPos.x - 150;
-	float exRight = ExplanationStartPos.x + 150;
-	float exTop = ExplanationStartPos.y + 43;
-	float exBottom = ExplanationStartPos.y - 43;
-
-	ExplanationStartFlg = false;
-
-	//強調枠内の判定
-	if (m_mouse.cur.x > exLeft && m_mouse.cur.x < exRight)
-	{
-		if (m_mouse.cur.y > exBottom && m_mouse.cur.y < exTop)
-		{
-			ExplanationStartFlg = true;	//強調枠表示
-
-			if (clickFlg == false)
-			{
-				if (GetAsyncKeyState(VK_LBUTTON))
-				{
-					sceneType = eSceneExplanation;	//説明画面に移行
-					clickFlg = true;
-				}
-				else
-				{
-					clickFlg = false;
-				}
-			}
-		}
-	}
-
 }
 //タイトル:描画
 void Scene::TitleDraw()
 {
-	Titlemat = DirectX::XMMatrixTranslation(0, 0, 0);//ここは座標
-	SHADER.m_spriteShader.SetMatrix(Titlemat);
-	SHADER.m_spriteShader.DrawTex(&titleTex, Math::Rectangle(0, 0, 1280, 720), 1.0f);
-
-	//強調枠描画
-	if (gameStartFlg)	//ゲーム
-	{
-		color = { 1,1,0,1 };
-		SHADER.m_spriteShader.DrawBox(gameStartPos.x, gameStartPos.y, 190, 50, &color, false);
-	}
-	if (ExplanationStartFlg)	//説明
-	{
-		color = { 1,0,0,1 };
-		SHADER.m_spriteShader.DrawBox(ExplanationStartPos.x, ExplanationStartPos.y, 150, 43, &color, false);
-	}
+	m_title.Draw();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //												ゲーム画面
@@ -484,23 +425,20 @@ void Scene::GameUpdate()
 	//タイトル移行
 	if (GetAsyncKeyState(VK_TAB) & 0x8000)
 	{
-		if (keyFlg == 0)
-		{
-			Reset();
-			keyFlg = 1;
-			sceneType = eSceneTitle;//タイトルへ
-		}
-	}
-	else
-	{
-		keyFlg = 0;
+		Reset();
+		sceneType = eSceneTitle;//タイトルへ
 	}
 
-	if (m_enemy.GetBossHp() <= 0)
+	// リザルト移行
+	if (m_player.GetHp() <= 0)
+	{
+		m_resultTex.Load("Resource/Texture/Result/GameOver.png");
+		sceneType = eSceneResult;
+	}
+	else if (m_enemy.GetBossHp() <= 0)
 	{
 		sceneType = eSceneResult;
 	}
-	
 }
 
 //ゲーム:描画
@@ -532,58 +470,20 @@ void Scene::GameDraw()
 //												操作説明画面
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //説明:更新
-void Scene::ExplanationUpdate()
+void Scene::DescriptUpdate()
 {
 	GetMousePos({ 0,0 });
-
-	////////////////////////////////////////////////////////
-	//	説明からタイトル								///
-	//////////////////////////////////////////////////////
-
-	float eLeft = TitleStartPos.x - 80;
-	float eRight = TitleStartPos.x + 80;
-	float eTop = TitleStartPos.y + 80;
-	float eBottom = TitleStartPos.y - 80;
-
-	TitleStartFlg = false;
-
-	//強調枠内の判定
-	if (m_mouse.cur.x > eLeft && m_mouse.cur.x < eRight)
+	m_descript.Update(m_mouse.cur);
+	// シーン遷移処理
+	if (m_descript.SceneTransition())
 	{
-		if (m_mouse.cur.y > eBottom && m_mouse.cur.y < eTop)
-		{
-			TitleStartFlg = true;	//強調枠表示
-
-			if (GetAsyncKeyState(VK_LBUTTON))
-			{
-				if (clickFlg == false)
-				{
-					sceneType = eSceneTitle;	//タイトル移行
-					clickFlg = true;
-				}
-			}
-			else
-			{
-				clickFlg = false;
-			}
-		}
+		sceneType = eSceneTitle;
 	}
-
 }
-
 //説明:描画
-void Scene::ExplanationDraw()
+void Scene::DescriptDraw()
 {
-	Titlemat = DirectX::XMMatrixTranslation(0, 0, 0);//ここは座標
-	SHADER.m_spriteShader.SetMatrix(Titlemat);
-	SHADER.m_spriteShader.DrawTex(&ExpTex, Math::Rectangle(0, 0, 1280, 720), 1.0f);
-
-	if (TitleStartFlg)
-	{
-		//強調枠
-		color = { 0,0,1,1 };
-		SHADER.m_spriteShader.DrawBox(TitleStartPos.x, TitleStartPos.y, 80, 80, &color, false);
-	}
+	m_descript.Draw();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //												リザルト画面
@@ -591,15 +491,21 @@ void Scene::ExplanationDraw()
 // リザルト：更新
 void Scene::ResultUpdate()
 {
-	Resultmat = DirectX::XMMatrixTranslation(0, 0, 0);
+	GetMousePos({ 0,0 });
+	m_result.Update(m_mouse.cur);
+	// シーン遷移処理
+	if (m_result.SceneTransition())
+	{
+		sceneType = eSceneTitle;
+		Reset();
+	}
 	bgmInst->Pause();
 }
 
 // リザルト：描画
 void Scene::ResultDraw()
 {
-	SHADER.m_spriteShader.SetMatrix(Resultmat);
-	SHADER.m_spriteShader.DrawTex(&resultTex, Math::Rectangle(0, 0, 1280, 720), 1.0f);
+	m_result.Draw();
 }
 
 //マウス座標取得関数

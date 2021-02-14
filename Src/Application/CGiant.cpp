@@ -66,7 +66,7 @@ void CGiant::Update(int mapData)
 	if (m_hp <= 0)
 	{
 		m_bAlive = false;
-		if (mapData == 2) m_bDrop = true;
+		if (mapData == 3) m_bDrop = true;
 		return;
 	}
 

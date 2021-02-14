@@ -678,6 +678,7 @@ void CMap::SetMapData()
 	{
 	case OutSide:
 		m_mapData =OneFloor;
+		m_mapData = BossFloor;
 		break;
 	case OneFloor:
 		m_mapData = TwoFloor;

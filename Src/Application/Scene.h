@@ -6,13 +6,16 @@
 #include"UI.h"
 #include"CEffect.h"
 #include"CMessage.h"
+#include"CTitle.h"
+#include"CResult.h"
+#include"CDescription.h"
 
 //シーンの種類
 enum eSceneType
 {
 	eSceneTitle,		//0	Title
 	eSceneGame,			//1	ゲーム
-	eSceneExplanation,	//2	説明
+	eSceneDescription,	//2	説明
 	eSceneResult		//3リザルト
 };
 
@@ -28,27 +31,23 @@ class Scene
 {
 private:
 
-	//プレイヤー
-	CPlayer m_player;
+	/* タイトル */
+	Ctitle m_title;
 	
-	//マップ
-	CMap m_map;
+	/* 説明シーン */
+	CDescription m_descript;
 
-	//敵
-	CEnemy m_enemy;
-	
-	//アイテム
-	CItem m_item;
+	/* ゲームメイン */
+	CPlayer m_player;	//プレイヤー
+	CMap m_map;			//マップ
+	CEnemy m_enemy;		//敵
+	CItem m_item;		//アイテム
+	CUI m_ui;			//UI
+	CEffect m_effect;	//エフェクト
+	CMessage m_message;	//メッセージ
 
-	//UI
-	CUI m_ui;
-
-	//エフェクト
-	CEffect m_effect;
-
-	//メッセージ
-	CMessage m_message;
-
+	/* リザルト */
+	CResult m_result;
 
 	//テクスチャ関連
 	//プレイヤー
@@ -100,10 +99,15 @@ private:
 	// メッセージ
 	KdTexture m_msgTex;
 
-	// その他
-	KdTexture titleTex;
-	KdTexture resultTex;
-	KdTexture ExpTex;
+	// タイトル
+	KdTexture m_titleTex;
+	KdTexture m_lineTex;
+	
+	// 説明
+	KdTexture m_descriptTex;
+
+	// リザルト
+	KdTexture m_resultTex;
 
 
 	eSceneType sceneType;	//0:タイトル　1:ゲーム本編
@@ -111,26 +115,7 @@ private:
 	//マウス構造体
 	t_Mouse m_mouse;
 
-	//キー制御
-	int keyFlg;		//0:押してない1:押している
-	bool clickFlg;	//マウスクリックフラグ
-
-	
-	Math::Matrix Titlemat;
 	Math::Color color;
-
-	//タイトルシーン
-	Math::Vector2 gameStartPos;			//タイトル:ゲームスタート座標
-	bool gameStartFlg;					//タイトル:ゲームスタートフラグ
-	Math::Vector2 ExplanationStartPos;	//タイトル:説明
-	bool ExplanationStartFlg;			//タイトル:説明
-
-	//説明シーン
-	Math::Vector2 TitleStartPos;		//説明:タイトル
-	bool TitleStartFlg;					//説明:タイトル
-
-	//　リザルト行列
-	Math::Matrix Resultmat;
 
 	std::shared_ptr<KdSoundEffect> bgm;
 	std::shared_ptr<KdSoundInstance> bgmInst;
@@ -180,8 +165,8 @@ public:
 	void GameDraw();//描画
 
 	//説明　
-	void ExplanationUpdate(); //更新
-	void ExplanationDraw(); //描画
+	void DescriptUpdate(); //更新
+	void DescriptDraw(); //描画
 
 	//リザルト
 	void ResultUpdate();
