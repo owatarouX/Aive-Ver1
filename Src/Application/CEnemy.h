@@ -12,8 +12,8 @@
 class Scene;
 
 //ìGÇÃóvëfêî
-constexpr int SAMURAI_MAX = 15;
-constexpr int ARCHER_MAX = 13;
+constexpr int SAMURAI_MAX = 20;
+constexpr int ARCHER_MAX = 15;
 constexpr int GIANT_MAX = 5;
 
 class CEnemy

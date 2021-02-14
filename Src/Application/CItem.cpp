@@ -112,25 +112,22 @@ void CItem::SetBomb()
 	{
 	//城外
 	case OutSide:
-		m_bombList[0].SetBomb({ 930.0f,270.0f });
+		m_bombList[0].SetBomb({ 260.0f,-920.0f });
 		break;
 	//一階層
 	case OneFloor:
-		m_bombList[0].SetBomb({ 1750, -750 });
-		m_bombList[1].SetBomb({ 464,-744 });
+		m_bombList[0].SetBomb({ 464,-744 });
 		break;
 	//二階層
 	case TwoFloor:
+		m_bombList[0].SetBomb({ 300,200 });
 		break;
 	//三階層
 	case ThreeFloor:
 		break;
-	//四階層
-	case FourFloor:
-		break;
 	//ボス階層
 	case BossFloor:
-		
+		m_bombList[0].SetBomb({ 730,-1000 });
 		break;
 	default:
 		break;
@@ -168,7 +165,7 @@ void CItem::SetMino()
 	CMap* map = m_pOwner->GetMap();
 	int mapData = map->GetMapData();	//マップデータ取得
 	
-	if (mapData == TwoFloor) m_minoList.SetMino({ 1755,75 });
+	if (mapData == TwoFloor) m_minoList.SetMino({ 1700,200 });
 }
 
 //テクスチャ設定：爆弾true

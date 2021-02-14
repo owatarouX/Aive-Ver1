@@ -112,7 +112,8 @@ private:
 
 	eSceneType sceneType;	//0:タイトル　1:ゲーム本編
 
-	//マウス構造体
+	//マウス
+	KdTexture m_mousePointTex;
 	t_Mouse m_mouse;
 
 	Math::Color color;
@@ -174,6 +175,7 @@ public:
 
 	//マウス座標取得
 	void GetMousePos(Math::Vector2 scrPos);
+	void MousePointDraw();
 
 private:
 	DirectX::SpriteBatch* spriteBatch;

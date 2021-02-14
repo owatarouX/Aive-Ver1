@@ -47,7 +47,6 @@ private:
 	Math::Matrix	m_mat;		// 合成行列
 	Math::Matrix	m_transMat;	// 移動行列
 	Math::Matrix	m_scaleMat;	// 拡大行列
-	Math::Vector2	m_size;	// 画像反転用
 	bool			m_bAlive;	// 生存フラグ
 	int				m_hp;		// 体力量
 	int				m_dmg;		// 体力減少量

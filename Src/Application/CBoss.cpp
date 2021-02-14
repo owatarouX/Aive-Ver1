@@ -40,6 +40,7 @@ void CBoss::Init()
 	attackType = Stop;
 	m_direction = BUp;
 	m_bAlive = false;
+	m_hp = HP::BOSS;
 	m_dmg = 0;
 	m_bSlashHit = false;
 	m_bBlastHit = false;

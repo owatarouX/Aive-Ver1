@@ -43,7 +43,7 @@ void Ctitle::Update(POINT mouse)
 	// 強調線アニメーション
 	if (m_bToGame || m_bToDescript)
 	{
-		m_drawLineCnt+=20;
+		m_drawLineCnt+=30;
 		if (m_drawLineCnt >= DRAW_MAX)m_drawLineCnt = DRAW_MAX;
 	}
 	else m_drawLineCnt = 0;
@@ -69,7 +69,7 @@ void Ctitle::Draw()
 	if (m_bToGame || m_bToDescript)
 	{
 		SHADER.m_spriteShader.SetMatrix(m_matLine);
-		SHADER.m_spriteShader.DrawTex(m_pTex_Line, Math::Rectangle(0, 0, m_drawLineCnt, 15), 1.0f);
+		SHADER.m_spriteShader.DrawTex(m_pTex_Line, Math::Rectangle(0, 0, m_drawLineCnt, 27), 1.0f);
 	}
 }
 

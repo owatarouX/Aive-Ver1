@@ -3,14 +3,14 @@
 #include"Utility.h"
 
 CMap::CMap()
-	:m_pTexture(nullptr)	//�摜(�e�N�X�`��)
-	, m_ChipData()			//�}�b�v�f�[�^
-	, m_chipX()				//���WX
-	, m_chipY()				//���WY
-	, m_mat()				//�s��
-	, m_scroll(0,0)			//�X�N���[����
+	:m_pTexture(nullptr)	//画像(テクスチャ)
+	, m_ChipData()			//マップデータ
+	, m_chipX()				//座標X
+	, m_chipY()				//座標Y
+	, m_mat()				//行列
+	, m_scroll(0, 0)		//スクロール量
 	, m_mapData(OutSide)
-	, m_bMapSwitch(false)	//�}�b�v�؂�ւ��t���O
+	, m_bMapSwitch(false)	//マップ切り替えフラグ
 	, m_pOwner(nullptr)
 	, m_bGimmick(false)
 {
@@ -20,13 +20,13 @@ CMap::~CMap()
 {
 }
 
-//������
+// 初期化
 void CMap::Init()
 {
 	m_mapData = OutSide;
 	m_bMapSwitch = false;
 	m_bGimmick = false;
-	//�}�b�v��񃍁[�h
+	//マップ情報ロード
 	LoadMapFile();
 
 	for (int h = 0; h < MAP_CHIP_H; h++)
@@ -39,28 +39,24 @@ void CMap::Init()
 	}
 }
 
-//�X�V
+//更新
 void CMap::Update()
 {
-	//�}�b�v�X�V
+	//マップ更新
 	for (int h = 0; h < MAP_CHIP_H; h++)
 	{
 		for (int w = 0; w < MAP_CHIP_W; w++)
 		{
-			//�X�N���[������
+			//スクロール処理
 			Scroll();
 
-			//��ʒ[�̃��~�b�g��`
+			//画面端のリミット定義
 			ScrollRemit();
-
 		}
 	}
-	
-	// �f�o�b�O
-	if (GetAsyncKeyState(VK_RETURN) & 0x8000) SetUnlock();
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000) SetLock();
 
-	const int GMAX = 60;
+	// ギミック処理
+	const int GMAX = COOL_TIME::THORNS;
 	gimmickcount++;
 	if (gimmickcount > GMAX)
 	{
@@ -73,201 +69,89 @@ void CMap::Update()
 
 		gimmickcount = 0;
 	}
-
-	if (m_bGimmick == false)
+	
+	if (m_mapData == TwoFloor)
 	{
-		switch (m_mapData)
+		int i = 0;
+		int j = 0;
+		if (m_bGimmick == false)
 		{
-		case OutSide:
-			break;
-		case OneFloor:	
-			break;
-		case TwoFloor:
-			m_ChipData[21][33] = 95;
-			m_ChipData[22][33] = 95;
-			m_ChipData[21][34] = 95;
-			m_ChipData[22][34] = 95;
-			m_ChipData[21][35] = 95;
-			m_ChipData[22][35] = 95;
-			m_ChipData[21][36] = 95;
-			m_ChipData[22][36] = 95;
-			m_ChipData[21][37] = 95;
-			m_ChipData[22][37] = 95;
-			m_ChipData[21][38] = 95;
-			m_ChipData[22][38] = 95;
-
-			m_ChipData[25][33] = 101;
-			m_ChipData[26][33] = 101;
-			m_ChipData[25][34] = 101;
-			m_ChipData[26][34] = 101;
-			m_ChipData[25][35] = 101;
-			m_ChipData[26][35] = 101;
-			m_ChipData[25][36] = 101;
-			m_ChipData[26][36] = 101;
-			m_ChipData[25][37] = 101;
-			m_ChipData[26][37] = 101;
-			m_ChipData[25][38] = 101;
-			m_ChipData[26][38] = 101;
-
-			m_ChipData[30][33] = 95;
-			m_ChipData[29][33] = 95;
-			m_ChipData[30][34] = 95;
-			m_ChipData[29][34] = 95;
-			m_ChipData[30][35] = 95;
-			m_ChipData[29][35] = 95;
-			m_ChipData[30][36] = 95;
-			m_ChipData[29][36] = 95;
-			m_ChipData[30][37] = 95;
-			m_ChipData[29][37] = 95;
-			m_ChipData[30][38] = 95;
-			m_ChipData[29][38] = 95;
-
-			m_ChipData[32][31] = 101;
-			m_ChipData[32][32] = 101;
-			m_ChipData[33][31] = 101;
-			m_ChipData[33][32] = 101;
-			m_ChipData[34][31] = 101;
-			m_ChipData[34][32] = 101;
-			m_ChipData[35][31] = 101;
-			m_ChipData[35][32] = 101;
-			m_ChipData[36][31] = 101;
-			m_ChipData[36][32] = 101;
-			m_ChipData[37][31] = 101;
-			m_ChipData[37][32] = 101;
-
-			m_ChipData[32][27] = 95;
-			m_ChipData[32][28] = 95;
-			m_ChipData[33][27] = 95;
-			m_ChipData[33][28] = 95;
-			m_ChipData[34][27] = 95;
-			m_ChipData[34][28] = 95;
-			m_ChipData[35][27] = 95;
-			m_ChipData[35][28] = 95;
-			m_ChipData[36][27] = 95;
-			m_ChipData[36][28] = 95;
-			m_ChipData[37][27] = 95;
-			m_ChipData[37][28] = 95;
-
-			m_ChipData[32][23] = 101;
-			m_ChipData[32][24] = 101;
-			m_ChipData[33][23] = 101;
-			m_ChipData[33][24] = 101;
-			m_ChipData[34][23] = 101;
-			m_ChipData[34][24] = 101;
-			m_ChipData[35][23] = 101;
-			m_ChipData[35][24] = 101;
-			m_ChipData[36][23] = 101;
-			m_ChipData[36][24] = 101;
-			m_ChipData[37][23] = 101;
-			m_ChipData[37][24] = 101;
-
-			break;
-		case ThreeFloor:
-			break;
-		case BossFloor:
-			break;
-		default:
-			break;
+			i = 95;
+			j = 101;
 		}
-	}
-	else if (m_bGimmick == true)
-	{
-		switch (m_mapData)
+		else
 		{
-		case OutSide:
-			break;
-		case OneFloor:
-			break;
-		case TwoFloor:
-			m_ChipData[21][33] = 101;
-			m_ChipData[22][33] = 101;
-			m_ChipData[21][34] = 101;
-			m_ChipData[22][34] = 101;
-			m_ChipData[21][35] = 101;
-			m_ChipData[22][35] = 101;
-			m_ChipData[21][36] = 101;
-			m_ChipData[22][36] = 101;
-			m_ChipData[21][37] = 101;
-			m_ChipData[22][37] = 101;
-			m_ChipData[21][38] = 101;
-			m_ChipData[22][38] = 101;
-
-			m_ChipData[25][33] = 95;
-			m_ChipData[26][33] = 95;
-			m_ChipData[25][34] = 95;
-			m_ChipData[26][34] = 95;
-			m_ChipData[25][35] = 95;
-			m_ChipData[26][35] = 95;
-			m_ChipData[25][36] = 95;
-			m_ChipData[26][36] = 95;
-			m_ChipData[25][37] = 95;
-			m_ChipData[26][37] = 95;
-			m_ChipData[25][38] = 95;
-			m_ChipData[26][38] = 95;
-
-			m_ChipData[30][33] = 101;
-			m_ChipData[29][33] = 101;
-			m_ChipData[30][34] = 101;
-			m_ChipData[29][34] = 101;
-			m_ChipData[30][35] = 101;
-			m_ChipData[29][35] = 101;
-			m_ChipData[30][36] = 101;
-			m_ChipData[29][36] = 101;
-			m_ChipData[30][37] = 101;
-			m_ChipData[29][37] = 101;
-			m_ChipData[30][38] = 101;
-			m_ChipData[29][38] = 101;
-
-			m_ChipData[32][31] = 95;
-			m_ChipData[32][32] = 95;
-			m_ChipData[33][31] = 95;
-			m_ChipData[33][32] = 95;
-			m_ChipData[34][31] = 95;
-			m_ChipData[34][32] = 95;
-			m_ChipData[35][31] = 95;
-			m_ChipData[35][32] = 95;
-			m_ChipData[36][31] = 95;
-			m_ChipData[36][32] = 95;
-			m_ChipData[37][31] = 95;
-			m_ChipData[37][32] = 95;
-
-			m_ChipData[32][27] = 101;
-			m_ChipData[32][28] = 101;
-			m_ChipData[33][27] = 101;
-			m_ChipData[33][28] = 101;
-			m_ChipData[34][27] = 101;
-			m_ChipData[34][28] = 101;
-			m_ChipData[35][27] = 101;
-			m_ChipData[35][28] = 101;
-			m_ChipData[36][27] = 101;
-			m_ChipData[36][28] = 101;
-			m_ChipData[37][27] = 101;
-			m_ChipData[37][28] = 101;
-
-			m_ChipData[32][23] = 95;
-			m_ChipData[32][24] = 95;
-			m_ChipData[33][23] = 95;
-			m_ChipData[33][24] = 95;
-			m_ChipData[34][23] = 95;
-			m_ChipData[34][24] = 95;
-			m_ChipData[35][23] = 95;
-			m_ChipData[35][24] = 95;
-			m_ChipData[36][23] = 95;
-			m_ChipData[36][24] = 95;
-			m_ChipData[37][23] = 95;
-			m_ChipData[37][24] = 95;
-
-			break;
-		case ThreeFloor:
-			break;
-		case BossFloor:
-			break;
-		default:
-			break;
+			i = 101;
+			j = 95;
 		}
+
+		m_ChipData[21][33] = i;
+		m_ChipData[22][33] = i;
+		m_ChipData[21][34] = i;
+		m_ChipData[22][34] = i;
+		m_ChipData[21][35] = i;
+		m_ChipData[22][35] = i;
+		m_ChipData[21][36] = i;
+		m_ChipData[22][36] = i;
+		m_ChipData[21][37] = i;
+		m_ChipData[22][37] = i;
+		m_ChipData[21][38] = i;
+		m_ChipData[22][38] = i;
+
+		m_ChipData[25][33] = j;
+		m_ChipData[26][33] = j;
+		m_ChipData[25][34] = j;
+		m_ChipData[26][34] = j;
+		m_ChipData[25][35] = j;
+		m_ChipData[26][35] = j;
+		m_ChipData[25][36] = j;
+		m_ChipData[26][36] = j;
+		m_ChipData[25][37] = j;
+		m_ChipData[26][37] = j;
+		m_ChipData[25][38] = j;
+		m_ChipData[26][38] = j;
+
+		m_ChipData[30][33] = i;
+		m_ChipData[29][33] = i;
+		m_ChipData[30][34] = i;
+		m_ChipData[29][34] = i;
+		m_ChipData[30][35] = i;
+		m_ChipData[29][35] = i;
+		m_ChipData[30][36] = i;
+		m_ChipData[29][36] = i;
+		m_ChipData[30][37] = i;
+		m_ChipData[29][37] = i;
+		m_ChipData[30][38] = i;
+		m_ChipData[29][38] = i;
+
+		m_ChipData[32][31] = j;
+		m_ChipData[32][32] = j;
+		m_ChipData[33][31] = j;
+		m_ChipData[33][32] = j;
+		m_ChipData[34][31] = j;
+		m_ChipData[34][32] = j;
+		m_ChipData[35][31] = j;
+		m_ChipData[35][32] = j;
+		m_ChipData[36][31] = j;
+		m_ChipData[36][32] = j;
+		m_ChipData[37][31] = j;
+		m_ChipData[37][32] = j;
+
+		m_ChipData[32][27] = i;
+		m_ChipData[32][28] = i;
+		m_ChipData[33][27] = i;
+		m_ChipData[33][28] = i;
+		m_ChipData[34][27] = i;
+		m_ChipData[34][28] = i;
+		m_ChipData[35][27] = i;
+		m_ChipData[35][28] = i;
+		m_ChipData[36][27] = i;
+		m_ChipData[36][28] = i;
+		m_ChipData[37][27] = i;
+		m_ChipData[37][28] = i;
 	}
 
-	//�s��쐬
+	//行列作成
 	for (int h = 0; h < MAP_CHIP_H; h++)
 	{
 		for (int w = 0; w < MAP_CHIP_W; w++)
@@ -278,7 +162,7 @@ void CMap::Update()
 	}
 }
 
-//�`��
+//描画
 void CMap::Draw()
 {
 	Math::Rectangle chipRect;
@@ -553,11 +437,19 @@ void CMap::Draw()
 			}
 			else if (m_ChipData[h][w] == 78)
 			{
-				chipRect = { 256,64,64,64 };
+				if (m_mapData == BossFloor)
+				{
+					chipRect = { 192,64,64,64 };
+				}
+				else chipRect = { 256,64,64,64 };
 			}
 			else if (m_ChipData[h][w] == 79)
 			{
-				chipRect = { 320,64,64,64 };
+				if (m_mapData == BossFloor)
+				{
+					chipRect = { 256,64,64,64 };
+				}
+				else chipRect = { 320,64,64,64 };
 			}
 			else if (m_ChipData[h][w] >= 80 && m_ChipData[h][w] <= 83)
 			{
@@ -631,7 +523,7 @@ void CMap::Draw()
 	}
 }
 
-//�e�N�X�`���ݒ�
+//テクスチャ設定
 void CMap::SetTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -639,31 +531,31 @@ void CMap::SetTexture(KdTexture* apTexture)
 	m_pTexture = apTexture;
 }
 
-//�}�b�vX���W�擾
+//マップX座標取得
 float(*CMap::GetPosX())[MAP_CHIP_W]
 {
 	return m_chipX;
 }
 
-//�}�b�vY���W�擾
+//マップY座標取得
 float(*CMap::GetPosY())[MAP_CHIP_W]
 {
 	return m_chipY;
 }
 
-//�}�b�v�f�[�^�擾
+//マップデータ取得
 int(*CMap::GetChipData())[MAP_CHIP_W]
 {
 	return m_ChipData;
 }
 
-//�X�N���[���ʎ擾
+//スクロール量取得
 Math::Vector2 CMap::GetscrollPos()
 {
 	return m_scroll;
 }
 
-//�I�[�i�[�ݒ�
+//オーナー設定
 void CMap::SetOwner(Scene* apOwner)
 {
 	if (apOwner == nullptr) return;
@@ -671,14 +563,13 @@ void CMap::SetOwner(Scene* apOwner)
 	m_pOwner = apOwner;
 }
 
-//�}�b�v�f�[�^�̕ύX
+//マップデータの変更
 void CMap::SetMapData()
 {
 	switch (m_mapData)
 	{
 	case OutSide:
-		m_mapData =OneFloor;
-		m_mapData = BossFloor;
+		m_mapData = OneFloor;
 		break;
 	case OneFloor:
 		m_mapData = TwoFloor;
@@ -696,13 +587,13 @@ void CMap::SetMapData()
 
 }
 
-//�}�b�v�؂�ւ��t���O���]
+//マップ切り替えフラグ反転
 void CMap::SetMapSwitchFlg(bool flg)
 {
 	m_bMapSwitch = flg;
 }
 
-//���J������
+//鍵開け処理
 void CMap::SetUnlock()
 {
 	const int ch = 10;
@@ -741,7 +632,7 @@ void CMap::SetUnlock()
 	}
 }
 
-// �J�M��
+// カギ閉め処理
 void CMap::SetLock()
 {
 	const int ch = 49;
@@ -765,29 +656,34 @@ void CMap::SetLock()
 		m_ChipData[11][4] = 56;
 		m_ChipData[12][4] = 52;
 		break;
-	case ThreeFloor:
-		break;
-	case FourFloor:
-		break;
 	case BossFloor:
+		m_ChipData[13][18] = 18;
+		m_ChipData[14][18] = 16;
+		m_ChipData[13][19] = 19;
+		m_ChipData[14][19] = 17;
+		m_ChipData[13][20] = 18;
+		m_ChipData[14][20] = 16;
+		m_ChipData[13][21] = 19;
+		m_ChipData[14][21] = 17;
+
 		break;
 	default:
 		break;
 	}
 }
 
-//�X�N���[������
+//スクロール処理
 void CMap::Scroll()
 {
-	//�v���C���[���W�擾
+	//プレイヤー座標取得
 	CPlayer* player = m_pOwner->GetPlayer();
 	Math::Vector2 playerPos = player->GetPos();
 
-	//�X�N���[�����W
+	//スクロール座標
 	m_scroll = playerPos;
 }
 
-//��ʒ[���~�b�g��`
+//画面端リミット定義
 void CMap::ScrollRemit()
 {
 	if (m_mapData == BossFloor)
@@ -797,14 +693,14 @@ void CMap::ScrollRemit()
 		static const float SCR_Y_MIN = m_chipY[31][1] + Screen::HalfHeight;
 		static const float SCR_Y_MAX = m_chipY[1][1] - Screen::HalfHeight;
 
-		//���[����
-		if (m_scroll.x < SCR_X_MIN)	 m_scroll.x = SCR_X_MIN;  //�[�ɓ��B���Œ�
-		//�E�[����
-		else if (m_scroll.x > SCR_X_MAX)	m_scroll.x = SCR_X_MAX; //�[�ɓ��B���Œ�
-		//���[����
-		if (m_scroll.y < SCR_Y_MIN)		m_scroll.y = SCR_Y_MIN; //�[�ɓ��B���Œ�
-		//��[����
-		else if (m_scroll.y > SCR_Y_MAX)	m_scroll.y = SCR_Y_MAX; //�[�ɓ��B���Œ�
+		//左端判定
+		if (m_scroll.x < SCR_X_MIN)	 m_scroll.x = SCR_X_MIN;  //端に到達時固定
+		//右端判定
+		else if (m_scroll.x > SCR_X_MAX)	m_scroll.x = SCR_X_MAX; //端に到達時固定
+		//下端判定
+		if (m_scroll.y < SCR_Y_MIN)		m_scroll.y = SCR_Y_MIN; //端に到達時固定
+		//上端判定
+		else if (m_scroll.y > SCR_Y_MAX)	m_scroll.y = SCR_Y_MAX; //端に到達時固定
 	}
 	else
 	{
@@ -813,23 +709,23 @@ void CMap::ScrollRemit()
 		static const float SCR_Y_MIN = m_chipY[MAP_CHIP_H - 1][0] + Screen::HalfHeight;
 		static const float SCR_Y_MAX = m_chipY[0][0] - Screen::HalfHeight;
 
-		//���[����
-		if (m_scroll.x < SCR_X_MIN)	 m_scroll.x = SCR_X_MIN;  //�[�ɓ��B���Œ�
-		//�E�[����
-		else if (m_scroll.x > SCR_X_MAX)	m_scroll.x = SCR_X_MAX; //�[�ɓ��B���Œ�
-		//���[����
-		if (m_scroll.y < SCR_Y_MIN)		m_scroll.y = SCR_Y_MIN; //�[�ɓ��B���Œ�
-		//��[����
-		else if (m_scroll.y > SCR_Y_MAX)	m_scroll.y = SCR_Y_MAX; //�[�ɓ��B���Œ�
+		//左端判定
+		if (m_scroll.x < SCR_X_MIN)	 m_scroll.x = SCR_X_MIN;  //端に到達時固定
+		//右端判定
+		else if (m_scroll.x > SCR_X_MAX)	m_scroll.x = SCR_X_MAX; //端に到達時固定
+		//下端判定
+		if (m_scroll.y < SCR_Y_MIN)		m_scroll.y = SCR_Y_MIN; //端に到達時固定
+		//上端判定
+		else if (m_scroll.y > SCR_Y_MAX)	m_scroll.y = SCR_Y_MAX; //端に到達時固定
 	}
 }
 
-//�}�b�v�ǂݍ���
+//マップ読み込み
 void CMap::LoadMapFile()
 {
-	FILE* fp; // �t�@�C���̏���i�[����\����
+	FILE* fp; // ファイルの情報を格納する構造体
 
-	// �t�@�C���ǂݍ���
+	// ファイル読み込み
 	switch (m_mapData)
 	{
 	case OutSide:

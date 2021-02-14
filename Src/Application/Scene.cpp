@@ -24,6 +24,8 @@ void Scene::Draw2D()
 		break;
 	}
 
+	// マウスカーソル
+	MousePointDraw();
 }
 
 void Scene::Update()
@@ -43,7 +45,7 @@ void Scene::Update()
 		DescriptUpdate();
 		break;
 	case eSceneResult:
-		//説明
+		//リザルト
 		ResultUpdate();
 		break;
 	}
@@ -53,13 +55,12 @@ void Scene::Init()
 {
 	srand(timeGetTime());
 
-	Reset();
 
 	bgm = std::make_shared<KdSoundEffect>();
 	bgm->Load("Resource/Sound/BGM.WAV");
 	bgmInst = bgm->CreateInstance(false);
 	bgmInst->SetVolume(0.3);
-	bgmInst->Play(true);
+	Reset();
 }
 
 void Scene::Release()
@@ -154,14 +155,7 @@ void Scene::ImGuiUpdate()
 //初期化リセット
 void Scene::Reset()
 {
-	/*bool load = false;
-	load =
-	_ASSERT_EXPR(load == true, L"読み込み失敗");*/
-
-	//MessageBox(NULL, L"HIT", L"hit", MB_OK);
-
 	/*テクスチャ*/
-
 	// タイトル画面
 	m_titleTex.Load("Resource/Texture/Title/Op.png");
 	m_lineTex.Load("Resource/Texture/Title/Line.png");
@@ -219,6 +213,9 @@ void Scene::Reset()
 
 	// リザルト
 	m_resultTex.Load("Resource/Texture/Result/clear.png");
+
+	// マウスカーソル
+	m_mousePointTex.Load("Resource/Texture/Player/mousepoint.png");
 
 	/*クラスごとの初期化*/
 	// タイトル
@@ -299,6 +296,8 @@ void Scene::Reset()
 
 	//初期シーン　タイトル
 	sceneType = eSceneTitle;
+
+	bgmInst->Play(true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -418,16 +417,13 @@ void Scene::GameUpdate()
 		break; 
 	case 4: m_msgTex.Load("Resource/Texture/Message/minoMassage.png");
 		break;
+	case 5: m_msgTex.Load("Resource/Texture/Message/BombMassage.png");
+		break;
+	case 6: m_msgTex.Load("Resource/Texture/Message/lightbasketMessage.png");
+		break;
 	}
 	m_message.SetScrollPos(m_map.GetscrollPos());
 	m_message.Update();
-
-	//タイトル移行
-	if (GetAsyncKeyState(VK_TAB) & 0x8000)
-	{
-		Reset();
-		sceneType = eSceneTitle;//タイトルへ
-	}
 
 	// リザルト移行
 	if (m_player.GetHp() <= 0)
@@ -464,7 +460,6 @@ void Scene::GameDraw()
 	
 	//UI
 	m_ui.Draw();
-
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //												操作説明画面
@@ -496,8 +491,8 @@ void Scene::ResultUpdate()
 	// シーン遷移処理
 	if (m_result.SceneTransition())
 	{
-		sceneType = eSceneTitle;
 		Reset();
+		return;
 	}
 	bgmInst->Pause();
 }
@@ -517,4 +512,15 @@ void Scene::GetMousePos(Math::Vector2 scrPos)
 	m_mouse.cur.x -= Screen::HalfWidth - scrPos.x;
 	m_mouse.cur.y -= Screen::HalfHeight + scrPos.y;
 	m_mouse.cur.y *= -1;
+}
+
+// マウスポイント描画
+void Scene::MousePointDraw()
+{
+	GetMousePos({ 0,0 });
+	Math::Matrix mat;
+	int r = 32;
+	mat = DirectX::XMMatrixTranslation(m_mouse.cur.x+ r/2, m_mouse.cur.y- r/2, 0);
+	SHADER.m_spriteShader.SetMatrix(mat);
+	SHADER.m_spriteShader.DrawTex(&m_mousePointTex, Math::Rectangle(0,0, r, r),1.0f);
 }

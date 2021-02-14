@@ -5,10 +5,10 @@
 #include"CBomb.h"
 #include"CHidden.h"
 
-//�N���X�̑O���錾
+//クラスの前方宣言
 class Scene;
 
-enum eDirection	//�����Ă������
+enum eDirection	//向いている方向
 {
 	Up,
 	Down,
@@ -16,13 +16,13 @@ enum eDirection	//�����Ă������
 	Right
 };
 
-//����Z���N�g
+//武器セレクト
 enum eClick
 {
-	eShuriken,	//0.�藠��
-	eSword,		//1.��
-	eBomb,		//2.���e
-	eHidden		//3.�B��g	
+	eShuriken,	//0.手裏剣
+	eSword,		//1.刀
+	eBomb,		//2.爆弾
+	eHidden		//3.隠れ身	
 };
 
 enum eStatus
@@ -32,130 +32,130 @@ enum eStatus
 	eAttack
 };
 
-//�藠���̗v�f��
+//手裏剣の要素数
 constexpr int BULLET_MAX = 2;
 
-//���e�̗v�f��
+//爆弾の要素数
 constexpr int BOMB_MAX = 5;
 
-//�v���C���[�N���X
+//プレイヤークラス
 class CPlayer
 {
 public:
 
-	CPlayer();	//�R���X�g���N�^
-	~CPlayer();	//�f�X�g���N�^
+	CPlayer();	//コンストラクタ
+	~CPlayer();	//デストラクタ
 
-	//�v���C���[
+	//プレイヤー
 	void Init();
 	void ReInit(int mapData);
 	void Updata(POINT aMousePos);
 	void UpDatePlayer(Math::Vector2 ScrollPos);
 	void Draw();
 
-	//�Z�b�^�[
+	//セッター
 	void SetTexture(KdTexture* apTexture);
 	void SetBulletTexture(KdTexture* apTexture);
 	void SetSlashTexture(KdTexture* apTexture);
 	void SetBombTexture(KdTexture* apTexture);
 	void SetBlastTexture(KdTexture* apTexture);
 	void SetOwner(Scene* apOwner);
-	void SetDamage(int dmg);	// �̗͌���
-	void SetHeal(int heal);		// �̗͉�
-	void SetPosX(float x);	// ���W�Z�b�gX(���ݍ��W�ɑ����Z)
-	void SetPosY(float y);	// ���W�Z�b�gY(���ݍ��W�ɑ����Z)
-	void SetMovevalX(float movex);	// �ړ��ʃZ�b�gX(�ړ��ʂ����)
-	void SetMovevalY(float movey);	// �ړ��ʃZ�b�gY(�ړ��ʂ����)
+	void SetDamage(int dmg);	// 体力減少
+	void SetHeal(int heal);		// 体力回復
+	void SetPosX(float x);	// 座標セットX(現在座標に足し算)
+	void SetPosY(float y);	// 座標セットY(現在座標に足し算)
+	void SetMovevalX(float movex);	// 移動量セットX(移動量を入力)
+	void SetMovevalY(float movey);	// 移動量セットY(移動量を入力)
 
-	//�Q�b�^�[
+	//ゲッター
 	const bool IsAlive() { return m_bAlive; }
-	const Math::Vector2 GetPos() { return m_pos; }				//�v���C���[���W�擾
-	const Math::Vector2 GetMove() { return m_moveVal; }			//�v���C���[�ړ��ʎ擾
-	const int GetHp() { return m_hp; }							//�̗͗ʎ擾
-	const int GetBombPossession() { return m_BombPossession; }	//���e�������擾
-	const int GetKeyPossession() { return m_KeyPossession; }	//���������擾
-	const bool bGetHit() { return m_HitFlg; }					// ���G��Ԏ擾
-	const bool bGetHidden() { return m_hiddenList.bGetHidden(); }	// �B��g�t���O�擾
+	const Math::Vector2 GetPos() { return m_pos; }				//プレイヤー座標取得
+	const Math::Vector2 GetMove() { return m_moveVal; }			//プレイヤー移動量取得
+	const int GetHp() { return m_hp; }							//体力量取得
+	const int GetBombPossession() { return m_BombPossession; }	//爆弾所持数取得
+	const int GetKeyPossession() { return m_KeyPossession; }	//鍵所持数取得
+	const bool bGetHit() { return m_HitFlg; }					// 無敵状態取得
+	const bool bGetHidden() { return m_hiddenList.bGetHidden(); }	// 隠れ身フラグ取得
 	const int GetHideCnt() { return m_hiddenList.GetHiddenCnt(); }
 	const int GetR() { return m_RClick; }	// 右クリック情報取得
 	const int GetL() { return m_LClick; }	// 左クリック情報取得
-		
-private:		//�O������A�N�Z�X�s��
 
-	eDirection		m_direction;	//�v���C���[�̌���
+private:
+
+	eDirection		m_direction;	//プレイヤーの向き
 	eClick			m_LClick;
 	eClick			m_RClick;
 	eStatus			m_status;
 
-	KdTexture*		 m_pTexture;	//�摜(�e�N�X�`��)
-	Math::Vector2	 m_pos;			//���W
-	Math::Vector2	 m_moveVal;		//�ړ���
-	Math::Matrix	 m_mat;			//�s��
-	Math::Matrix	 m_transMat;	//�ړ��s��
-	Math::Matrix	 m_scaleMat;	//�g��s��
-	Math::Vector2	 m_size;		//�g��T�C�Y
-	
-	bool			 m_bAlive;		//�����t���O
+	KdTexture* m_pTexture;	//画像(テクスチャ)
+	Math::Vector2	 m_pos;			//座標
+	Math::Vector2	 m_moveVal;		//移動量
+	Math::Matrix	 m_mat;			//行列
+	Math::Matrix	 m_transMat;	//移動行列
+	Math::Matrix	 m_scaleMat;	//拡大行列
+	Math::Vector2	 m_size;		//拡大サイズ
+
+	bool			 m_bAlive;		//生存フラグ
 	int				 m_hp;			//HP
-	bool			 m_bHeal;		//HP�񕜃|�C���g�t���O
-	int				 m_invincibleCnt;	//���G����
-	float			 m_alpha;		//�摜�̓����x
-	bool			 m_HitFlg;		//�����蔻��t���O
-	float			 m_slashCnt;	//�a���U���̃N�[���^�C��
-	float			 m_shurikenCnt;	//�藠���N�[���^�C��
+	bool			 m_bHeal;		//HP回復ポイントフラグ
+	int				 m_invincibleCnt;	//無敵時間
+	float			 m_alpha;		//画像の透明度
+	bool			 m_HitFlg;		//当たり判定フラグ
+	float			 m_slashCnt;	//斬撃攻撃のクールタイム
+	float			 m_shurikenCnt;	//手裏剣クールタイム
 
-	bool			 m_bRClick;	//�E�N���b�N�t���O
-	bool			 m_bLClick;	//���N���b�N�t���O
-	bool			 m_bRChange;//�E����ύX�t���O
-	bool			 m_bLChange;//������ύX�t���O
+	bool			 m_bRClick;	//右クリックフラグ
+	bool			 m_bLClick;	//左クリックフラグ
+	bool			 m_bRChange;//右武器変更フラグ
+	bool			 m_bLChange;//左武器変更フラグ
 
-	int	 m_aCnt;	//�A�j���[�V�����J�E���g
-	int	 m_aAttackCnt; //�U���A�j���[�V�����̃J�E���g
-	int m_aTimer;	//�A�j���[�V�������f��1��������
-	int m_aflame;	//�A�j���[�V��������
+	int	 m_aCnt;	//アニメーションカウント
+	int	 m_aAttackCnt; //攻撃アニメーションのカウント
+	int m_aTimer;	//アニメーションを何fに1枚動かす
+	int m_aflame;	//アニメーション枚数
 
-	Math::Rectangle scrRect; //�e�N�X�`�����W
+	Math::Rectangle scrRect; //テクスチャ座標
 
-	int				 m_BombPossession;		//���e������
-	int				 m_KeyPossession;		//��������
-	bool			 m_bMinoPossession;		//�B�ꖪ�����t���O
+	int				 m_BombPossession;		//爆弾所持数
+	int				 m_KeyPossession;		//鍵所持数
+	bool			 m_bMinoPossession;		//隠れ蓑所持フラグ
 
-	void KeyOperation();	// �L�[����ꗗ
+	void KeyOperation();	// キー操作一覧
 
-	/* �����蔻�� */
-	void HitCheckMap();			// �}�b�v
-	bool bMapHitFunction(Math::Vector2 chipPos);		// �}�b�v�ƃv���C���[�̔���֐�
-	int iMapHitFunction(Math::Vector2 chipPos);		// �}�b�v�ƃv���C���[�̔���֐�
-	void HitMapCase(Math::Vector2 chipPos, int HitCase);		// �l�ӂ̓����蔻��֐�
-	void HitCheckEnemy();		// �G
-	// �G�Ǝ藠�������蔻��֐�
-	bool HitCheckEnemy_And_Bullet(Math::Vector2 enePos, float left, float right, float top, float down);	
-	// �G�Ǝa�������蔻��֐�
-	bool HitCheckEnemy_And_Slash(Math::Vector2 enePos, bool bSlashHit, float size);		
-	// �G�Ɣ��e�����蔻��֐�
+	/* 当たり判定 */
+	void HitCheckMap();			// マップ
+	bool bMapHitFunction(Math::Vector2 chipPos);		// マップとプレイヤーの判定関数
+	int iMapHitFunction(Math::Vector2 chipPos);		// マップとプレイヤーの判定関数
+	void HitMapCase(Math::Vector2 chipPos, int HitCase);		// 四辺の当たり判定関数
+	void HitCheckEnemy();		// 敵
+	// 敵と手裏剣当たり判定関数
+	bool HitCheckEnemy_And_Bullet(Math::Vector2 enePos, float left, float right, float top, float down);
+	// 敵と斬撃当たり判定関数
+	bool HitCheckEnemy_And_Slash(Math::Vector2 enePos, bool bSlashHit, float size);
+	// 敵と爆弾当たり判定関数
 	bool HitCheckEnemy_And_Blast(Math::Vector2 enePos, bool bBlastHit, float left, float right, float top, float down);
-	void HitCheckBomb();		// ���e
-	void HitCheckItem();		// �A�C�e��
+	void HitCheckBomb();		// 爆弾
+	void HitCheckItem();		// アイテム
 
-	/* ����֘A */
-	eClick ChangeItem(eClick click);		//����ύX�֐�
+	/* 武器関連 */
+	eClick ChangeItem(eClick click);		//武器変更関数
 	void Attack(bool flg, eClick click);
-	void SetShuriken();		//�藠���U��
-	void SetSword();		//���U��
-	void SetBomb();			//���e�U��
-	void SetHidden();		//�B��g 
+	void SetShuriken();		//手裏剣攻撃
+	void SetSword();		//刀攻撃
+	void SetBomb();			//爆弾攻撃
+	void SetHidden();		//隠れ身 
 
-	void invincibleTime();	//���G����
-	void Inversion();		//�������]�֐�
+	void invincibleTime();	//無敵時間
+	void Inversion();		//向き反転関数
 
-	Scene*			 m_pOwner;			//�I�[�i�[�擾�p
+	Scene* m_pOwner;			//オーナー取得用
 	POINT			 m_ClickPoint;
-	CBullet m_bulletList[BULLET_MAX];	//�藠���N���X�擾
-	CSword  m_swordList;				//�a���N���X�擾
-	CBomb  m_bombList;					//���e�N���X�擾
-	CHidden m_hiddenList;				//�B��g�N���X�擾
+	CBullet m_bulletList[BULLET_MAX];	//手裏剣クラス取得
+	CSword  m_swordList;				//斬撃クラス取得
+	CBomb  m_bombList;					//爆弾クラス取得
+	CHidden m_hiddenList;				//隠れ身クラス取得
 
-	//��
+	//音
 	std::shared_ptr<KdSoundEffect> katanase;
 	std::shared_ptr<KdSoundInstance> katanaseInst;
 

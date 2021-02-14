@@ -49,7 +49,6 @@ void CPlayer::Init()
 {
 	//座標
 	m_pos = { -250.0f,-1080.0f };	// 初期座標
-	m_pos = { 900.0f,200.0f };	// 近道
 
 	//移動量
 	m_moveVal = { 0.0f,0.0f };
@@ -463,10 +462,8 @@ void CPlayer::HitCheckMap()
 				else if (mapData == BossFloor)
 				{
 					// イベント発生処理
-					if (bMapHitFunction({ chipX[h][w],chipY[h][w] }))
-					{
-						if (enemy->bGetEvent())map->SetLock();	// カギ閉め
-					}
+					hit = iMapHitFunction({ chipX[h][w],chipY[h][w] });
+					if (hit == 1) map->SetLock();	// カギ閉め
 				}
 			}
 			else if (chipData[h][w] >= 91 && chipData[h][w] <= 94)	//データ：扉
@@ -477,7 +474,7 @@ void CPlayer::HitCheckMap()
 			}
 			else if (chipData[h][w] >= 90 && chipData[h][w] <= 94)	//データ：回復ポイント
 			{
-				if (m_bHeal) return;
+				if (m_bHeal) continue;
 				if (bMapHitFunction({ chipX[h][w],chipY[h][w] }))
 				{
 					SetHeal(HP::PLAYER);
@@ -487,9 +484,10 @@ void CPlayer::HitCheckMap()
 			else if (chipData[h][w] == 95)	// ギミック：トゲ
 			{
 				if (m_HitFlg) continue;
-				if (bMapHitFunction({ chipX[h][w],chipY[h][w] })) SetDamage(10);
+				bool hit = bMapHitFunction({ chipX[h][w],chipY[h][w] });
+				if (hit) SetDamage(POWER::THORNS);
 			}
-			else if (chipData[h][w] == 96 || chipData[h][w] == 97)
+			else if (chipData[h][w] == 96)	// データ：灯籠
 			{
 				hit = iMapHitFunction({ chipX[h][w],chipY[h][w] });
 				if (hit == 2 || hit == 4)map->SetUnlock();
@@ -511,7 +509,7 @@ void CPlayer::HitCheckMap()
 					enemy->shot({ chipX[y][x], chipY[y][x] }, m_pos);
 				}
 			}
-			else if (chipData[h][w] == 70)	//データ：看板標準
+			else if (chipData[h][w] == 70)	//データ：看板表示
 			{
 				if (mapData != OutSide)continue;
 				CMessage* msgList = m_pOwner->GetMsg();
@@ -522,6 +520,7 @@ void CPlayer::HitCheckMap()
 					if (w == 5)msgNum = 0;
 					else if (w == 8)msgNum = 1;
 					else if (w == 11)msgNum = 2;
+					if (w == 16)msgNum = 5;
 
 					// メッセージ表示
 					msgList->SetMessage({ chipX[h][w],chipY[h][w] + 100 }, msgNum);
@@ -549,7 +548,6 @@ void CPlayer::HitCheckMap()
 				if ((m_KeyPossession >= 2) && (bMapHitFunction({ chipX[h][w],chipY[h][w] })))
 				{
 					map->SetUnlock();	// 鍵開け処理
-					m_KeyPossession = 0;
 				}
 				////////////////////////////////////////////////////////////////
 				//		弾のヒットチェック								
@@ -571,6 +569,7 @@ void CPlayer::HitCheckMap()
 				{
 					int msgNum = 0;
 					if (w == 23)msgNum = 3;
+					if (w == 24)msgNum = 6;
 					if (w == 34)msgNum = 4;
 					
 					// メッセージ表示
@@ -578,6 +577,14 @@ void CPlayer::HitCheckMap()
 					return;
 				}
 				else msgList->SetAlive();
+			}
+			else if (chipData[h][w] <= 19 && chipData[h][w] >= 18)	// データ：ふすま
+			{
+				if (mapData == BossFloor)
+				{
+					hit = iMapHitFunction({ chipX[h][w],chipY[h][w] });
+					HitMapCase({ chipX[h][w],chipY[h][w] }, hit);
+				}
 			}
 			else if (chipData[h][w] >= 10)	continue; //データ：床
 			else	//データ：壁
@@ -946,7 +953,7 @@ void CPlayer::HitCheckItem()
 			ITEM_HELSE_SIZE::LEFT,ITEM_HELSE_SIZE::RIGHT,ITEM_HELSE_SIZE::TOP,ITEM_HELSE_SIZE::DOWN))
 		{
 			ItemHealth[i].SetAlive();		// 回復のフラグ下げ
-			SetHeal(10);		// 回復
+			SetHeal(5);		// 回復
 		}
 	}
 	////////////////////////////////////////////////////////////////

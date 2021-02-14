@@ -2,7 +2,6 @@
 #include "Scene.h"
 #include"Utility.h"
 
-// �R���X�g���N�^
 CEnemy::CEnemy()
 	:gimmickcount(0)
 	, m_bEvent(false)
@@ -10,79 +9,78 @@ CEnemy::CEnemy()
 {
 }
 
-// �f�X�g���N�^
 CEnemy::~CEnemy()
 {
 }
 
-// ������
+// 初期化
 void CEnemy::Init()
 {
 	CMap* pMap = m_pOwner->GetMap();
-	int mapData = pMap->GetMapData();	//�}�b�v�f�[�^�擾
-	// �������F��
+	int mapData = pMap->GetMapData();	//マップデータ取得
+	// 初期化：侍
 	for (int i = 0; i < SAMURAI_MAX; i++)
 	{
 		m_samuraiList[i].Init();
 	}
-	SetSamurai(mapData);	// ���̔z�u
+	SetSamurai(mapData);	// 侍の配置
 
-	// �������F�|��
+	// 初期化：弓兵
 	for (int i = 0; i < ARCHER_MAX; i++)
 	{
 		m_archerList[i].Init();
 	}
-	SetArcher(mapData);	// �|���̔z�u
+	SetArcher(mapData);	// 弓兵の配置
 
-	// �������F��j
+	// 初期化：大男
 	for (int i = 0; i < GIANT_MAX; i++)
 	{
 		m_giantList[i].Init();
 	}
-	SetGiant(mapData);		// ��j�̔z�u
+	SetGiant(mapData);		// 大男の配置
 
-	// �������F�{�X
+	// 初期化：ボス
 	m_bossList.Init();
-	SetBoss(mapData);		// �{�X�̔z�u
+	SetBoss(mapData);		// ボスの配置
 
 	gimmickcount = 0;
 	m_bEvent = false;
 }
 
-// �X�V
+// 更新処理
 void CEnemy::Update()
 {
-	CPlayer* pPlayer = m_pOwner->GetPlayer();		// �v���C���[�N���X�̎擾
-	Math::Vector2 playerPos = pPlayer->GetPos();	// �v���C���[���W�擾
-	bool bHidden = pPlayer->bGetHidden();			// �B��g��Ԏ擾
+	CPlayer* pPlayer = m_pOwner->GetPlayer();		// プレイヤークラスの取得
+	Math::Vector2 playerPos = pPlayer->GetPos();	// プレイヤー座標取得
+	bool bHidden = pPlayer->bGetHidden();			// 隠れ身状態取得
 
 	CMap* pMap = m_pOwner->GetMap();
-	Math::Vector2 scrPos = pMap->GetscrollPos();	//�X�N���[���ʎ擾
+	Math::Vector2 scrPos = pMap->GetscrollPos();	//スクロール量取得
 
-	// �X�V�F��
-	Update_Samurai(playerPos,scrPos, bHidden);
-	
-	// �X�V�F�|��
+	// 更新：侍
+	Update_Samurai(playerPos, scrPos, bHidden);
+
+	// 更新：弓兵
 	Update_Archer(playerPos, scrPos, bHidden);
 
-	// �X�V�F��j
+	// 更新：大男
 	Update_Giant(playerPos, scrPos, bHidden);
 
-	// �X�V�F�{�X
+	// 更新：ボス
 	Update_Boss(playerPos, scrPos, bHidden);
 
-	// �X�V�F��
+	// 更新：矢
 	Update_Arrow(scrPos);
 
-	// �G�̎a������
+	// 敵の斬撃処理
 	Update_Sword(scrPos);
 
-	// �}�b�v�Ƃ̓����蔻��
+	// マップとの当たり判定
 	HitCheckMap();
-	// �v���C���[�Ƃ̓����蔻��
+	// プレイヤーとの当たり判定
 	HitCheckPlayer();
 
-	//�M�~�b�N
+	//ギミック
 	const int GMAX = 100;
 	gimmickcount++;
 	if (gimmickcount > GMAX)
@@ -90,14 +88,14 @@ void CEnemy::Update()
 		gimmickcount = GMAX;
 	}
 
-	//�C�x���g����
-	if(pMap->GetMapData()==OneFloor) Event();
+	//イベント処理
+	if (pMap->GetMapData() == OneFloor) Event();
 }
 
-// �X�V�F��
+// 更新：侍
 void CEnemy::Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
-	CPlayer* pPlayer = m_pOwner->GetPlayer();		// �v���C���[�N���X�̎擾
+	CPlayer* pPlayer = m_pOwner->GetPlayer();		// プレイヤークラスの取得
 
 	CItem* item = m_pOwner->GetItem();
 
@@ -107,33 +105,33 @@ void CEnemy::Update_Samurai(Math::Vector2 playerPos, Math::Vector2 scrPos, bool 
 		m_samuraiList[i].SetScrollPos(scrPos);
 		m_samuraiList[i].bSetHidden(hide);
 		m_samuraiList[i].Update();
-		
-		// �񕜃A�C�e���h���b�v����
+
+		// 回復アイテムドロップ処理
 		if (item->DropHealth(m_samuraiList[i].bGetDrop(), m_samuraiList[i].GetPos())) m_samuraiList[i].bSetDrop();
-		
-		// �a���U������
+
+		// 斬撃攻撃処理
 		if (m_samuraiList[i].bGetSlash())
 		{
-			// �G�a���N���X�������V�K
+			// 敵斬撃クラスメモリ新規
 			CEnemySword* sword = new CEnemySword;
 
-			sword->Init();	// ������
-			sword->SetTexture(m_pSlashTex);	// �e�N�X�`���ݒ�
+			sword->Init();	// 初期化
+			sword->SetTexture(m_pSlashTex);	// テクスチャ設定
 
 			// 斬撃発生
-			sword->Slash(m_samuraiList[i].GetPos(), m_samuraiList[i].GetDeg(), 
+			sword->Slash(m_samuraiList[i].GetPos(), m_samuraiList[i].GetDeg(),
 				SAMURAI_SLASH_SIZE, DISTANCE::SAMURAI_SLASH);
 			m_enemySwordList.push_back(sword);
 
-			m_samuraiList[i].bSetSlash(false);		// �a���t���O������Ĉ�x�������s����悤�� 
+			m_samuraiList[i].bSetSlash(false);		// 斬撃フラグを下げて一度だけ実行するように 
 		}
 	}
 }
 
-// �X�V�F�|��
+// 更新：弓兵
 void CEnemy::Update_Archer(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
-	CPlayer* pPlayer = m_pOwner->GetPlayer();		// �v���C���[�N���X�̎擾
+	CPlayer* pPlayer = m_pOwner->GetPlayer();		// プレイヤークラスの取得
 
 	for (int i = 0; i < ARCHER_MAX; i++)
 	{
@@ -142,29 +140,29 @@ void CEnemy::Update_Archer(Math::Vector2 playerPos, Math::Vector2 scrPos, bool h
 		m_archerList[i].bSetHidden(hide);
 		m_archerList[i].Update();
 
-		// ����t���Otrue�������˃J�E���g0�ȉ��̎�
+		// 視野フラグtrue時＆発射カウント0以下の時
 		if ((m_archerList[i].GetbVisibility()) && (m_archerList[i].GetShotCnt() >= COOL_TIME::ARCHER_ARROW))
 		{
-			// ��N���X�������V�K�쐬
+			// 矢クラスメモリ新規作成
 			CArrow* arrow = new CArrow;
 
-			arrow->Init();		// ������
-			arrow->SetTexture(m_pArrawTex);	// �e�N�X�`���ݒ�
+			arrow->Init();		// 初期化
+			arrow->SetTexture(m_pArrawTex);	// テクスチャ設定
 
-			// ���ˏ���
+			// 発射処理
 			arrow->Shot(m_archerList[i].GetPos(), playerPos);
 			m_arrowList.push_back(arrow);
 
-			// ���˃t���Otrue
+			// 発射フラグtrue
 			m_archerList[i].SetShotFlg(true);
 		}
 	}
 }
 
-// �X�V�F��j
+// 更新：大男
 void CEnemy::Update_Giant(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
-	CPlayer* pPlayer = m_pOwner->GetPlayer();		// �v���C���[�N���X�̎擾
+	CPlayer* pPlayer = m_pOwner->GetPlayer();
 
 	CMap* map = m_pOwner->GetMap();
 	int mapData = map->GetMapData();
@@ -177,53 +175,53 @@ void CEnemy::Update_Giant(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hi
 		m_giantList[i].bSetHidden(hide);
 		m_giantList[i].Update(mapData);
 
-		// ���h���b�v����
+		// 鍵ドロップ処理
 		if (item->DropKey(m_giantList[i].bGetDrop(), m_giantList[i].GetPos())) m_giantList[i].bSetDrop();
 	}
 }
 
-// �X�V�F�{�X
+// 更新：ボス
 void CEnemy::Update_Boss(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hide)
 {
 	m_bossList.SetScrollPos(scrPos);
 	m_bossList.SetPlayerPos(playerPos);
 	m_bossList.Update();
 
-	if (m_bossList.GetSlash())	// �a���t���O��true�ɂȂ����Ƃ�
+	if (m_bossList.GetSlash())	// 斬撃フラグがtrueになったとき
 	{
-		// �G�a���N���X�������V�K
+		// 敵斬撃クラスメモリ新規
 		CEnemySword* sword = new CEnemySword;
 
-		sword->Init();	// ������
-		sword->SetTexture(m_pSlashTex);	// �e�N�X�`���ݒ�
+		sword->Init();	// 初期化
+		sword->SetTexture(m_pSlashTex);	// テクスチャ設定
 
 		// 斬撃発生
-		sword->Slash(m_bossList.GetPos(), m_bossList.GetDeg(), 
+		sword->Slash(m_bossList.GetPos(), m_bossList.GetDeg(),
 			BOSS_SLASH_SIZE, DISTANCE::BOSS_SLASH);
 		m_enemySwordList.push_back(sword);
 
-		m_bossList.SetSlash(false);		// �a���t���O������Ĉ�x�������s����悤�� 
+		m_bossList.SetSlash(false);		// 斬撃フラグを下げて一度だけ実行するように 
 	}
 
-	// ����t���Otrue�������˃J�E���g0�ȉ��̎�
+	// 視野フラグtrue時＆発射カウント0以下の時
 	if ((m_bossList.iGetAttakeType() == Shot) && (m_bossList.GetShotCnt() >= COOL_TIME::BOSS_ARROW))
 	{
-		// ��N���X�������V�K�쐬
+		// 矢クラスメモリ新規作成
 		CArrow* arrow = new CArrow;
 
-		arrow->Init();		// ������
-		arrow->SetTexture(m_pArrawTex);	// �e�N�X�`���ݒ�
+		arrow->Init();		// 初期化
+		arrow->SetTexture(m_pArrawTex);	// テクスチャ設定
 
-		// ���ˏ���
+		// 発射処理
 		arrow->Shot(m_bossList.GetPos(), playerPos);
 		m_arrowList.push_back(arrow);
 
-		// ���˃t���Otrue
+		// 発射フラグtrue
 		m_bossList.SetShotFlg(true);
 	}
 }
 
-// �X�V�F��
+// 更新：矢
 void CEnemy::Update_Arrow(Math::Vector2 scrPos)
 {
 	for (int i = 0; i < m_arrowList.size(); i++)
@@ -235,10 +233,10 @@ void CEnemy::Update_Arrow(Math::Vector2 scrPos)
 	std::vector<CArrow*>::iterator it;
 	it = m_arrowList.begin();
 
-	// �s�v�Ȗ�̗v�f���폜
+	// 不要な矢の要素数削除
 	while (it != m_arrowList.end())
 	{
-		// �t���Oture�Ȃ�X���[
+		// フラグtureならスルー
 		if (!(*it)->IsAlive())
 		{
 			delete(*it);
@@ -249,7 +247,7 @@ void CEnemy::Update_Arrow(Math::Vector2 scrPos)
 	}
 }
 
-// �X�V�F�a��
+// 更新：斬撃
 void CEnemy::Update_Sword(Math::Vector2 scrPos)
 {
 	for (int i = 0; i < m_enemySwordList.size(); i++)
@@ -261,10 +259,10 @@ void CEnemy::Update_Sword(Math::Vector2 scrPos)
 	std::vector<CEnemySword*>::iterator it;
 	it = m_enemySwordList.begin();
 
-	// �s�v�Ȗ�̗v�f���폜
+	// 不要な斬撃の要素数削除
 	while (it != m_enemySwordList.end())
 	{
-		// �t���Oture�Ȃ�X���[
+		// フラグtureならスルー
 		if (!(*it)->bGetSlash())
 		{
 			delete(*it);
@@ -275,44 +273,44 @@ void CEnemy::Update_Sword(Math::Vector2 scrPos)
 	}
 }
 
-// �`��
+// 描画
 void CEnemy::Draw()
 {
-	// �`��F��
+	// 描画：侍
 	for (int i = 0; i < SAMURAI_MAX; i++)
 	{
 		m_samuraiList[i].Draw();
 	}
 
-	// �`��F�|��
+	// 描画：弓兵
 	for (int i = 0; i < ARCHER_MAX; i++)
 	{
 		m_archerList[i].Draw();
 	}
 
-	// �`��F��j
+	// 描画：大男
 	for (int i = 0; i < GIANT_MAX; i++)
 	{
 		m_giantList[i].Draw();
 	}
 
-	// �`��F�{�X
+	// 描画：ボス
 	m_bossList.Draw();
-	
-	// �`��F��
+
+	// 描画：矢
 	for (int i = 0; i < m_arrowList.size(); i++)
 	{
 		m_arrowList[i]->Draw();
 	}
 
-	// �`��F�G�a��
+	// 描画：敵斬撃
 	for (int i = 0; i < m_enemySwordList.size(); i++)
 	{
 		m_enemySwordList[i]->Draw();
 	}
 }
 
-// �e�N�X�`���ݒ�F��
+// テクスチャ設定：侍
 void CEnemy::SetTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -323,7 +321,7 @@ void CEnemy::SetTexture(KdTexture* apTexture)
 	}
 }
 
-// �e�N�X�`���ݒ�F�|��
+// テクスチャ設定：弓兵
 void CEnemy::SetArcherTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -334,7 +332,7 @@ void CEnemy::SetArcherTexture(KdTexture* apTexture)
 	}
 }
 
-// �e�N�X�`���ݒ�F��
+// テクスチャ設定：矢
 void CEnemy::SetArrowTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -342,7 +340,7 @@ void CEnemy::SetArrowTexture(KdTexture* apTexture)
 	m_pArrawTex = apTexture;
 }
 
-// �e�N�X�`���ݒ�F�a��
+// テクスチャ設定：斬撃
 void CEnemy::SetSwordTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -350,7 +348,7 @@ void CEnemy::SetSwordTexture(KdTexture* apTexture)
 	m_pSlashTex = apTexture;
 }
 
-// �e�N�X�`���ݒ�F��j
+// テクスチャ設定：大男
 void CEnemy::SetGiantTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -361,7 +359,7 @@ void CEnemy::SetGiantTexture(KdTexture* apTexture)
 	}
 }
 
-// �e�N�X�`���ݒ�F�{�X
+// テクスチャ設定：ボス
 void CEnemy::SetBossTexture(KdTexture* apTexture)
 {
 	if (apTexture == nullptr) return;
@@ -369,51 +367,58 @@ void CEnemy::SetBossTexture(KdTexture* apTexture)
 	m_bossList.SetTexture(apTexture);
 }
 
-// ���̐ݒu�֐�
+// 侍の設置関数
 void CEnemy::SetSamurai(int data)
 {
-	//�f�[�^���Ƃ̔z�u�ݒ�
+	//データごとの配置設定
 	switch (data)
 	{
-	//��O
+	//城外
 	case OutSide:
 		m_samuraiList[0].SetSamurai({ 300.0f, -1080.0f });
 		m_samuraiList[1].SetSamurai({ 640.0f,230.0f });
 		m_samuraiList[2].SetSamurai({ 640.0f,110.0f });
 		break;
-	//��K�w
+	//一階層
 	case OneFloor:
 		m_samuraiList[0].SetSamurai({ 731,-1531 });
-
 		m_samuraiList[1].SetSamurai({ 1250,-900 });
 		m_samuraiList[2].SetSamurai({ 1600,-1250 });
 		m_samuraiList[3].SetSamurai({ 1500,-1000 });
-
 		m_samuraiList[4].SetSamurai({ 1350, 100 });
 		m_samuraiList[5].SetSamurai({ 1550, 100 });
 		m_samuraiList[6].SetSamurai({ -400, -1950 });
 		m_samuraiList[7].SetSamurai({ -500, -1850 });
-
 		m_samuraiList[8].SetSamurai({ -84,-1250 });
 		m_samuraiList[9].SetSamurai({ -324,-1486 });
 		m_samuraiList[10].SetSamurai({ 221,-1486 });
-		
 		m_samuraiList[11].SetSamurai({ 610,0 });
 		m_samuraiList[12].SetSamurai({ -400,-550 });
+		m_samuraiList[13].SetSamurai({ 1430,-130 });
+		m_samuraiList[14].SetSamurai({ 720,-440 });
+		m_samuraiList[15].SetSamurai({ 230,-450 });
 		break;
-	//��K�w
+	//二階層
 	case TwoFloor:
-		m_samuraiList[0].SetSamurai({ 200,-350 });
-		m_samuraiList[1].SetSamurai({ 400,-350 });
-		m_samuraiList[2].SetSamurai({ 600,-350 });
-		m_samuraiList[3].SetSamurai({ 800,-350 });
-		m_samuraiList[4].SetSamurai({ 1000,-350 });
-		m_samuraiList[5].SetSamurai({ 1200,-350 });
-
-		m_samuraiList[6].SetSamurai({ 500, -1000 });
-		m_samuraiList[7].SetSamurai({ 700, -1000 });
-
-		
+		m_samuraiList[0].SetSamurai({ 200,-550 });
+		m_samuraiList[1].SetSamurai({ 400,-550 });
+		m_samuraiList[2].SetSamurai({ 600,-550 });
+		m_samuraiList[3].SetSamurai({ 800,-550 });
+		m_samuraiList[4].SetSamurai({ 1000,-550 });
+		m_samuraiList[5].SetSamurai({ 1200,-550 });
+		m_samuraiList[6].SetSamurai({ 200,-1250 });
+		m_samuraiList[7].SetSamurai({ 400,-1250 });
+		m_samuraiList[8].SetSamurai({ 600,-1250 });
+		m_samuraiList[9].SetSamurai({ 800,-1250 });
+		m_samuraiList[10].SetSamurai({ 1000,-1250 });
+		m_samuraiList[11].SetSamurai({ 1200,-1250 });
+		m_samuraiList[12].SetSamurai({ 1145,-610 });
+		m_samuraiList[13].SetSamurai({ 1145,-1050 });
+		m_samuraiList[14].SetSamurai({ 1635,-1380 });
+		m_samuraiList[15].SetSamurai({ 1250,-1820 });
+		m_samuraiList[16].SetSamurai({ 820,-1850 });
+		m_samuraiList[17].SetSamurai({ 970,100 });
+		m_samuraiList[18].SetSamurai({ 1100,120 });
 		break;
 	//三階層
 	case ThreeFloor:
@@ -422,81 +427,72 @@ void CEnemy::SetSamurai(int data)
 		m_samuraiList[3].SetSamurai({ 1000,-875 });
 		m_samuraiList[4].SetSamurai({ 1635,-884 });
 		break;
-	//四階層
-	case FourFloor:
-		break;
 	}
 
 }
 
-// �|���z�u
+// 弓兵配置
 void CEnemy::SetArcher(int data)
 {
-	//�f�[�^���Ƃ̔z�u�ݒ�
+	//データごとの配置設定
 	switch (data)
 	{
-	//��O
+		//城外
 	case OutSide:
 		m_archerList[1].SetArchaer({ 925.0f, -250.0f });
 		break;
-	//��K�w
+		//一階層
 	case OneFloor:
 		m_archerList[1].SetArchaer({ 720.0f, -1250.0f });
 		m_archerList[2].SetArchaer({ 1600.0f, -650.0f });
-
 		m_archerList[3].SetArchaer({ -384,-1246 });
 		m_archerList[4].SetArchaer({ 136,-1751 });
-		
 		m_archerList[5].SetArchaer({ 1186,-190 });
 		m_archerList[6].SetArchaer({ 1700,-190 });
-		
 		m_archerList[7].SetArchaer({ 160,-22 });
+		m_archerList[8].SetArchaer({ -80,-1890 });
+		m_archerList[9].SetArchaer({ 707,-210 });
+		m_archerList[10].SetArchaer({ 150,-600 });
+		m_archerList[11].SetArchaer({ -310,-500 });
 		break;
-	//��K�w
+		//二階層
 	case TwoFloor:
 		m_archerList[1].SetArchaer({ 300, -1000 });
 		m_archerList[2].SetArchaer({ 1000, -1000 });
-		break;
-	//�O�K�w
-	case ThreeFloor:
-		break;
-	//�l�K�w
-	case FourFloor:
+		m_archerList[3].SetArchaer({ 300, -600 });
+		m_archerList[4].SetArchaer({ 1000, -600 });
+		m_archerList[5].SetArchaer({ 680, -888 });
+		m_archerList[6].SetArchaer({ 1655, -1780 });
 		break;
 	}
 }
 
-// ��j�z�u
+// 大男配置
 void CEnemy::SetGiant(int data)
 {
-	//�f�[�^���Ƃ̔z�u�ݒ�
+	//データごとの配置設定
 	switch (data)
 	{
-	//��K�w
+	//二階層
 	case TwoFloor:
-
-
-
+		m_giantList[0].SetGiant({ 660 , -870 });
 		break;
-	//�O�K�w
+		//三階層
 	case ThreeFloor:
-		m_giantList[1].SetGiant({ 1620 , -2042});
-		m_giantList[2].SetGiant({ 1620 ,296 });
-		break;
-	//�l�K�w
-	case FourFloor:
+		m_giantList[0].SetGiant({ 1620 , -2042});
+		m_giantList[1].SetGiant({ 1620 ,296 });
 		break;
 	}
 }
 
-// �{�X�z�u
+// ボス配置
 void CEnemy::SetBoss(int data)
 {
-	//�f�[�^���Ƃ̔z�u�ݒ�
+	//データごとの配置設定
 	if (data == BossFloor)m_bossList.SetBoss({ 609.0f,0.0f });
 }
 
-// �M�~�b�N����
+// ギミック発射
 void CEnemy::shot(Math::Vector2 apos, Math::Vector2 bpos)
 {
 	const int GMAX = 100;
@@ -505,10 +501,10 @@ void CEnemy::shot(Math::Vector2 apos, Math::Vector2 bpos)
 
 		CArrow* arrow = new CArrow;
 
-		arrow->Init();		// ������
-		arrow->SetTexture(m_pArrawTex);	// �e�N�X�`���ݒ�
+		arrow->Init();		// 初期化
+		arrow->SetTexture(m_pArrawTex);	// テクスチャ設定
 
-		// ���ˏ���
+		// 発射処理
 		arrow->Shot(apos, bpos);
 		m_arrowList.push_back(arrow);
 
@@ -517,11 +513,11 @@ void CEnemy::shot(Math::Vector2 apos, Math::Vector2 bpos)
 	}
 }
 
-// �C�x���g����
+// イベント処理
 void CEnemy::Event()
 {
 	CMap* map = m_pOwner->GetMap();
-	// �C�x���g������e
+	// イベント発生内容
 	if (!m_bEvent)
 	{
 		m_giantList[1].SetGiant({ 409, -250 });
@@ -529,14 +525,14 @@ void CEnemy::Event()
 		m_bEvent = true;
 		return;
 	}
-	// �C�x���g�I������
+	// イベント終了処理
 	if (!m_giantList[1].IsAlive() && !m_giantList[2].IsAlive())
 	{
 		map->SetUnlock();
 	}
 }
 
-//�I�[�i�[�ݒ�擾
+//オーナー設定取得
 void CEnemy::SetOwner(Scene* apOwner)
 {
 	if (apOwner == nullptr) return;
@@ -544,32 +540,32 @@ void CEnemy::SetOwner(Scene* apOwner)
 	m_pOwner = apOwner;
 }
 
-// �v���C���[�Ƃ̓����蔻��
+// プレイヤーとの当たり判定
 void CEnemy::HitCheckPlayer()
 {
 	CPlayer* player = m_pOwner->GetPlayer();
 
-	// �v���C���[�������Ă��邩�A���G��ԂłȂ����ɏ���
+	// プレイヤーが生きているか、無敵状態でない時に処理
 	if (!player->IsAlive() || player->bGetHit()) return;
 
-	Math::Vector2 playerPos = player->GetPos();		// �v���C���[�̍��W�擾
-	Math::Vector2 playerMove = player->GetMove();	// �v���C���[�̈ړ��ʎ擾
-	CEffect* effect = m_pOwner->GetEffect();		// �G�t�F�N�g�N���X
-	CDamage* dmgList = effect->GetDmgList();		// �_���[�W���X�g
+	Math::Vector2 playerPos = player->GetPos();		// プレイヤーの座標取得
+	Math::Vector2 playerMove = player->GetMove();	// プレイヤーの移動量取得
+	CEffect* effect = m_pOwner->GetEffect();		// エフェクトクラス
+	CDamage* dmgList = effect->GetDmgList();		// ダメージリスト
 
 	////////////////////////////////////////////////////////////////
-	//					��Ƃ̓����蔻��								
+	//					矢との当たり判定								
 	////////////////////////////////////////////////////////////////
 	for (int i = 0; i < m_arrowList.size(); i++)
 	{
 		if (!m_arrowList[i]->IsAlive()) continue;
 
-		// �v���C���[�Ɩ�̋���
+		// プレイヤーと矢の距離
 		const float checkDist = Utility::GetDistance(playerPos, m_arrowList[i]->GetPos());
-		// �q�b�g����̋���
+		// ヒット判定の距離
 		const float hitDist = 16;
 
-		// �q�b�g�������������߂��Ƃ�
+		// ヒット判定よりも距離が近いとき
 		if (checkDist <= hitDist)
 		{
 			player->SetDamage(POWER::ARCHER_ARROW);	// プレイヤー与ダメージ
@@ -577,21 +573,21 @@ void CEnemy::HitCheckPlayer()
 		}
 	}
 	////////////////////////////////////////////////////////////////
-	//					�a���Ƃ̓����蔻��								
+	//					斬撃との当たり判定								
 	////////////////////////////////////////////////////////////////
 	for (int i = 0; i < m_enemySwordList.size(); i++)
 	{
 		if (!m_enemySwordList[i]->bGetSlash()) continue;
 
-		// �v���C���[�Ǝa���̋���
+		// プレイヤーと斬撃の距離
 		const float checkDist = Utility::GetDistance(playerPos, m_enemySwordList[i]->GetPos());
-		
+
 		// 侍の斬撃用判定
 		if (m_enemySwordList[i]->GetSize().x == SAMURAI_SLASH_SIZE.x ||
 			(m_enemySwordList[i]->GetSize().x == -SAMURAI_SLASH_SIZE.x))
 		{
-			// �q�b�g����̋���
-			const float hitDist = PLAYER_SIZE::LEFT+SLASH_SIZE::LEFT;
+			// ヒット判定の距離
+			const float hitDist = PLAYER_SIZE::LEFT + SLASH_SIZE::LEFT;
 			// ヒット判定よりも距離が近いとき
 			if (checkDist <= hitDist)
 			{
@@ -602,10 +598,10 @@ void CEnemy::HitCheckPlayer()
 		if (m_enemySwordList[i]->GetSize().x == BOSS_SLASH_SIZE.x ||
 			(m_enemySwordList[i]->GetSize().x == -BOSS_SLASH_SIZE.x))
 		{
-			// �q�b�g����̋���
-			const float hitDist = PLAYER_SIZE::LEFT+BOSS_SIZE::LEFT;
+			// ヒット判定の距離
+			const float hitDist = PLAYER_SIZE::LEFT + BOSS_SIZE::LEFT;
 
-			// �q�b�g�������������߂��Ƃ�
+			// ヒット判定よりも距離が近いとき
 			if (checkDist <= hitDist)
 			{
 				player->SetDamage(POWER::BOSS_SLASH);		// プレイヤー与ダメージ
@@ -615,30 +611,30 @@ void CEnemy::HitCheckPlayer()
 
 	int knockBack = 20;
 	////////////////////////////////////////////////////////////////
-	//					���Ƃ̓����蔻��								
+	//					侍との当たり判定								
 	////////////////////////////////////////////////////////////////
 	for (int i = 0; i < SAMURAI_MAX; i++)
 	{
 		if (!m_samuraiList[i].IsAlive()) continue;
-		// �v���C���[�Ƃ̓����蔻��֐�
-		HitCheckEnemy_And_Player(m_samuraiList[i].GetPos(),POWER::ENEMY_PHYSICAL, knockBack, SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN);
+		// プレイヤーとの当たり判定関数
+		HitCheckEnemy_And_Player(m_samuraiList[i].GetPos(), POWER::ENEMY_PHYSICAL, knockBack, SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN);
 	}
 	////////////////////////////////////////////////////////////////
-	//					�|���Ƃ̓����蔻��								
+	//					弓兵との当たり判定								
 	////////////////////////////////////////////////////////////////
 	for (int i = 0; i < ARCHER_MAX; i++)
 	{
 		if (!m_archerList[i].IsAlive())continue;
-		// �v���C���[�Ƃ̓����蔻��֐�
+		// プレイヤーとの当たり判定関数
 		HitCheckEnemy_And_Player(m_archerList[i].GetPos(), POWER::ENEMY_PHYSICAL, knockBack, ARCHER_SIZE::LEFT, ARCHER_SIZE::RIGHT, ARCHER_SIZE::TOP, ARCHER_SIZE::DOWN);
 	}
 	////////////////////////////////////////////////////////////////
-	//					��j�Ƃ̓����蔻��								
+	//					大男との当たり判定								
 	////////////////////////////////////////////////////////////////
 	for (int i = 0; i < GIANT_MAX; i++)
 	{
 		if (!m_giantList[i].IsAlive())continue;
-		// �ːi��������Ƒ�_���[�W
+		// 突進時当たると大ダメージ
 		int dmg = 0;
 		if (m_giantList[i].bGetRush())
 		{
@@ -646,12 +642,12 @@ void CEnemy::HitCheckPlayer()
 			knockBack = 80;
 		}
 		else dmg = POWER::ENEMY_PHYSICAL;
-		
-		// �v���C���[�Ƃ̓����蔻��֐�
+
+		// プレイヤーとの当たり判定関数
 		HitCheckEnemy_And_Player(m_giantList[i].GetPos(), dmg, knockBack, GIANT_SIZE::LEFT, GIANT_SIZE::RIGHT, GIANT_SIZE::TOP, GIANT_SIZE::DOWN);
 	}
 	////////////////////////////////////////////////////////////////
-	//					�{�X�Ƃ̓����蔻��								
+	//					ボスとの当たり判定								
 	////////////////////////////////////////////////////////////////
 	int bossknockback = 80;	//ノックバックの値
 
@@ -688,26 +684,26 @@ void CEnemy::HitCheckPlayer()
 	}
 }
 
-// �v���C���[�ƓG�̓����蔻��֐�
+// プレイヤーと敵の当たり判定関数
 void CEnemy::HitCheckEnemy_And_Player(Math::Vector2 enePos, int dmg, float knockBack, float Left, float Right, float Top, float Down)
 {
 	CPlayer* player = m_pOwner->GetPlayer();
 	for (int e = 0; e < SAMURAI_MAX; e++)
 	{
-		//�����Ă�G�̂�
+		//生きてる敵のみ
 		if (!m_samuraiList[e].IsAlive()) continue;
 		int player_hit = Utility::iHitCheck(player->GetPos(), player->GetMove(), enePos.x, enePos.y,
 			PLAYER_SIZE::LEFT, PLAYER_SIZE::RIGHT, PLAYER_SIZE::TOP, PLAYER_SIZE::DOWN,
-			Left,Right,Top,Down);
+			Left, Right, Top, Down);
 
-		//�G�̌��ݍ��W�̎l��
-		const float ENEMY_LEFT = enePos.x - Left;	//����
-		const float ENEMY_RIGHT = enePos.x + Right;	//�E��
-		const float ENEMY_TOP = enePos.y + Top;		//���
-		const float ENEMY_BOTTOM = enePos.y - Down;	//����
+		//敵の現在座標の四辺
+		const float ENEMY_LEFT = enePos.x - Left;	//左辺
+		const float ENEMY_RIGHT = enePos.x + Right;	//右辺
+		const float ENEMY_TOP = enePos.y + Top;		//上辺
+		const float ENEMY_BOTTOM = enePos.y - Down;	//下辺
 
-		//�����蔻�蕪�򏈗�
-		//1:��	2:�� 3:�� 4:�E
+		//当たり判定分岐処理
+		//1:上	2:下 3:左 4:右
 		switch (player_hit)
 		{
 		case 1:
@@ -734,7 +730,7 @@ void CEnemy::HitCheckEnemy_And_Player(Math::Vector2 enePos, int dmg, float knock
 	}
 }
 
-//�}�b�v�Ƃ̓����蔻��
+//マップとの当たり判定
 void CEnemy::HitCheckMap()
 {
 	CMap* map = m_pOwner->GetMap();
@@ -743,26 +739,26 @@ void CEnemy::HitCheckMap()
 	float(*chipY)[MAP_CHIP_W] = map->GetPosY();
 	int(*chipData)[MAP_CHIP_W] = map->GetChipData();
 
-	//�}�b�v�f�[�^��g����
+	//マップデータを使って
 	int hit = 0;
 	for (int h = 0; h < MAP_CHIP_H; h++)
 	{
 		for (int w = 0; w < MAP_CHIP_W; w++)
 		{
-			//�}�b�v�̌��ݍ��W�̎l��
-			const float MAP_LEFT = chipX[h][w] - Infor::RADIUS_32;		//����
-			const float MAP_RIGHT = chipX[h][w] + Infor::RADIUS_32;		//�E��
-			const float MAP_TOP = chipY[h][w] + Infor::RADIUS_32;		//���
-			const float MAP_BOTTOM = chipY[h][w] - Infor::RADIUS_32;	//����
+			//マップの現在座標の四辺
+			const float MAP_LEFT = chipX[h][w] - Infor::RADIUS_32;		//左辺
+			const float MAP_RIGHT = chipX[h][w] + Infor::RADIUS_32;		//右辺
+			const float MAP_TOP = chipY[h][w] + Infor::RADIUS_32;		//上辺
+			const float MAP_BOTTOM = chipY[h][w] - Infor::RADIUS_32;	//下辺
 
-			if (chipData[h][w] >= 10 && chipData[h][w] < 49 || chipData[h][w]>=78)
+			if (chipData[h][w] >= 10 && chipData[h][w] < 49 || chipData[h][w] >= 78)
 			{
 				continue;
 			}
 			else
 			{
 				////////////////////////////////////////////////////////////////
-				//		���Ƃ̃q�b�g�`�F�b�N								
+				//		侍とのヒットチェック								
 				////////////////////////////////////////////////////////////////
 				for (int i = 0; i < SAMURAI_MAX; i++)
 				{
@@ -770,7 +766,7 @@ void CEnemy::HitCheckMap()
 
 					hit = Utility::iHitCheck(m_samuraiList[i].GetPos(), m_samuraiList[i].GetMove(), chipX[h][w], chipY[h][w],
 						SAMURAI_SIZE::LEFT, SAMURAI_SIZE::RIGHT, SAMURAI_SIZE::TOP, SAMURAI_SIZE::DOWN,
-						Infor::RADIUS_32,Infor::RADIUS_32,Infor::RADIUS_32,Infor::RADIUS_32);
+						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32);
 
 					switch (hit)
 					{
@@ -791,7 +787,7 @@ void CEnemy::HitCheckMap()
 				}
 
 				////////////////////////////////////////////////////////////////
-				//		�|���Ƃ̃q�b�g�`�F�b�N								
+				//		弓兵とのヒットチェック								
 				////////////////////////////////////////////////////////////////
 				for (int i = 0; i < ARCHER_MAX; i++)
 				{
@@ -819,7 +815,7 @@ void CEnemy::HitCheckMap()
 					}
 				}
 				////////////////////////////////////////////////////////////////
-				//		��j�Ƃ̃q�b�g�`�F�b�N								
+				//		大男とのヒットチェック								
 				////////////////////////////////////////////////////////////////
 				for (int i = 0; i < GIANT_MAX; i++)
 				{
@@ -854,12 +850,12 @@ void CEnemy::HitCheckMap()
 						ARROW_SIZE::LEFT, ARROW_SIZE::RIGHT, ARROW_SIZE::TOP, ARROW_SIZE::DOWN,
 						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 					{
-						m_arrowList[i]->SetAlive();		// ��̃t���O����
+						m_arrowList[i]->SetAlive();		// 矢のフラグ下げ
 					}
 				}
 			}
 			////////////////////////////////////////////////////////////////
-			//		��Ƃ̃q�b�g�`�F�b�N								
+			//		矢とのヒットチェック								
 			////////////////////////////////////////////////////////////////
 			if (chipData[h][w] >= 10 && chipData[h][w] < 49 || chipData[h][w]>80)
 			{
@@ -870,13 +866,11 @@ void CEnemy::HitCheckMap()
 						ARROW_SIZE::LEFT, ARROW_SIZE::RIGHT, ARROW_SIZE::TOP, ARROW_SIZE::DOWN,
 						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 					{
-						m_arrowList[i]->SetAlive();		// ��̃t���O����
+						m_arrowList[i]->SetAlive();		// 矢のフラグ下げ
 					}
 				}
 			}
-
 			// ボスとのマップ判定
-
 			if (!m_bossList.IsAlive()) continue;
 
 			hit = Utility::iHitCheck(m_bossList.GetPos(), m_bossList.GetMove(), chipX[h][w], chipY[h][w],
@@ -891,17 +885,17 @@ void CEnemy::HitCheckMap()
 				m_bossList.SetMoveX(0);
 				break;
 			case 2://マップの下
-				m_bossList.SetPosY(MAP_BOTTOM - BOSS_SIZE::DOWN );
+				m_bossList.SetPosY(MAP_BOTTOM - BOSS_SIZE::DOWN);
 				m_bossList.SetMoveY(0);
 				m_bossList.SetMoveX(0);
 				break;
 			case 3://マップの左
-				m_bossList.SetPosX(MAP_LEFT - BOSS_SIZE::LEFT );
+				m_bossList.SetPosX(MAP_LEFT - BOSS_SIZE::LEFT);
 				m_bossList.SetMoveY(0);
 				m_bossList.SetMoveX(0);
 				break;
 			case 4://マップの右
-				m_bossList.SetPosX(MAP_RIGHT + BOSS_SIZE::RIGHT+80 );
+				m_bossList.SetPosX(MAP_RIGHT + BOSS_SIZE::RIGHT + 80);
 				m_bossList.SetMoveY(0);
 				m_bossList.SetMoveX(0);
 			break; default:

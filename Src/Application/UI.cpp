@@ -1,5 +1,6 @@
 #include "UI.h"
 #include "Scene.h"
+#include"Utility.h"
 
 CUI::CUI()
 	:m_pbackTexture(nullptr)
@@ -179,9 +180,9 @@ void CUI::Draw()
 	SHADER.m_spriteShader.SetMatrix(m_hpbarmat);
 	SHADER.m_spriteShader.DrawTex(m_pHPbarTexture, Math::Rectangle(0, 0, 110, 28), 1.0f);
 
-	m_hpmat = DirectX::XMMatrixTranslation(-200-((100-m_hp)/2), -250, 0);//Ç±Ç±ÇÕç¿ïW
+	m_hpmat = DirectX::XMMatrixTranslation(-225-((HP::PLAYER-m_hp*2)/2), -250, 0);//Ç±Ç±ÇÕç¿ïW
 	SHADER.m_spriteShader.SetMatrix(m_hpmat);
-	SHADER.m_spriteShader.DrawTex(m_pHPTexture, Math::Rectangle(0, 0, m_hp, 18), 1.0f);
+	SHADER.m_spriteShader.DrawTex(m_pHPTexture, Math::Rectangle(0, 0, m_hp*2, 18), 1.0f);
 
 	
 

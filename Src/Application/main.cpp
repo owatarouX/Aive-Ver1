@@ -171,6 +171,7 @@ void Application::Execute()
 
 		// ウィンドウのメッセージを処理する
 		m_window.ProcessMessage();
+		ShowCursor(FALSE);
 
 		// ウィンドウが破棄されてるならループ終了
 		if (m_window.IsCreated() == false)
