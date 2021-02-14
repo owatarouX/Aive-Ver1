@@ -592,13 +592,16 @@ void CPlayer::HitCheckMap()
 				////////////////////////////////////////////////////////////////
 				for (int i = 0; i < BULLET_MAX; i++)
 				{
+					if (!m_bulletList[i].IsAlive())continue;
 					//ƒqƒbƒgŽž
 					if (!Utility::bHitCheck(m_bulletList[i].GetPos(), m_bulletList[i].GetMove(), { chipX[h][w],chipY[h][w] },
 						SHURIKEN_SIZE::LEFT, SHURIKEN_SIZE::RIGHT, SHURIKEN_SIZE::TOP, SHURIKEN_SIZE::DOWN,
 						Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32, Infor::RADIUS_32))
 					{
 						m_bulletList[i].SetAlive();	//’e‚Ìƒtƒ‰ƒO‰º‚°
+						break;
 					}
+					if (m_bulletList[i].GetPos().x < chipX[0][0] - SHURIKEN_SIZE::LEFT) m_bulletList[i].SetAlive();
 				}
 			}
 		}

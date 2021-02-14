@@ -474,13 +474,14 @@ void CEnemy::SetGiant(int data)
 	{
 	//��K�w
 	case TwoFloor:
-		m_giantList[1].SetGiant({ 150,-1400});
-		m_giantList[2].SetGiant({ 1200,-1400 });
+
 
 
 		break;
 	//�O�K�w
 	case ThreeFloor:
+		m_giantList[1].SetGiant({ 1620 , -2042});
+		m_giantList[2].SetGiant({ 1620 ,296 });
 		break;
 	//�l�K�w
 	case FourFloor:
