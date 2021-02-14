@@ -55,11 +55,6 @@ void Scene::Init()
 {
 	srand(timeGetTime());
 
-
-	bgm = std::make_shared<KdSoundEffect>();
-	bgm->Load("Resource/Sound/BGM.WAV");
-	bgmInst = bgm->CreateInstance(false);
-	bgmInst->SetVolume(0.3);
 	Reset();
 }
 
@@ -207,6 +202,7 @@ void Scene::Reset()
 	m_dmgTex.Load("Resource/Texture/Effect/dmg.png");
 	m_darkenTex.Load("Resource/Texture/Effect/Dark.gif");
 	m_HealTex.Load("Resource/Texture/Effect/heal.png");
+	m_BlackTex.Load("Resource/Texture/Effect/black.png");
 
 	// メッセージ
 	m_msgTex.Load("Resource/Texture/Message/AOMessage.png");
@@ -284,6 +280,7 @@ void Scene::Reset()
 	m_effect.SetDmgTexture(&m_dmgTex);
 	m_effect.SetDarkTexture(&m_darkenTex);
 	m_effect.SetHealTexture(&m_HealTex);
+	m_effect.SetBlackTexture(&m_BlackTex);
 
 	// メッセージ
 	m_message.Init();
@@ -297,7 +294,20 @@ void Scene::Reset()
 	//初期シーン　タイトル
 	sceneType = eSceneTitle;
 
+	blackcnt = 0;
+
+	bgmflg = true;
+	bossbgmflg = false;
+	blackflg = true;
+
+	bgmInst = Utility::Sound_Loading(bgm, "Resource/Sound/BGM.WAV");
+	bgmInst->SetVolume(0.3);
 	bgmInst->Play(true);
+
+	bossbgmInst = Utility::Sound_Loading(bossbgm, "Resource/Sound/bossBGM.WAV");
+	bossbgmInst->Play(true);
+	bossbgmInst->Pause();
+	gameoverseInst = Utility::Sound_Loading(gameoverse, "Resource/Sound/gameover.WAV");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -429,12 +439,31 @@ void Scene::GameUpdate()
 	if (m_player.GetHp() <= 0)
 	{
 		m_resultTex.Load("Resource/Texture/Result/GameOver.png");
-		sceneType = eSceneResult;
+
+			CBlack* blackList = m_effect.GetBlackList();
+			blackList->EmitBlack();		//暗転エフェクト
+
+		blackcnt++;
+		if (blackcnt >= 60)
+		{
+			bgmInst->Stop();
+			bossbgmInst->Stop();
+			gameoverseInst->Play();
+			sceneType = eSceneResult;
+		}
 	}
 	else if (m_enemy.GetBossHp() <= 0)
 	{
 		sceneType = eSceneResult;
 	}
+
+	if (!bgmflg)
+	{
+		bgmInst->Stop();
+		bgmflg = true;
+	}
+	if(bossbgmflg)
+		bossbgmInst->Resume();
 }
 
 //ゲーム:描画
@@ -452,14 +481,14 @@ void Scene::GameDraw()
 	//プレイヤー
 	m_player.Draw();
 
+	//UI
+	m_ui.Draw();
+
 	// エフェクト
 	m_effect.Draw();
 
 	// メッセージ
 	m_message.Draw();
-	
-	//UI
-	m_ui.Draw();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //												操作説明画面
@@ -494,7 +523,7 @@ void Scene::ResultUpdate()
 		Reset();
 		return;
 	}
-	bgmInst->Pause();
+	bossbgmInst->Pause();
 }
 
 // リザルト：描画
@@ -523,4 +552,14 @@ void Scene::MousePointDraw()
 	mat = DirectX::XMMatrixTranslation(m_mouse.cur.x+ r/2, m_mouse.cur.y- r/2, 0);
 	SHADER.m_spriteShader.SetMatrix(mat);
 	SHADER.m_spriteShader.DrawTex(&m_mousePointTex, Math::Rectangle(0,0, r, r),1.0f);
+}
+
+void Scene::SetBGMFlg()
+{
+	bgmflg = false;
+}
+
+void Scene::SetbossBGMFlg()
+{
+	bossbgmflg = true;
 }

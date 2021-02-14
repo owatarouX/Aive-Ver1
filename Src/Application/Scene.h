@@ -95,6 +95,7 @@ private:
 	KdTexture m_dmgTex;
 	KdTexture m_darkenTex;
 	KdTexture m_HealTex;
+	KdTexture m_BlackTex;
 
 	// メッセージ
 	KdTexture m_msgTex;
@@ -120,6 +121,18 @@ private:
 
 	std::shared_ptr<KdSoundEffect> bgm;
 	std::shared_ptr<KdSoundInstance> bgmInst;
+
+	std::shared_ptr<KdSoundEffect> bossbgm;
+	std::shared_ptr<KdSoundInstance> bossbgmInst;
+
+	std::shared_ptr<KdSoundEffect> gameoverse;
+	std::shared_ptr<KdSoundInstance> gameoverseInst;
+
+	bool bgmflg;
+	bool bossbgmflg;
+
+	int blackcnt; // 暗転のカウント
+	bool blackflg; //暗転しているか
 
 public:
 
@@ -176,6 +189,10 @@ public:
 	//マウス座標取得
 	void GetMousePos(Math::Vector2 scrPos);
 	void MousePointDraw();
+
+	//セッター
+	void SetBGMFlg();
+	void SetbossBGMFlg();
 
 private:
 	DirectX::SpriteBatch* spriteBatch;

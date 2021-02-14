@@ -33,7 +33,7 @@ namespace HP
 namespace POWER
 {
 	// プレイヤー
-	const int PLAYER_SHURIKEN = 2;	// 手裏剣
+	const int PLAYER_SHURIKEN = 200;	// 手裏剣
 	const int PLAYER_SLASH = 9;		// 斬撃
 	const int PLAYER_BLAST = 15;	// 爆風
 
@@ -55,7 +55,7 @@ namespace POWER
 namespace SPEED
 {
 	// プレイヤー
-	const int PLAYER = 5;
+	const int PLAYER = 50;
 	const int PLAYER_SHURIKEN = 15;
 
 	// 侍

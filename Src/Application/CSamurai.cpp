@@ -9,6 +9,7 @@ CSamurai::CSamurai()
 	, m_mat()
 	, m_transMat()
 	, m_scaleMat()
+	, m_size(1.0f,1.0f)
 	, m_bAlive(false)
 	, m_hp(HP::SAMURAI)
 	, m_dmg(0)
@@ -71,6 +72,12 @@ void CSamurai::Update()
 		return;
 	}
 
+	if(m_moveVal.x>0)
+		m_size = { -1.0f, 1.0f };
+	else if (m_moveVal.x < 0)
+		m_size = { 1.0f, 1.0f };
+
+
 	// プレイヤーとの距離を求める
 	m_dist = Utility::GetDistance(m_pos, m_playerPos);
 	// プレイヤーとの角度を求める 
@@ -98,7 +105,7 @@ void CSamurai::Update()
 
 	//行列
 	m_transMat = DirectX::XMMatrixTranslation(m_pos.x - m_scrollPos.x, m_pos.y - m_scrollPos.y, 0.0f);
-	m_scaleMat = DirectX::XMMatrixScaling(1.0f, 1.0f, 0.0f);
+	m_scaleMat = DirectX::XMMatrixScaling(m_size.x, m_size.y, 0.0f);
 	m_mat = m_scaleMat * m_transMat;	// 行列作成
 }
 

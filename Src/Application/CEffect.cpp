@@ -21,6 +21,9 @@ void CEffect::Init()
 	// 暗転エフェクト初期化
 	m_darkenList.Init();
 
+	// 暗転エフェクト初期化
+	m_blackList.Init();
+
 	// 回復エフェクト
 	for (int i = 0; i < HEAL_MAX; i++)
 	{
@@ -42,6 +45,9 @@ void CEffect::UpDate()
 	// 暗転エフェクト
 	m_darkenList.Update();
 
+	// 暗転エフェクト
+	m_blackList.Update();
+
 	// 回復エフェクト
 	for (int i = 0; i < HEAL_MAX; i++)
 	{
@@ -60,6 +66,9 @@ void CEffect::Draw()
 	// 暗転エフェクト
 	m_darkenList.Draw();
 	
+	// 暗転エフェクト
+	m_blackList.Draw();
+
 	// 回復エフェクト
 	for (int i = 0; i < HEAL_MAX; i++)
 	{
@@ -92,6 +101,13 @@ void CEffect::SetHealTexture(KdTexture* apTexture)
 	{
 		m_healList[i].SetTexture(apTexture);
 	}
+}
+
+//テクスチャ:暗転
+void CEffect::SetBlackTexture(KdTexture* apTexture)
+{
+	if (apTexture == nullptr)return;
+	m_blackList.SetTexture(apTexture);
 }
 
 // プレイヤーのヒットエフェクト発生

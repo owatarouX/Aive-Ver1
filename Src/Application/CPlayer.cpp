@@ -60,6 +60,9 @@ void CPlayer::Init()
 	m_hp = HP::PLAYER;
 	m_invincibleCnt = 0;
 
+	//回復
+	m_bHeal=false;
+
 	//透明度
 	m_alpha = 1.0f;
 
@@ -108,7 +111,10 @@ void CPlayer::Init()
 	shurikenseInst = Utility::Sound_Loading(shurikense, "Resource/Sound/shuriken.WAV");
 	hitseInst = Utility::Sound_Loading(hitse,"Resource/Sound/hit.WAV");
 	healseInst = Utility::Sound_Loading(healse, "Resource/Sound/heal.WAV");
-	keypuseInst = Utility::Sound_Loading(healse, "Resource/Sound/key.WAV");
+	keypuseInst = Utility::Sound_Loading(keypuse, "Resource/Sound/key.WAV");
+	itempuseInst = Utility::Sound_Loading(itempuse,"Resource/Sound/itempu.WAV");
+	unlockseInst = Utility::Sound_Loading(unlockse, "Resource/Sound/unlock.WAV");
+	gimmickseInst = Utility::Sound_Loading(gimmickse, "Resource/Sound/gimmick.WAV");
 }
 
 // 再初期化
@@ -463,7 +469,12 @@ void CPlayer::HitCheckMap()
 				{
 					// イベント発生処理
 					hit = iMapHitFunction({ chipX[h][w],chipY[h][w] });
-					if (hit == 1) map->SetLock();	// カギ閉め
+					if (hit == 1) 
+					{
+						map->SetLock();	// カギ閉め
+						m_pOwner->SetbossBGMFlg(); //ボスBGMフラグをtrueにする
+					}
+					m_pOwner->SetBGMFlg();
 				}
 			}
 			else if (chipData[h][w] >= 91 && chipData[h][w] <= 94)	//データ：扉
@@ -490,7 +501,7 @@ void CPlayer::HitCheckMap()
 			else if (chipData[h][w] == 96)	// データ：灯籠
 			{
 				hit = iMapHitFunction({ chipX[h][w],chipY[h][w] });
-				if (hit == 2 || hit == 4)map->SetUnlock();
+				if (hit == 2 || hit == 4) { map->SetUnlock(); gimmickseInst->Play(); }
 				HitMapCase({ chipX[h][w],chipY[h][w] }, hit);
 			}
 			else if (chipData[h][w] >= 111 && chipData[h][w] <= 119)	//	Map5の階層判定
@@ -548,6 +559,7 @@ void CPlayer::HitCheckMap()
 				if ((m_KeyPossession >= 2) && (bMapHitFunction({ chipX[h][w],chipY[h][w] })))
 				{
 					map->SetUnlock();	// 鍵開け処理
+					unlockseInst->Play();
 				}
 				////////////////////////////////////////////////////////////////
 				//		弾のヒットチェック								
@@ -917,6 +929,7 @@ void CPlayer::HitCheckItem()
 			ItemBomb[i].bSetbombHit();	//拾った判定入手
 			ItemBomb[i].SetAlive();		//爆弾のフラグ下げ
 			m_BombPossession = BOMB_MAX;	//アイテム入手
+			itempuseInst->Play();
 		}
 	}
 	////////////////////////////////////////////////////////////////
@@ -969,6 +982,7 @@ void CPlayer::HitCheckItem()
 	{
 		ItemMino->SetAlive();			// フラグ下げ
 		m_bMinoPossession = true;		// 隠れ蓑入手
+		itempuseInst->Play();
 	}
 }
 

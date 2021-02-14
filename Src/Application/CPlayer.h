@@ -170,6 +170,15 @@ private:
 
 	std::shared_ptr<KdSoundEffect> keypuse;
 	std::shared_ptr<KdSoundInstance> keypuseInst;
+	
+	std::shared_ptr<KdSoundEffect> itempuse;
+	std::shared_ptr<KdSoundInstance> itempuseInst;
+
+	std::shared_ptr<KdSoundEffect> unlockse;
+	std::shared_ptr<KdSoundInstance> unlockseInst;
+
+	std::shared_ptr<KdSoundEffect> gimmickse;
+	std::shared_ptr<KdSoundInstance> gimmickseInst;
 
 	void Animation();
 	int AnimationCalc(int cnt, const int xtex);

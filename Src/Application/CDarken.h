@@ -11,7 +11,6 @@ public:
 	void Update();	//更新
 	void Draw();	//描画
 	void SetTexture(KdTexture* apTexture);	//テクスチャ設定
-	float Rnd();	//0～1の乱数を求める関数
 
 	//パーティクル発生関数
 	void EmitDark();

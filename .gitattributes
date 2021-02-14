@@ -1,0 +1,5 @@
+*.cpp diff=sjis
+*.h diff=sjis
+
+[diff "sjis"]
+    textconv = iconv -f sjis
