@@ -2,7 +2,7 @@
 #include"Utility.h"
 
 CBoss::CBoss()
-	:attackType(Stop)
+	:attackType(Homing)
 	, m_direction()
 	, m_pTexture(nullptr)
 	, m_pos(0.0f, 0.0f)
@@ -27,17 +27,17 @@ CBoss::CBoss()
 	, m_scrollPos(0.0f, 0.0f)
 	, m_playerPos(0.0f, 0.0f)
 	, playerHitFlg(false)
+	, m_battleStartFlg(false)
 {
 }
 
 CBoss::~CBoss()
 {
-	
 }
 
 void CBoss::Init()
 {
-	attackType = Stop;
+	attackType = Rush;
 	m_direction = BUp;
 	m_bAlive = false;
 	m_hp = HP::BOSS;
@@ -49,11 +49,27 @@ void CBoss::Init()
 	m_slashCnt = 0;
 
 	playerHitFlg = false;
+	m_bAtk = false;
+
+	m_atkCnt = 0;
+
+	m_battleStartFlg = false;
 }
 
 void CBoss::Update()
 {
 	if (!m_bAlive) return;
+
+	// ダメージ処理
+	m_hp -= m_dmg;
+	m_dmg = 0;
+
+	// 死亡処理
+	if (m_hp <= 0)
+	{
+		m_bAlive = false;
+		return;
+	}
 
 	playerHitFlg = false;	// 円判定の時に使用
 
@@ -76,49 +92,25 @@ void CBoss::Update()
 	{
 		m_direction = BRight;
 	}
-	// �_���[�W����
-	m_hp -= m_dmg;
-	m_dmg = 0;
 
-	// ���S����
-	if (m_hp <= 0)
-	{
-		m_bAlive = false;
-		return;
-	}
-
-	// �v���C���[�Ƃ̋�������߂�
+	// プレイヤーとの距離を求める
 	float m_dist = Utility::GetDistance(m_pos, m_playerPos);
-	// �v���C���[�Ƃ̊p�x����߂�
-	//m_deg = Utility::GetAngleDeg(m_pos, m_playerPos);
+	// プレイヤーとの角度を求める
+	m_deg = Utility::GetAngleDeg(m_pos, m_playerPos);
 	m_moveVal = { 0.0f,0.0f };
 
 	if (m_slashCnt >= COOL_TIME::BOSS_SLASH) { m_slashCnt = COOL_TIME::BOSS_SLASH; }
-
 	m_slashCnt++;
 
+	if (m_battleStartFlg)
+	{
+		Attake();
+	}
 
-	Attake();
 	if (m_dist < 100)
 	{
 		playerHitFlg = true;
-		//MessageBox(NULL, L"Hit", L"hit", MB_OK);
 	}
-	else if (m_dist > 100 && m_dist < 300)
-	{
-		attackType = Rush;
-		//BossMoveRush();
-	}
-	else if (m_dist > 300 && m_dist < 400 )
-	{
-		//attackType = Homing;
-	}
-	else if (m_dist > 600 && m_dist < 800)
-	{
-		//attackType = Shot;
-	}
-
-
 
 	m_pos.x += m_moveVal.x;
 	m_pos.y += m_moveVal.y;
@@ -129,80 +121,77 @@ void CBoss::Draw()
 {
 	if (!m_bAlive) return;
 
-	SHADER.m_spriteShader.SetMatrix(m_mat);	// �s��Z�b�g
+	SHADER.m_spriteShader.SetMatrix(m_mat);
 	SHADER.m_spriteShader.DrawTex(m_pTexture, Math::Rectangle(0, 0, 256, 256), 1.0f);	// �`��
 }
 
 void CBoss::SetTexture(KdTexture* apTexture)
 {
-	if (apTexture == nullptr) return;	// �|�C���^�̃A�h���X�����킩���ׂ�(null�Ȃ�Z�b�g���Ȃ�)
+	if (apTexture == nullptr) return;
 
 	m_pTexture = apTexture;
 }
 
-// X���W�Z�b�g
 void CBoss::SetPosX(float posX)
 {
 	m_pos.x = posX;
 }
 
-// Y���W�Z�b�g
 void CBoss::SetPosY(float posY)
 {
 	m_pos.y = posY;
 }
 
-// X���W�ړ���
 void CBoss::SetMoveX(float moveX)
 {
 	m_moveVal.x = moveX;
 }
 
-// Y���W�ړ���
 void CBoss::SetMoveY(float moveY)
 {
 	m_moveVal.y = moveY;
 }
 
-// �����t���O�ݒ�
 void CBoss::SetAlive()
 {
 	m_bAlive = false;
 }
 
-// �_���[�W����
 void CBoss::SetDamage(int dmg)
 {
 	m_dmg += dmg;
 }
 
-// �a���̃q�b�g�t���O�Z�b�g
 void CBoss::bSetSlashHit(bool aHit)
 {
 	m_bSlashHit = aHit;
 }
 
-// �����q�b�g�t���O�Z�b�g
 void CBoss::bSetBlastHit(bool aHit)
 {
 	m_bBlastHit = aHit;
 }
-// ���˃t���O�ݒ�
 void CBoss::SetShotFlg(bool flg)
 {
 	m_shotFlg = flg;
+}
+void CBoss::SetAtkFlg()
+{
+	m_bAtk = true;
+}
+void CBoss::bSetButtleStart()
+{
+	m_battleStartFlg = true;
 }
 void CBoss::SetBoss(Math::Vector2 pos)
 {
 	m_pos = pos;
 	m_bAlive = true;
 }
-//�X�N���[���ʎ擾
 void CBoss::SetScrollPos(Math::Vector2 scrPos)
 {
 	m_scrollPos = scrPos;
 }
-// �v���C���[�̍��W�擾
 void CBoss::SetPlayerPos(Math::Vector2 pos)
 {
 	m_playerPos = pos;
@@ -213,14 +202,20 @@ void CBoss::SetSlash(bool slash)
 	m_bSlash = slash;
 }
 
-//�{�X�̍U��
+//攻撃関数
 void CBoss::Attake()
 {
-
+	if (!m_bAtk)
+	{
+		if (m_atkCnt <= 0)	// 攻撃していないとき
+		{
+			atkTypeRnd();
+			m_bAtk = true;
+		}
+	}
+	m_atkCnt++;
 	switch (attackType)
 	{
-	case Stop:
-		break;
 	case Homing:BossMoveHoming(SPEED::BOSS);
 		break;
 	case Slash:BossMoveSlash();
@@ -229,54 +224,64 @@ void CBoss::Attake()
 		break;
 	case Rush:BossMoveRush();
 		break;
-	default:
-		break;
 	}
 }
 
-// �{�X�̍s���P �z�[�~���O
+// ボスの行動１：追跡
 void CBoss::BossMoveHoming(float sp)
 {
+	atkSleep(40);
 	m_deg = Utility::GetAngleDeg(m_pos, m_playerPos);
 
 	m_moveVal.x = cos(DirectX::XMConvertToRadians(m_deg)) * sp;	// cos
 	m_moveVal.y = sin(DirectX::XMConvertToRadians(m_deg)) * sp;	// sin
 }
 
-// �{�X�̍s���Q�F�a��
+// ボスの行動２：斬撃
 void CBoss::BossMoveSlash()
 {
+	atkSleep(180);
+	if (!m_bAtk)return;
 	if (m_slashCnt >= COOL_TIME::BOSS_SLASH)
 	{
 		m_slashCnt = 0;
 		m_bSlash = true;	// �a�����s
+		m_bAtk = false;
 	}
 }
 
-// �{�X�̍s���R�F����
+// ボスの行動３：発射
 void CBoss::BossMoveShot()
 {
-	// ���˂��ꂽ��
-	if (m_shotFlg)
+	atkSleep(120);
+	
+	if (m_atkCnt <= 80)
 	{
-		m_shotCnt = 0;	// �J�E���g���Z�b�g
-		m_shotFlg = false;	// ���˃t���O����
+		const float sp = 2;
+		m_moveVal.x = -cos(DirectX::XMConvertToRadians(m_deg)) * sp;	// -��t���Ĉ�����\��
+		m_moveVal.y = -sin(DirectX::XMConvertToRadians(m_deg)) * sp;
 	}
+	else
+	{
+		if (!m_bAtk)return;
+		if (m_shotFlg)
+		{
+			m_shotCnt = 0;	// �J�E���g���Z�b�g
+			m_shotFlg = false;	// ���˃t���O����
+			m_bAtk = false;
+		}
+	}
+	// ���˂��ꂽ��
+	
 	// ���˃J�E���g
 	if (m_shotCnt <= COOL_TIME::BOSS_ARROW) m_shotCnt++;
 }
-// �{�X�̍s���S�F�ːi
 
-
-
-
-
-
-
-
-
+// ボスの行動４：突進
 void CBoss::BossMoveRush()
 {
+	atkSleep(180);
+	if (!m_bAtk)return;
 	if (m_rushCnt >= RUSH_CNT_MAX)
 	{
 		m_rushCnt = 0;
@@ -307,3 +312,24 @@ void CBoss::BossMoveRush()
 	}
 	m_rushCnt++;
 }
+
+// 攻撃ランダム変化
+void CBoss::atkTypeRnd()
+{
+	int r = rand() % 20+1;
+	if (r <= 2)			attackType = Slash;
+	else if (r <= 4)	attackType = Shot;
+	else if (r <= 6)	attackType = Rush;
+	else				attackType = Homing;
+}
+
+// モーション時間
+void CBoss::atkSleep(int cnt)
+{
+	if (m_atkCnt >= cnt)
+	{
+		m_bAtk = false;
+		m_atkCnt = 0;
+	}
+}
+

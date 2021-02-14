@@ -3,7 +3,6 @@
 
 enum eattackType
 {
-	Stop,
 	Homing,
 	Slash,
 	Shot,
@@ -42,18 +41,21 @@ public:
 	void bSetSlashHit(bool aHit);	// 斬撃ヒットフラグセット
 	void bSetBlastHit(bool aHit);	// 爆風ヒットフラグセット
 	void SetShotFlg(bool flg);	// 発射フラグ設定
+	void SetAtkFlg();	// 
+	void bSetButtleStart();		// 戦闘開始フラグセット
 
 	void SetSlash(bool slash);
 	void SetScrollPos(Math::Vector2 scrPos);	//スクロール量取得
 	void SetPlayerPos(Math::Vector2 pos);		// プレイヤーの座標取得
 
 	// ゲッター
-	Math::Vector2 GetPos() { return m_pos; }
+	Math::Vector2 GetPos() { return { m_pos.x - 40 , m_pos.y }; }
 	Math::Vector2 GetMove() { return m_moveVal; }
 	float GetPosX() { return m_pos.x; }
 	float GetPosY() { return m_pos.y; }
 	float	GetDeg() { return m_deg; }
 	bool	GetSlash() { return m_bSlash; }
+	bool	bGetShot() { return m_shotFlg; }
 	const bool IsAlive() { return m_bAlive; }
 	int		GetHp() { return m_hp; }
 	const bool bGetSlashHit() { return m_bSlashHit; }	// 斬撃ヒットフラグ取得
@@ -63,6 +65,8 @@ public:
 	bool Getm_bRush() { return m_bRush; }			// 突進フラグ
 	bool GetPlayerHit() { return playerHitFlg; }	// プレイヤーに当たったか
 	const int GetDirection() { return m_direction; }// 方向
+	int	GetAtkCnt() { return m_atkCnt; }
+	int	GetAttakeType() { return attackType; }
 
 
 
@@ -99,6 +103,8 @@ private:
 
 	bool			playerHitFlg;		// プレイヤーと触れたか
 
+	bool			m_battleStartFlg;			// 戦闘開始フラグ
+
 	Math::Vector2	 m_scrollPos;	//スクロール量取得用
 	Math::Vector2	 m_playerPos;	//プレイヤーの座標取得用
 
@@ -107,6 +113,9 @@ private:
 	void BossMoveSlash();	// ボスの行動２：斬撃
 	void BossMoveShot();	// ボスの行動３：発射
 	void BossMoveRush();	// ボスの行動４：突進
+
+	void atkTypeRnd();
+	void atkSleep(int cnt);
 
 	CEnemySword	m_enemySwordList;
 

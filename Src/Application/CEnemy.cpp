@@ -203,19 +203,22 @@ void CEnemy::Update_Boss(Math::Vector2 playerPos, Math::Vector2 scrPos, bool hid
 		m_bossList.SetSlash(false);		// 斬撃フラグを下げて一度だけ実行するように 
 	}
 
-	// 視野フラグtrue時＆発射カウント0以下の時
-	if ((m_bossList.iGetAttakeType() == Shot) && (m_bossList.GetShotCnt() >= COOL_TIME::BOSS_ARROW))
+	// 発射フラグtrue時＆発射カウント0以下の時
+	if ((!m_bossList.bGetShot()) && (m_bossList.GetShotCnt() >= COOL_TIME::BOSS_ARROW))
 	{
-		// 矢クラスメモリ新規作成
-		CArrow* arrow = new CArrow;
+		for (int i = 0; i < 3; i++)
+		{
+			// 矢クラスメモリ新規作成
+			CArrow* arrow = new CArrow;
 
-		arrow->Init();		// 初期化
-		arrow->SetTexture(m_pArrawTex);	// テクスチャ設定
+			arrow->Init();		// 初期化
+			arrow->SetTexture(m_pArrawTex);	// テクスチャ設定
 
-		// 発射処理
-		arrow->Shot(m_bossList.GetPos(), playerPos);
-		m_arrowList.push_back(arrow);
+			// 発射処理
+			arrow->BossShot(m_bossList.GetPos(), playerPos, i);
+			m_arrowList.push_back(arrow);
 
+		}
 		// 発射フラグtrue
 		m_bossList.SetShotFlg(true);
 	}
